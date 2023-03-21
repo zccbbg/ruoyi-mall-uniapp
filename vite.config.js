@@ -17,7 +17,7 @@ export default (command, mode) => {
 			// 	verbose: false
 			// }),
 			uniReadPagesV3Plugin({
-				pagesJsonDir: path.resolve(__dirname, './pages.json'),
+				pagesJsonDir: path.resolve(__dirname, './src/pages.json'),
 				includes: ['path', 'aliasPath', 'name', 'meta'],
 			}),
 			mpliveMainfestPlugin(env.SHOPRO_MPLIVE_ON)
