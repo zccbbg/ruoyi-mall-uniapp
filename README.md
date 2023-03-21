@@ -1,12 +1,6 @@
 ## 技术栈
 
 - **前端技术栈：uni-app、ES6、Vue3、Vite、Pinia;**
-## 安装
-```bash
-# 拷贝env示例配置文件 重命名为.env
-$ cd shopro-uniapp
-$ cp env .env 
-```
 
 ```bash
 # 安装依赖 (需安装nodejs环境, 使用npm国内镜像)
