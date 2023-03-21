@@ -5,6 +5,5 @@ deploy.sh
 /.hbuilderx/
 /.vscode/
 **/.DS_Store
-.env
 yarn.lock
 package-lock.json

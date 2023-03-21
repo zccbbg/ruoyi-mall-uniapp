@@ -1,5 +1,5 @@
 <template>
-  <s-layout class="wallet-wrap" title="佣金">
+  <s-layout class="wallet-wrap" title="消费金">
     <!-- 钱包卡片 -->
     <view class="header-box ss-flex ss-row-center ss-col-center">
       <view class="card-box ui-BG-Main ui-Shadow-Main">
@@ -22,9 +22,6 @@
                 提现
               </button>
             </view>
-            <button class="ss-reset-button balance-btn ss-m-l-20" @tap="state.showModal = true">
-              转余额
-            </button>
           </view>
         </view>
 
