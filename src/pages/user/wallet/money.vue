@@ -13,8 +13,8 @@
         </view>
         <view class="ss-flex ss-row-between ss-col-center ss-m-t-64">
           <view class="money-num">{{ state.showMoney ? userInfo.money : '*****' }}</view>
-          <button class="ss-reset-button topup-btn" @tap="sheep.$router.go('/pages/pay/recharge')">
-            充值
+          <button class="ss-reset-button topup-btn" @tap="sheep.$router.go('/pages/pay/withdraw')">
+            提现
           </button>
         </view>
       </view>

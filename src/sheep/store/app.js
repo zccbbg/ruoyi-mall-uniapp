@@ -866,6 +866,24 @@ const app = defineStore({
                                 {
                                     "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
                                     "title": {
+                                        "text": "我的团队",
+                                        "color": "#333"
+                                    },
+                                    "tip": {
+                                        "text": "",
+                                        "color": "#bbb"
+                                    },
+                                    "url": "\/pages\/user\/address\/list",
+                                    "badge": {
+                                        "show": 0,
+                                        "text": "",
+                                        "color": "#FFFFFF",
+                                        "bgColor": "#FF6000"
+                                    }
+                                },
+                                {
+                                    "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
+                                    "title": {
                                         "text": "收货地址",
                                         "color": "#333"
                                     },

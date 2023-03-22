@@ -277,10 +277,10 @@
       name: '待收货',
       value: 'noget',
     },
-    {
-      name: '待评价',
-      value: 'nocomment',
-    },
+    // {
+    //   name: '待评价',
+    //   value: 'nocomment',
+    // },
   ];
 
   // 切换选项卡

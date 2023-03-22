@@ -35,19 +35,26 @@
       type: 'unpaid',
     },
     {
+      title: '待发货',
+      value: '2',
+      icon: '/static/img/shop/order/no_comment.png',
+      path: '/pages/order/list',
+      type: 'nosend',
+    },
+    {
       title: '待收货',
       value: '3',
       icon: '/static/img/shop/order/no_take.png',
       path: '/pages/order/list',
       type: 'noget',
     },
-    {
-      title: '待评价',
-      value: '4',
-      icon: '/static/img/shop/order/no_comment.png',
-      path: '/pages/order/list',
-      type: 'nocomment',
-    },
+    // {
+    //   title: '待评价',
+    //   value: '4',
+    //   icon: '/static/img/shop/order/no_comment.png',
+    //   path: '/pages/order/list',
+    //   type: 'nocomment',
+    // },
     {
       title: '售后单',
       value: '0',

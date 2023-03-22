@@ -4,7 +4,7 @@
     <view class="header-box ss-flex ss-row-center ss-col-center">
       <view class="card-box ui-BG-Main ui-Shadow-Main">
         <view class="card-head ss-flex ss-col-center">
-          <view class="card-title ss-m-r-10">我的佣金（元）</view>
+          <view class="card-title ss-m-r-10">我的消费金</view>
           <view
             @tap="state.showMoney = !state.showMoney"
             class="ss-eye-icon"
@@ -13,30 +13,36 @@
         </view>
         <view class="ss-flex ss-row-between ss-col-center ss-m-t-30">
           <view class="money-num">{{ state.showMoney ? userInfo.commission : '*****' }}</view>
-          <view class="ss-flex">
-            <view class="ss-m-r-20">
-              <button
-                class="ss-reset-button withdraw-btn"
-                @tap="sheep.$router.go('/pages/pay/withdraw')"
-              >
-                提现
-              </button>
-            </view>
-          </view>
+<!--          <view class="ss-flex">-->
+<!--            <view class="ss-m-r-20">-->
+<!--              <button-->
+<!--                class="ss-reset-button withdraw-btn"-->
+<!--                @tap="sheep.$router.go('/pages/pay/withdraw')"-->
+<!--              >-->
+<!--                提现-->
+<!--              </button>-->
+<!--            </view>-->
+<!--          </view>-->
         </view>
 
         <view class="ss-flex">
           <view class="loading-money">
-            <view class="loading-money-title">待入账佣金</view>
+            <view class="loading-money-title">可使用</view>
+            <view class="loading-money-num">{{
+                state.showMoney ? userInfo.commission || '0.00' : '*****'
+              }}</view>
+          </view>
+          <view class="loading-money ss-m-l-100">
+            <view class="loading-money-title">待结算</view>
             <view class="loading-money-num">{{
               state.showMoney ? agentInfo.pending_reward || '0.00' : '*****'
             }}</view>
           </view>
           <view class="loading-money ss-m-l-100">
-            <view class="loading-money-title">可提现佣金</view>
+            <view class="loading-money-title">已冻结</view>
             <view class="loading-money-num">{{
-              state.showMoney ? userInfo.commission || '0.00' : '*****'
-            }}</view>
+                state.showMoney ? userInfo.commission || '0.00' : '*****'
+              }}</view>
           </view>
         </view>
       </view>
