@@ -124,7 +124,8 @@
   // 默认单规格
   if (props.goodsInfo.skus.length < 2) {
     state.selectedSkuPrice = {...props.goodsInfo.skus[0], buyNum:1,productName:props.goodsInfo.product.name}
-    state.currentSkuArray = JSON.parse(state.selectedSkuPrice.spData);
+    state.currentSkuMap = JSON.parse(state.selectedSkuPrice.spData);
+    console.log('selectedSkuPrice', state.selectedSkuPrice)
   }
 
   const skuList = props.goodsInfo.skus;
@@ -169,6 +170,7 @@
   });
 
   function onAddCart() {
+    console.log('加入购物车')
     if (state.selectedSkuPrice.id) {
       // if (state.selectedSkuPrice.stock <= 0) {
       //   sheep.$helper.toast('库存不足');

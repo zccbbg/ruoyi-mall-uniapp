@@ -9,9 +9,9 @@
 
   const props = defineProps({
     modelValue: {
-      type: Array,
+      type: String,
       default() {
-        return [];
+        return '';
       },
     },
     skus: {
@@ -22,11 +22,13 @@
     },
   });
   const value = computed(() => {
+    console.log('modelValue,',props.modelValue)
     let str = '';
-    if (props.modelValue.length > 0) {
-      props.modelValue.forEach((item, index) => {
-        str += props.skus[index].name + ':' + item + ' ';
-      });
+    if (props.modelValue) {
+      const obj = JSON.parse(props.modelValue);
+      Object.keys(obj).forEach(key=>{
+        str += key + "：" + obj[key] + ' ';
+      })
     } else {
       str = '请选择商品规格';
     }

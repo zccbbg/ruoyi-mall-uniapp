@@ -75,7 +75,7 @@
           <!-- 功能卡片 -->
           <view class="detail-cell-card detail-card ss-flex-col">
             <detail-cell-sku
-              v-model="state.selectedSkuPrice.goods_sku_text"
+              v-model="state.selectedSkuPrice.spData"
               :skus="state.goodsInfo.skus"
               @tap="state.showSelectSku = true"
             />
@@ -180,6 +180,7 @@
 
   // 规格变更
   function onSkuChange(e) {
+    console.log('e',e)
     state.selectedSkuPrice = e;
   }
 
