@@ -129,6 +129,7 @@
     current_page: 1,
     total: 1,
     last_page: 1,
+    size: 6
   };
   const state = reactive({
     pagination: {
@@ -136,8 +137,9 @@
       current_page: 1,
       total: 1,
       last_page: 1,
+      size: 6
     },
-    currentSort: 'weigh',
+    currentSort: 'sort',
     currentOrder: 'desc',
     currentTab: 0,
     filterParams: {},
@@ -148,11 +150,12 @@
     tabList: [
       {
         name: '综合推荐',
-        value: 'weigh',
+        value: 'sort',
+        order: 'asc',
         list: [
           {
             label: '综合推荐',
-            sort: 'weigh',
+            sort: 'sort',
             order: 'desc',
           },
           {
@@ -167,13 +170,15 @@
           },
         ],
       },
-      {
-        name: '销量',
-        value: 'total_sales',
-      },
+        //没有销量字段，暂时隐藏
+      // {
+      //   name: '销量',
+      //   value: 'total_sales',
+      // },
       {
         name: '新品优先',
         value: 'create_time',
+        order: 'desc'
       },
     ],
     loadStatus: '',
@@ -189,22 +194,28 @@
 
   function mountMasonry(height = 0, where = 'left') {
     if (!state.pagination.data[count]) return;
-
-    if (where === 'left') {
-      leftHeight += height;
-    } else {
-      rightHeight += height;
-    }
-    if (leftHeight <= rightHeight) {
+    if (count %2 === 0) {
       state.leftGoodsList.push(state.pagination.data[count]);
     } else {
       state.rightGoodsList.push(state.pagination.data[count]);
     }
+    // if (!state.pagination.data[count]) return;
+    //
+    // if (where === 'left') {
+    //   leftHeight += height;
+    // } else {
+    //   rightHeight += height;
+    // }
+    // if (leftHeight <= rightHeight) {
+    //   state.leftGoodsList.push(state.pagination.data[count]);
+    // } else {
+    //   state.rightGoodsList.push(state.pagination.data[count]);
+    // }
     count++;
   }
 
   function emptyList() {
-    state.pagination = pagination
+    state.pagination = {...pagination}
     state.leftGoodsList = [];
     state.rightGoodsList = [];
     count = 0;
@@ -215,7 +226,7 @@
   function onSearch(e) {
     state.keyword = e;
     emptyList();
-    getList(state.currentSort, state.currentOrder, state.categoryId, e);
+    getList();
   }
 
   // 点击
@@ -233,8 +244,9 @@
       state.currentTab = e.index;
     }
     emptyList();
-
-    getList(e.value, state.currentOrder, state.categoryId, state.keyword);
+    state.currentSort = e.value
+    state.currentOrder = e.order
+    getList();
   }
 
   // 点击筛选项
@@ -251,50 +263,40 @@
     state.currentSort = state.tabList[0].list[val].sort;
     state.currentOrder = state.tabList[0].list[val].order;
     emptyList();
-    getList(state.currentSort, state.currentOrder, state.categoryId, state.keyword);
+    getList();
     state.showFilter = false;
   };
 
-  async function getList(Sort, Order, categoryId, keyword, page = 1, list_rows = 6) {
+  async function getList() {
     state.loadStatus = 'loading';
-    const res = await sheep.$api.goods.list({
-      sort: Sort,
-      order: Order,
-      category_id: !keyword ? categoryId : '',
-      list_rows,
-      keyword: keyword,
-      page,
-    });
-    if (res.error === 0) {
-        let couponList = _.concat(state.pagination.data, res.data.data);
-        state.pagination = {
-          ...res.data,
-          data: couponList,
-        };
-      mountMasonry();
-      if (state.pagination.current_page < state.pagination.last_page) {
-        state.loadStatus = 'more';
-      } else {
-        state.loadStatus = 'noMore';
-      }
+    const params = {
+      search:state.keyword,
+      categoryId: state.categoryId,
+      orderField: state.currentSort,
+      orderSort: state.currentOrder
+    }
+    const res = await sheep.$api.goods.list(params, { page:state.pagination.current_page - 1, size: state.pagination.size });
+    const { content, totalElements, totalPages } = res;
+    state.pagination.data = _.concat(state.pagination.data, content)
+    state.pagination.total = totalElements
+    mountMasonry();
+    if (state.pagination.current_page < totalPages) {
+      state.loadStatus = 'more';
+    } else {
+      state.loadStatus = 'noMore';
     }
   }
   // 加载更多
   function loadmore() {
     if (state.loadStatus !== 'noMore') {
-      getList(
-        state.currentSort,
-        state.currentOrder,
-        state.categoryId,
-        state.keyword,
-        state.pagination.current_page + 1,
-      );
+      state.pagination.current_page++;
+      getList();
     }
   }
   onLoad((options) => {
     state.categoryId = options.categoryId;
     state.keyword = options.keyword;
-    getList(state.currentSort, state.currentOrder, state.categoryId, state.keyword);
+    getList();
   });
   // 上拉加载更多
   onReachBottom(() => {

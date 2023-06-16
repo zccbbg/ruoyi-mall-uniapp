@@ -123,6 +123,15 @@
         </s-goods-column>
       </view>
     </view>
+<!--    <uni-load-more-->
+<!--        v-if="state.pagination.total > 0"-->
+<!--        :status="state.loadStatus"-->
+<!--        :content-text="{-->
+<!--        contentdown: '上拉加载更多',-->
+<!--      }"-->
+<!--        @tap="loadmore"-->
+<!--    />-->
+<!--    <s-empty v-if="state.pagination.total === 0" icon="/static/soldout-empty.png" text="暂无商品" />-->
   </view>
 </template>
 
@@ -133,8 +142,22 @@
    */
   import { computed, reactive, onMounted } from 'vue';
   import sheep from '@/sheep';
+  import _ from "lodash";
+
+  const pagination = {
+    data: [],
+    page: 1,
+    total: 0,
+    size: 10
+  };
 
   const state = reactive({
+    pagination: {
+      page: 1,
+      total: 0,
+      size: 10
+    },
+    loadStatus: "",
     goodsList: [],
     leftGoodsList: [],
     rightGoodsList: [],
@@ -149,7 +172,12 @@
       default() {},
     },
   });
-
+  async function loadmore() {
+    if (state.loadStatus !== "noMore") {
+      state.pagination.page++;
+      await getList();
+    }
+  }
   const { mode, tagStyle, buyNowStyle, goodsFields, goodsIds } = props.data ?? {};
   const { marginLeft, marginRight } = props.styles ?? {};
 
@@ -158,8 +186,28 @@
     return data;
   }
 
+  async function getList() {
+    state.loadStatus = 'loading'
+    const params = {
+      publishStatus: 1
+    }
+    const res = await sheep.$api.goods.list(params, { page: state.pagination.page - 1, size: state.pagination.size });
+    const {content,totalElements, totalPages } = res;
+    let goodsList = _.concat((state.goodsList, content));
+    state.pagination.data = goodsList;
+    state.pagination.total = totalElements;
+    state.goodsList = goodsList;
+    mountMasonry();
+    if (state.pagination.page < totalPages){
+      state.loadStatus = 'more'
+    }else {
+      state.loadStatus = 'noMore'
+    }
+    console.log('res', res)
+  }
+
   onMounted(async () => {
-    state.goodsList = await getGoodsListByIds(goodsIds.join(','));
+    await getList()
     if (mode === 2) {
       mountMasonry();
     }
@@ -172,13 +220,19 @@
 
   function mountMasonry(height = 0, where = 'left') {
     if (!state.goodsList[count]) return;
-    if (where === 'left') leftHeight += height;
-    if (where === 'right') rightHeight += height;
-    if (leftHeight <= rightHeight) {
+    if (count %2 === 0) {
       state.leftGoodsList.push(state.goodsList[count]);
     } else {
       state.rightGoodsList.push(state.goodsList[count]);
     }
+    // if (!state.goodsList[count]) return;
+    // if (where === 'left') leftHeight += height;
+    // if (where === 'right') rightHeight += height;
+    // if (leftHeight <= rightHeight) {
+    //   state.leftGoodsList.push(state.goodsList[count]);
+    // } else {
+    //   state.rightGoodsList.push(state.goodsList[count]);
+    // }
     count++;
   }
 

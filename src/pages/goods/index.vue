@@ -33,14 +33,16 @@
             <view class="ss-flex ss-row-between ss-col-center ss-m-b-26">
               <view class="price-box ss-flex ss-col-bottom">
                 <view class="price-text ss-m-r-16">
-                  {{ state.selectedSkuPrice.price || formatPrice(state.goodsInfo.price) }}
+                  {{ state.selectedSkuPrice.price || state.goodsInfo.product.price }}
                 </view>
-                <view class="origin-price-text" v-if="state.goodsInfo.original_price > 0">
-                  {{ state.selectedSkuPrice.original_price || state.goodsInfo.original_price }}
-                </view>
+                <!-- 原价 -->
+<!--                <view class="origin-price-text" v-if="state.goodsInfo.original_price > 0">-->
+<!--                  {{ state.selectedSkuPrice.original_price || state.goodsInfo.original_price }}-->
+<!--                </view>-->
               </view>
+              <!-- 已售 -->
               <view class="sales-text">
-                {{ formatSales(state.goodsInfo.sales_show_type, state.goodsInfo.sales) }}
+                {{ formatSales(state.goodsInfo.sales_show_type, 10000) }}
               </view>
             </view>
             <view class="discounts-box ss-flex ss-row-between ss-m-b-28">
@@ -57,16 +59,16 @@
                 </view>
               </div>
 
-              <view
-                class="get-coupon-box ss-flex ss-col-center ss-m-l-20"
-                @tap="state.showModel = true"
-                v-if="state.couponInfo.length"
-              >
-                <view class="discounts-title ss-m-r-8">领券</view>
-                <text class="cicon-forward"></text>
-              </view>
+<!--              <view-->
+<!--                class="get-coupon-box ss-flex ss-col-center ss-m-l-20"-->
+<!--                @tap="state.showModel = true"-->
+<!--                v-if="state.couponInfo.length"-->
+<!--              >-->
+<!--                <view class="discounts-title ss-m-r-8">领券</view>-->
+<!--                <text class="cicon-forward"></text>-->
+<!--              </view>-->
             </view>
-            <view class="title-text ss-line-2 ss-m-b-6">{{ state.goodsInfo.title }}</view>
+            <view class="title-text ss-line-2 ss-m-b-6">{{ state.goodsInfo.product.name }}</view>
             <view class="subtitle-text ss-line-1">{{ state.goodsInfo.subtitle }}</view>
           </view>
 
@@ -90,23 +92,24 @@
             @change="onSkuChange"
             @close="state.showSelectSku = false"
           />
+
         </view>
 
         <!-- 评价 -->
-        <detail-comment-card class="detail-comment-selector" :goodsId="state.goodsId" />
+<!--        <detail-comment-card class="detail-comment-selector" :goodsId="state.goodsId" />-->
         <!-- 详情 -->
-        <detail-content-card class="detail-content-selector" :content="state.goodsInfo.content" />
+        <detail-content-card class="detail-content-selector" :content="state.goodsInfo.product.detailMobileHtml" />
 
         <!-- 活动跳转 -->
-        <detail-activity-tip
-          v-if="state.goodsInfo.activities"
-          :data="state.goodsInfo"
-        ></detail-activity-tip>
+<!--        <detail-activity-tip-->
+<!--          v-if="state.goodsInfo.activities"-->
+<!--          :data="state.goodsInfo"-->
+<!--        ></detail-activity-tip>-->
 
         <!-- 详情tabbar -->
         <detail-tabbar v-model="state.goodsInfo">
           <!-- TODO: 缺货中 已售罄 判断 设计-->
-          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-if="state.goodsInfo.stock > 0">
+          <view class="buy-box ss-flex ss-col-center ss-p-r-20">
             <button
               class="ss-reset-button add-btn ui-Shadow-Main"
               @tap="state.showSelectSku = true"
@@ -120,9 +123,9 @@
               立即购买
             </button>
           </view>
-          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-else>
-            <button class="ss-reset-button disabled-btn" disabled> 已售罄 </button>
-          </view>
+<!--          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-else>-->
+<!--            <button class="ss-reset-button disabled-btn" disabled> 已售罄 </button>-->
+<!--          </view>-->
         </detail-tabbar>
         <s-coupon-get
           v-model="state.couponInfo"
@@ -220,6 +223,7 @@
   }
 
   const shareInfo = computed(() => {
+    return {}
     if (isEmpty(state.goodsInfo)) return {};
     return sheep.$platform.share.getShareInfo(
       {
@@ -250,19 +254,16 @@
     state.goodsId = options.id;
     // 加载商品信息
     sheep.$api.goods.detail(state.goodsId).then((res) => {
+      console.log('商品数据：', res)
       state.skeletonLoading = false;
-      if (res.error === 0) {
-        state.goodsInfo = res.data;
-        state.goodsSwiper = formatGoodsSwiper(state.goodsInfo.images);
-      } else {
-        // 未找到商品
-        state.goodsInfo = null;
-      }
+      state.goodsInfo = res;
+      state.goodsSwiper = formatGoodsSwiper(state.goodsInfo.product.albumPics.split(','));
+      console.log('图册：', state.goodsSwiper)
     });
-    const { error, data } = await sheep.$api.coupon.listByGoods(state.goodsId);
-    if (error === 0) {
-      state.couponInfo = data;
-    }
+    // const { error, data } = await sheep.$api.coupon.listByGoods(state.goodsId);
+    // if (error === 0) {
+    //   state.couponInfo = data;
+    // }
   });
 </script>
 

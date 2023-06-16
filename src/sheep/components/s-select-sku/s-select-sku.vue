@@ -6,12 +6,12 @@
         <view class="header-left ss-m-r-30">
           <image
             class="sku-image"
-            :src="sheep.$url.cdn(state.selectedSkuPrice.image || goodsInfo.image)"
+            :src="sheep.$url.cdn(state.selectedSkuPrice.pic || goodsInfo.product.pic)"
             mode="aspectFill"
           ></image>
         </view>
         <view class="header-right ss-flex-col ss-row-between ss-flex-1">
-          <view class="goods-title ss-line-2">{{ goodsInfo.title }}</view>
+          <view class="goods-title ss-line-2">{{ goodsInfo.product.name }}</view>
           <view class="header-right-bottom ss-flex ss-col-center ss-row-between">
             <view class="ss-flex">
               <view v-if="goodsPrice.price > 0" class="price-text">
@@ -34,35 +34,31 @@
               </view>
             </view>
 
-            <view class="stock-text ss-m-l-20">
-              {{
-                state.selectedSkuPrice.stock
-                  ? formatStock(goodsInfo.stock_show_type, state.selectedSkuPrice.stock)
-                  : formatStock(goodsInfo.stock_show_type, goodsInfo.stock)
-              }}
-            </view>
+<!--            <view class="stock-text ss-m-l-20">-->
+<!--              {{-->
+<!--                state.selectedSkuPrice.stock-->
+<!--                  ? formatStock(goodsInfo.stock_show_type, state.selectedSkuPrice.stock)-->
+<!--                  : formatStock(goodsInfo.stock_show_type, goodsInfo.stock)-->
+<!--              }}-->
+<!--            </view>-->
           </view>
         </view>
       </view>
       <view class="modal-content ss-flex-1">
         <scroll-view scroll-y="true" class="modal-content-scroll" @touchmove.stop>
-          <view class="sku-item ss-m-b-20" v-for="sku1 in goodsInfo.skus" :key="sku1.id">
+          <view class="sku-item ss-m-b-20" v-for="sku1 in productAttrList" :key="sku1.id">
             <view class="label-text ss-m-b-20">{{ sku1.name }}</view>
             <view class="ss-flex ss-col-center ss-flex-wrap">
               <button
-                class="ss-reset-button spec-btn"
-                v-for="sku2 in sku1.children"
-                :class="[
+                  class="ss-reset-button spec-btn"
+                  v-for="sku2 in sku1.options.filter(i=>i.name)"
+                  :class="[
                   {
-                    'ui-BG-Main-Gradient': state.currentSkuArray[sku2.parent_id] == sku2.id,
-                  },
-                  {
-                    'disabled-btn': sku2.disabled == true,
-                  },
+                    'ui-BG-Main-Gradient': state.currentSkuMap[sku1.name] === sku2.name,
+                  }
                 ]"
-                :key="sku2.id"
-                :disabled="sku2.disabled == true"
-                @tap="onSelectSku(sku2.parent_id, sku2.id)"
+                  :key="sku2.name"
+                  @tap="onSelectSku(sku2.name, sku1.name)"
               >
                 {{ sku2.name }}
               </button>
@@ -72,7 +68,7 @@
             <view class="label-text">购买数量</view>
             <su-number-box
               :min="1"
-              :max="state.selectedSkuPrice.stock"
+
               :step="1"
               v-model="state.selectedSkuPrice.goods_num"
             ></su-number-box>
@@ -80,13 +76,13 @@
         </scroll-view>
       </view>
       <view class="modal-footer border-top">
-        <view
-          class="buy-box ss-flex ss-col-center ss-flex ss-col-center ss-row-center"
-          v-if="isScore"
-        >
-          <button class="ss-reset-button score-btn ui-Shadow-Main" @tap="onBuy">立即兑换</button>
-        </view>
-        <view class="buy-box ss-flex ss-col-center ss-flex ss-col-center ss-row-center" v-else>
+<!--        <view-->
+<!--          class="buy-box ss-flex ss-col-center ss-flex ss-col-center ss-row-center"-->
+<!--          v-if="isScore"-->
+<!--        >-->
+<!--          <button class="ss-reset-button score-btn ui-Shadow-Main" @tap="onBuy">立即兑换</button>-->
+<!--        </view>-->
+        <view class="buy-box ss-flex ss-col-center ss-flex ss-col-center ss-row-center">
           <button class="ss-reset-button add-btn ui-Shadow-Main" @tap="onAddCart"
             >加入购物车</button
           >
@@ -120,26 +116,28 @@
   });
 
   const state = reactive({
-    selectedSkuPrice: {},
+    selectedSkuPrice: {buyNum: 1},
     currentSkuArray: [],
+    currentSkuMap: {}
   });
 
   // 默认单规格
-  if (!props.goodsInfo.is_sku) {
-    state.selectedSkuPrice = props.goodsInfo.sku_prices[0];
+  if (props.goodsInfo.skus.length < 2) {
+    state.selectedSkuPrice = {...props.goodsInfo.skus[0], buyNum:1,productName:props.goodsInfo.product.name}
+    state.currentSkuArray = JSON.parse(state.selectedSkuPrice.spData);
   }
 
   const skuList = props.goodsInfo.skus;
 
   // 可选规格
   const skuPrices = computed(() => {
-    let skuPrices = props.goodsInfo.sku_prices;
-    if (props.goodsInfo.is_sku) {
-      skuPrices.forEach((item) => {
-        item.goods_sku_id_arr = item.goods_sku_ids.split(',');
-      });
-    }
-    return skuPrices;
+    return  props.goodsInfo.skus;
+    // if (props.goodsInfo.is_sku) {
+    //   skuPrices.forEach((item) => {
+    //     item.goods_sku_id_arr = item.goods_sku_ids.split(',');
+    //   });
+    // }
+    // return skuPrices;
   });
 
   watch(
@@ -153,10 +151,15 @@
     },
   );
 
+  // 可选择款式对象
+  const productAttrList = computed(() => {
+    return JSON.parse(props.goodsInfo.product.productAttr);
+  });
+
   const goodsPrice = computed(() => {
     let price, score;
     if (isEmpty(state.selectedSkuPrice)) {
-      price = props.goodsInfo.price[0];
+      price = props.goodsInfo.product.price;
       score = props.goodsInfo.score || 0;
     } else {
       price = state.selectedSkuPrice.price;
@@ -166,170 +169,158 @@
   });
 
   function onAddCart() {
-    if (state.selectedSkuPrice.goods_id) {
-      if (state.selectedSkuPrice.stock <= 0) {
-        sheep.$helper.toast('库存不足');
-      } else {
+    if (state.selectedSkuPrice.id) {
+      // if (state.selectedSkuPrice.stock <= 0) {
+      //   sheep.$helper.toast('库存不足');
+      // } else {
         emits('addCart', state.selectedSkuPrice);
-      }
+      // }
     } else {
       sheep.$helper.toast('请选择规格');
     }
   }
 
   function onBuy() {
-    if (state.selectedSkuPrice.goods_id) {
-      if (state.selectedSkuPrice.stock <= 0) {
-        sheep.$helper.toast('库存不足');
-      } else {
+    if (state.selectedSkuPrice.id) {
+      // if (state.selectedSkuPrice.stock <= 0) {
+      //   sheep.$helper.toast('库存不足');
+      // } else {
         emits('buy', state.selectedSkuPrice);
-      }
+      // }
     } else {
       sheep.$helper.toast('请选择规格');
     }
   }
   // 改变禁用状态
-  function changeDisabled(isChecked = false, pid = 0, skuId = 0) {
-    let newPrice = []; // 所有可以选择的 skuPrice
-
-    if (isChecked) {
-      // 选中规格
-      // 当前点击选中规格下的 所有可用 skuPrice
-      for (let price of skuPrices.value) {
-        if (price.stock <= 0) {
-          // this.goodsNum 不判断是否大于当前选择数量，在 uni-number-box 判断，并且 取 stock 和 goods_num 的小值
-          continue;
-        }
-        if (price.goods_sku_id_arr.indexOf(skuId.toString()) >= 0) {
-          newPrice.push(price);
-        }
-      }
-    } else {
-      // 取消选中
-      // 当前所选规格下，所有可以选择的 skuPrice
-      newPrice = getCanUseSkuPrice();
-    }
-
-    // 所有存在并且有库存未选择的规格项 的 子项 id
-    let noChooseSkuIds = [];
-    for (let price of newPrice) {
-      noChooseSkuIds = noChooseSkuIds.concat(price.goods_sku_id_arr);
-    }
-
-    // 去重
-    noChooseSkuIds = Array.from(new Set(noChooseSkuIds));
-
-    if (isChecked) {
-      // 去除当前选中的规格项
-      let index = noChooseSkuIds.indexOf(skuId.toString());
-      noChooseSkuIds.splice(index, 1);
-    } else {
-      // 循环去除当前已选择的规格项
-      state.currentSkuArray.forEach((sku) => {
-        if (sku.toString() != '') {
-          // sku 为空是反选 填充的
-          let index = noChooseSkuIds.indexOf(sku.toString());
-          if (index >= 0) {
-            // sku 存在于 noChooseSkuIds
-            noChooseSkuIds.splice(index, 1);
-          }
-        }
-      });
-    }
-
-    // 当前已选择的规格大类
-    let chooseSkuKey = [];
-    if (!isChecked) {
-      // 当前已选择的规格大类
-      state.currentSkuArray.forEach((sku, key) => {
-        if (sku != '') {
-          // sku 为空是反选 填充的
-          chooseSkuKey.push(key);
-        }
-      });
-    } else {
-      // 当前点击选择的规格大类
-      chooseSkuKey = [pid];
-    }
-
-    for (let i in skuList) {
-      // 当前点击的规格，或者取消选择时候 已选中的规格 不进行处理
-      if (chooseSkuKey.indexOf(skuList[i]['id']) >= 0) {
-        continue;
-      }
-
-      for (let j in skuList[i]['children']) {
-        // 如果当前规格项 id 不存在于有库存的规格项中，则禁用
-        if (noChooseSkuIds.indexOf(skuList[i]['children'][j]['id'].toString()) >= 0) {
-          skuList[i]['children'][j]['disabled'] = false;
-        } else {
-          skuList[i]['children'][j]['disabled'] = true;
-        }
-      }
-    }
-  }
+  // function changeDisabled(isChecked = false, pid = 0, skuId = 0) {
+  //   let newPrice = []; // 所有可以选择的 skuPrice
+  //
+  //   if (isChecked) {
+  //     // 选中规格
+  //     // 当前点击选中规格下的 所有可用 skuPrice
+  //     for (let price of skuPrices.value) {
+  //       if (price.stock <= 0) {
+  //         // this.goodsNum 不判断是否大于当前选择数量，在 uni-number-box 判断，并且 取 stock 和 goods_num 的小值
+  //         continue;
+  //       }
+  //       if (price.goods_sku_id_arr.indexOf(skuId.toString()) >= 0) {
+  //         newPrice.push(price);
+  //       }
+  //     }
+  //   } else {
+  //     // 取消选中
+  //     // 当前所选规格下，所有可以选择的 skuPrice
+  //     newPrice = getCanUseSkuPrice();
+  //   }
+  //
+  //   // 所有存在并且有库存未选择的规格项 的 子项 id
+  //   let noChooseSkuIds = [];
+  //   for (let price of newPrice) {
+  //     noChooseSkuIds = noChooseSkuIds.concat(price.goods_sku_id_arr);
+  //   }
+  //
+  //   // 去重
+  //   noChooseSkuIds = Array.from(new Set(noChooseSkuIds));
+  //
+  //   if (isChecked) {
+  //     // 去除当前选中的规格项
+  //     let index = noChooseSkuIds.indexOf(skuId.toString());
+  //     noChooseSkuIds.splice(index, 1);
+  //   } else {
+  //     // 循环去除当前已选择的规格项
+  //     state.currentSkuArray.forEach((sku) => {
+  //       if (sku.toString() != '') {
+  //         // sku 为空是反选 填充的
+  //         let index = noChooseSkuIds.indexOf(sku.toString());
+  //         if (index >= 0) {
+  //           // sku 存在于 noChooseSkuIds
+  //           noChooseSkuIds.splice(index, 1);
+  //         }
+  //       }
+  //     });
+  //   }
+  //
+  //   // 当前已选择的规格大类
+  //   let chooseSkuKey = [];
+  //   if (!isChecked) {
+  //     // 当前已选择的规格大类
+  //     state.currentSkuArray.forEach((sku, key) => {
+  //       if (sku != '') {
+  //         // sku 为空是反选 填充的
+  //         chooseSkuKey.push(key);
+  //       }
+  //     });
+  //   } else {
+  //     // 当前点击选择的规格大类
+  //     chooseSkuKey = [pid];
+  //   }
+  //
+  //   for (let i in skuList) {
+  //     // 当前点击的规格，或者取消选择时候 已选中的规格 不进行处理
+  //     if (chooseSkuKey.indexOf(skuList[i]['id']) >= 0) {
+  //       continue;
+  //     }
+  //
+  //     for (let j in skuList[i]['children']) {
+  //       // 如果当前规格项 id 不存在于有库存的规格项中，则禁用
+  //       if (noChooseSkuIds.indexOf(skuList[i]['children'][j]['id'].toString()) >= 0) {
+  //         skuList[i]['children'][j]['disabled'] = false;
+  //       } else {
+  //         skuList[i]['children'][j]['disabled'] = true;
+  //       }
+  //     }
+  //   }
+  // }
   // 当前所选规格下，获取所有有库存的 skuPrice
-  function getCanUseSkuPrice() {
-    let newPrice = [];
-
-    for (let price of skuPrices.value) {
-      if (price.stock <= 0) {
-        // || price.stock < this.goodsNum		不判断是否大于当前选择数量，在 uni-number-box 判断，并且 取 stock 和 goods_num 的小值
-        continue;
-      }
-      var isOk = true;
-
-      state.currentSkuArray.forEach((sku) => {
-        // sku 不为空，并且，这个 条 skuPrice 没有被选中,则排除
-        if (sku.toString() != '' && price.goods_sku_id_arr.indexOf(sku.toString()) < 0) {
-          isOk = false;
-        }
-      });
-
-      if (isOk) {
-        newPrice.push(price);
-      }
-    }
-
-    return newPrice;
-  }
+  // function getCanUseSkuPrice() {
+  //   let newPrice = [];
+  //
+  //   for (let price of skuPrices.value) {
+  //     if (price.stock <= 0) {
+  //       // || price.stock < this.goodsNum		不判断是否大于当前选择数量，在 uni-number-box 判断，并且 取 stock 和 goods_num 的小值
+  //       continue;
+  //     }
+  //     var isOk = true;
+  //
+  //     state.currentSkuArray.forEach((sku) => {
+  //       // sku 不为空，并且，这个 条 skuPrice 没有被选中,则排除
+  //       if (sku.toString() != '' && price.goods_sku_id_arr.indexOf(sku.toString()) < 0) {
+  //         isOk = false;
+  //       }
+  //     });
+  //
+  //     if (isOk) {
+  //       newPrice.push(price);
+  //     }
+  //   }
+  //
+  //   return newPrice;
+  // }
   // 选择规格
-  function onSelectSku(pid, skuId) {
-    // 清空已选择
-    let isChecked = true; // 选中 or 取消选中
-    if (state.currentSkuArray[pid] != undefined && state.currentSkuArray[pid] == skuId) {
-      // 点击已被选中的，删除并填充 ''
-      isChecked = false;
-      state.currentSkuArray.splice(pid, 1, '');
+  // 选择规格
+  function onSelectSku(childName, pname) {
+    const dbChildName = state.currentSkuMap[pname];
+    if (!dbChildName || dbChildName !== childName) {
+      state.currentSkuMap[pname] = childName;
     } else {
-      // 选中
-      state.currentSkuArray[pid] = skuId;
+      delete state.currentSkuMap[pname];
     }
-
-    let chooseSkuId = []; // 选中的规格大类
-    state.currentSkuArray.forEach((sku) => {
-      if (sku != '') {
-        // sku 为空是反选 填充的
-        chooseSkuId.push(sku);
+    //判断是否符合选中sku
+    for (let i = 0; i < skuList.length; i++) {
+      const skus = JSON.parse(skuList[i].spData);
+      if (Object.keys(skus).length !== Object.keys(state.currentSkuMap).length) {
+        state.selectedSkuPrice = {};
+        return;
       }
-    });
-
-    // 当前所选规格下，所有可以选择的 skuPric
-    let newPrice = getCanUseSkuPrice();
-
-    // 判断所有规格大类是否选择完成
-    if (chooseSkuId.length == skuList.length && newPrice.length) {
-      newPrice[0].goods_num = state.selectedSkuPrice.goods_num || 1;
-      state.selectedSkuPrice = newPrice[0];
-    } else {
-      state.selectedSkuPrice = {};
+      const list = Object.keys(skus).filter(item => skus[item] !== state.currentSkuMap[item]);
+      if (!list || list.length < 1) {
+        state.selectedSkuPrice = {...skuList[i],buyNum:1,productName:props.goodsInfo.product.name};
+        return;
+      }
     }
-
-    // 改变规格项禁用状态
-    changeDisabled(isChecked, pid, skuId);
   }
 
-  changeDisabled(false);
+  // changeDisabled(false);
 </script>
 
 <style lang="scss" scoped>

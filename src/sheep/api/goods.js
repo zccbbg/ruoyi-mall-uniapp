@@ -4,26 +4,26 @@ export default {
   // 商品详情
   detail: (id, params = {}) =>
     request({
-      url: 'goods/goods/' + id,
+      url: 'no-auth/product/detail/' + id,
       method: 'GET',
-      params,
       custom: {
         showLoading: false,
         showError: false,
       },
     }),
 
-  // 商品列表
-  list: (params) =>
-    request({
-      url: 'goods/goods',
-      method: 'GET',
-      params,
-      custom: {
-        showLoading: false,
-        showError: false,
-      },
-    }),
+    // 商品列表
+    list: (data, params) =>
+        request({
+            url: 'no-auth/product/list',
+            method: 'post',
+            data,
+            params,
+            custom: {
+                showLoading: false,
+                showError: false,
+            },
+        }),
 
   // 商品查询
   ids: (params = {}) =>
@@ -76,4 +76,6 @@ export default {
       method: 'GET',
       params,
     }),
+
+
 };

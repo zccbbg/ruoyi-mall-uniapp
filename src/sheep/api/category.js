@@ -3,7 +3,7 @@ import request from '@/sheep/request';
 export default {
   list: (params) =>
     request({
-      url: 'category',
+      url: '/no-auth/category/all-categories',
       method: 'GET',
       params,
     }),

@@ -49,7 +49,7 @@ const http = new Request({
   timeout: 8000,
   method: 'GET',
   header: {
-    Accept: 'text/json',
+    Accept: 'application/json',
     'Content-Type': 'application/json;charset=UTF-8',
     platform: $platform.name,
   },

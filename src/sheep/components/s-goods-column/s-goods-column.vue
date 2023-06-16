@@ -67,7 +67,7 @@
       </view>
       <image
         class="md-img-box"
-        :src="sheep.$url.cdn(data.image)"
+        :src="sheep.$url.cdn(data.pic)"
         mode="widthFix"
         @load="calculatePanelHeight"
       ></image>
@@ -80,7 +80,7 @@
           class="md-goods-title ss-line-1"
           :style="[{ color: titleColor, width: titleWidth ? titleWidth + 'rpx' : '' }]"
         >
-          {{ data.title }}
+          {{ data.name }}
         </view>
         <view
           v-if="goodsFields.subtitle?.show"
@@ -402,11 +402,14 @@
   const salesAndStock = computed(() => {
     let text = [];
     if (props.goodsFields.sales?.show) {
-      text.push(formatSales(props.data.sales_show_type, props.data.sales));
+      text.push(formatSales(props.data.sales_show_type, 10000));
     }
-    if (props.goodsFields.stock?.show) {
-      text.push(formatStock(props.data.stock_show_type, props.data.stock));
-    }
+    // if (props.goodsFields.sales?.show) {
+    //   text.push(formatSales(props.data.sales_show_type, props.data.sales));
+    // }
+    // if (props.goodsFields.stock?.show) {
+    //   text.push(formatStock(props.data.stock_show_type, props.data.stock));
+    // }
     return text.join(' | ');
   });
 
