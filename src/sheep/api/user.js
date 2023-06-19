@@ -46,7 +46,7 @@ export default {
   // 短信注册
   smsRegister: (data) =>
     request({
-      url: '/user/api/user/smsRegister',
+      url: '/no-auth/h5/member/register',
       method: 'POST',
       data,
       custom: {

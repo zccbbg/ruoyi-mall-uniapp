@@ -30,9 +30,8 @@ export default {
   // 发送短信
   sendSms: (data) =>
     request({
-      url: 'sendSms',
-      method: 'POST',
-      data,
+      url: `/no-auth/sms/sendAliyun/` + data,
+      method: 'get',
       custom: {
         showSuccess: true,
         loadingMsg: '发送中',

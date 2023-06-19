@@ -28,7 +28,7 @@
               class="ss-reset-button code-btn code-btn-start"
               :disabled="state.isMobileEnd"
               :class="{ 'code-btn-end': state.isMobileEnd }"
-              @tap="getSmsCode('smsRegister', state.model.mobile)"
+              @tap="send()"
             >
               {{ getSmsTimer('smsRegister') }}
             </button>
@@ -89,6 +89,7 @@
       mobile: '', // 手机号
       code: '', // 验证码
       password: '', // 密码
+      uuid: '', //uuid
     },
     rules: {
       code,
@@ -111,13 +112,25 @@
       return;
     }
 
-    const { error } = await sheep.$api.user.smsRegister({
+    const res = await sheep.$api.user.smsRegister({
       ...state.model,
       shareInfo: uni.getStorageSync('shareLog') || {},
     });
-    if (error === 0) {
+    if (res.result) {
       closeAuthModal();
     }
+    uni.showToast({
+      title: res.message,
+      icon: 'none',
+      mask: true,
+    });
+
+  }
+
+  // 发送验证码
+  async function send(){
+    await getSmsCode('smsRegister', state.model.mobile)
+    state.model.uuid = sheep.$store('user').getUUID()
   }
 </script>
 

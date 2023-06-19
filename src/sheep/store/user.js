@@ -31,6 +31,8 @@ const defaultNumData = {
   },
 };
 
+const defaultUUID = ''
+
 const user = defineStore({
   id: 'user',
   state: () => ({
@@ -39,6 +41,7 @@ const user = defineStore({
     numData: cloneDeep(defaultNumData), // 用户其他数据
     agentInfo: {}, // 分销商信息
     lastUpdateTime: 0, // 上次更新时间
+    smsUUID: defaultUUID //sms的uuid
   }),
 
   actions: {
@@ -144,6 +147,16 @@ const user = defineStore({
 
       return !this.isLogin;
     },
+
+    // 获取uuid
+    getUUID(){
+      return this.smsUUID
+    },
+
+    //设置UUID
+    setUUID(uuid){
+      this.smsUUID = uuid
+    }
   },
   persist: {
     enabled: true,

@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 import { ref } from 'vue';
 import test from '@/sheep/helper/test.js';
 import $api from '@/sheep/api';
+import {Base64} from 'js-base64'
+import sheep from '@/sheep';
 
 // 打开授权弹框
 export function showAuthModal(type = 'accountLogin') {
@@ -79,16 +81,26 @@ export function getSmsCode(event, mobile = '') {
     $helper.toast('手机号码格式不正确');
     return;
   }
-
+  const encodePhone = Base64.encode(mobile)
   // 发送验证码 + 更新上次发送验证码时间
-  $api.app.sendSms({ mobile, event }).then((res) => {
-    if (res.error === 0) {
+  var uuid = ''
+  $api.app.sendSms(encodePhone).then((res) => {
+    if (res.isSuccess){
       modalStore.$patch((state) => {
         state.lastTimer[event] = dayjs().unix();
       });
+      sheep.$store('user').setUUID(res.uuid)
+      uni.showToast({
+        title: '发送成功',
+        icon: 'none',
+        mask: true,
+      });
     }
-  });
+    // if (res.error === 0) {
 
+    // }
+  });
+  return uuid;
 }
 
 // 获取短信验证码倒计时 -- 60秒
