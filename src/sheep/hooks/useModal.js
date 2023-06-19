@@ -85,10 +85,12 @@ export function getSmsCode(event, mobile = '') {
   // 发送验证码 + 更新上次发送验证码时间
   var uuid = ''
   $api.app.sendSms(encodePhone).then((res) => {
-    if (res.isSuccess){
+    console.log('res',res)
+    if (res.success){
       modalStore.$patch((state) => {
         state.lastTimer[event] = dayjs().unix();
       });
+      console.log('res',res.uuid)
       sheep.$store('user').setUUID(res.uuid)
       uni.showToast({
         title: '发送成功',
