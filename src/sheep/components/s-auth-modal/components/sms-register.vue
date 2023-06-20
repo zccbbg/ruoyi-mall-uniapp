@@ -71,6 +71,7 @@
   import sheep from '@/sheep';
   import { code, mobile, password } from '@/sheep/validate/form';
   import { showAuthModal, closeAuthModal, getSmsCode, getSmsTimer } from '@/sheep/hooks/useModal';
+  import {Base64} from 'js-base64'
 
   const props = defineProps({
     agreeStatus: {
@@ -112,24 +113,29 @@
       return;
     }
     state.model.uuid = sheep.$store('user').getUUID()
-    const res = await sheep.$api.user.smsRegister({
+    sheep.$api.user.smsRegister({
       ...state.model,
       shareInfo: uni.getStorageSync('shareLog') || {},
-    });
-    if (res.ifSuccess) {
+    }).then((res) => {
+      console.log('注册result：', res)
       closeAuthModal();
-    }
-    uni.showToast({
-      title: res.message,
-      icon: 'none',
-      mask: true,
+      uni.showToast({
+        title: '注册成功',
+        icon: 'none',
+        mask: true,
+      });
     });
-
   }
 
   // 发送验证码
   async function send(){
-    await getSmsCode('smsRegister', state.model.mobile)
+    sheep.$api.user.validatePhone(Base64.encode(state.model.mobile)).then((res) => {
+      console.log('res:',res)
+      if (res && res.ifSuccess){
+        getSmsCode('smsRegister', state.model.mobile)
+      }
+    })
+
   }
 </script>
 

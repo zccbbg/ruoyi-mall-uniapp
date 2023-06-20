@@ -85,8 +85,8 @@ export function getSmsCode(event, mobile = '') {
   // 发送验证码 + 更新上次发送验证码时间
   var uuid = ''
   $api.app.sendSms(encodePhone).then((res) => {
-    console.log('res',res)
-    if (res.ifSuccess){
+    console.log('sms的res：', res)
+    if (res.success){
       modalStore.$patch((state) => {
         state.lastTimer[event] = dayjs().unix();
       });

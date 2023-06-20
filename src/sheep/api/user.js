@@ -54,6 +54,12 @@ export default {
         loadingMsg: '正在注册',
       },
     }),
+  // 注册校验手机号
+  validatePhone: (data) =>
+    request({
+        url: `/no-auth/h5/member/validate/` + data,
+        method: 'get'
+    }),
   // 重置密码
   resetPassword: (data) =>
     request({
