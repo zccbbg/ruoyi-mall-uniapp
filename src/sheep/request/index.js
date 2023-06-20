@@ -98,8 +98,10 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (response) => {
     // 自动设置登陆令牌
-    if (response.header.authorization || response.header.Authorization) {
-      $store('user').setToken(response.header.authorization || response.header.Authorization);
+    if (response.config.url.includes('h5/account/login') ||
+    response.config.url.includes('h5/sms/login') ||
+    response.config.url.includes('h5/register')) {
+      $store('user').setToken(response.data.token);
     }
 
     response.config.custom.showLoading && closeLoading();

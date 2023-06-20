@@ -65,7 +65,7 @@
   import sheep from '@/sheep';
   import { code, mobile } from '@/sheep/validate/form';
   import { showAuthModal, closeAuthModal, getSmsCode, getSmsTimer } from '@/sheep/hooks/useModal';
-  import throttle from '@/sheep/helper/throttle';
+  import {Base64} from 'js-base64'
 
   const smsLoginRef = ref(null);
 
@@ -83,6 +83,7 @@
     model: {
       mobile: '', // 手机号
       code: '', // 验证码
+      uuid: null // uuid
     },
     rules: {
       code,
@@ -103,8 +104,11 @@
       sheep.$helper.toast('请勾选同意');
       return;
     }
-    const { error } = await sheep.$api.user.smsLogin(state.model);
-    if (error === 0) {
+    state.model.uuid = sheep.$store('user').getUUID()
+    const data = Base64.encode(JSON.stringify(state.model))
+    const res = await sheep.$api.user.smsLogin(data);
+    if (res){
+      sheep.$helper.toast('登录成功')
       closeAuthModal();
     }
   }

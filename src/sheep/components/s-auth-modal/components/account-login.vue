@@ -21,8 +21,8 @@
       labelWidth="140"
       labelAlign="center"
     >
-      <uni-forms-item name="account" label="账号">
-        <uni-easyinput placeholder="请输入账号" v-model="state.model.account" :inputBorder="false">
+      <uni-forms-item name="mobile" label="账号">
+        <uni-easyinput placeholder="请输入账号" v-model="state.model.mobile" :inputBorder="false">
           <template v-slot:right>
             <button class="ss-reset-button forgot-btn" @tap="showAuthModal('resetPassword')">
               忘记密码
@@ -56,6 +56,8 @@
   import sheep from '@/sheep';
   import { account, password } from '@/sheep/validate/form';
   import { showAuthModal, closeAuthModal } from '@/sheep/hooks/useModal';
+  import {Base64} from 'js-base64'
+
 
   const accountLoginRef = ref(null);
 
@@ -68,7 +70,7 @@
   // 数据
   const state = reactive({
     model: {
-      account: '', // 账号
+      mobile: '', // 账号
       password: '', // 密码
     },
     rules: {
@@ -94,9 +96,11 @@
     }
 
     // 提交数据
-    sheep.$api.user.accountLogin(state.model).then((res) => {
-      if (res.error === 0) {
-        // sheep.$store('user').getInfo();
+    const data = Base64.encode(JSON.stringify(state.model))
+    sheep.$api.user.accountLogin(data).then((res) => {
+      if (res){
+        console.log('res:',res)
+        sheep.$helper.toast('登录成功')
         closeAuthModal();
       }
     });

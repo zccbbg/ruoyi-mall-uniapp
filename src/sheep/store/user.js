@@ -12,7 +12,7 @@ const defaultUserInfo = {
   avatar: '', // 头像
   nickname: '', // 昵称
   gender: 0, // 性别
-  mobile: '', // 手机号
+  phone: '', // 手机号
   money: '--', // 余额
   commission: '--', // 佣金
   score: '--', // 积分
@@ -47,8 +47,8 @@ const user = defineStore({
   actions: {
     // 获取个人信息
     async getInfo() {
-      const { error, data } = await userApi.profile();
-      if (error !== 0) return;
+      const data  = await userApi.profile();
+      if (!data) return;
       this.userInfo = data;
 
       return Promise.resolve(data);

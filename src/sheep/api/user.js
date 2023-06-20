@@ -4,7 +4,7 @@ import $platform from '@/sheep/platform';
 export default {
   profile: () =>
     request({
-      url: '/user/api/user/profile',
+      url: '/h5/member/info',
       method: 'GET',
       custom: {
         showLoading: false,
@@ -22,22 +22,22 @@ export default {
       data,
     }),
   // 账号登录
-  accountLogin: (data) =>
+  accountLogin: (params) =>
     request({
-      url: '/user/api/user/accountLogin',
-      method: 'POST',
-      data,
+      url: '/h5/account/login',
+      method: 'post',
+      data: params,
       custom: {
         showSuccess: true,
         loadingMsg: '登录中',
       },
     }),
   // 短信登录
-  smsLogin: (data) =>
+  smsLogin: (params) =>
     request({
-      url: '/user/api/user/smsLogin',
-      method: 'POST',
-      data,
+      url: '/h5/sms/login',
+      method: 'post',
+      data: params,
       custom: {
         showSuccess: true,
         loadingMsg: '登录中',
@@ -46,7 +46,7 @@ export default {
   // 短信注册
   smsRegister: (data) =>
     request({
-      url: '/no-auth/h5/member/register',
+      url: '/h5/register',
       method: 'POST',
       data,
       custom: {
@@ -57,7 +57,7 @@ export default {
   // 注册校验手机号
   validatePhone: (data) =>
     request({
-        url: `/no-auth/h5/member/validate/` + data,
+        url: `/h5/validate/` + data,
         method: 'get'
     }),
   // 重置密码
