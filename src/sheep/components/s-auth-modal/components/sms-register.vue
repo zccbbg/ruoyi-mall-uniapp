@@ -111,13 +111,12 @@
       sheep.$helper.toast('请勾选同意');
       return;
     }
-    console.log('store的uuid：', sheep.$store('user').getUUID())
     state.model.uuid = sheep.$store('user').getUUID()
     const res = await sheep.$api.user.smsRegister({
       ...state.model,
       shareInfo: uni.getStorageSync('shareLog') || {},
     });
-    if (res.result) {
+    if (res.ifSuccess) {
       closeAuthModal();
     }
     uni.showToast({

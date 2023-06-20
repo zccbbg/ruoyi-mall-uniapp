@@ -86,11 +86,10 @@ export function getSmsCode(event, mobile = '') {
   var uuid = ''
   $api.app.sendSms(encodePhone).then((res) => {
     console.log('res',res)
-    if (res.success){
+    if (res.ifSuccess){
       modalStore.$patch((state) => {
         state.lastTimer[event] = dayjs().unix();
       });
-      console.log('res',res.uuid)
       sheep.$store('user').setUUID(res.uuid)
       uni.showToast({
         title: '发送成功',
@@ -98,9 +97,6 @@ export function getSmsCode(event, mobile = '') {
         mask: true,
       });
     }
-    // if (res.error === 0) {
-
-    // }
   });
   return uuid;
 }
