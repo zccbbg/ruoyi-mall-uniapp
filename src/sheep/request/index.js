@@ -105,26 +105,49 @@ http.interceptors.response.use(
     }
 
     response.config.custom.showLoading && closeLoading();
-    if (response.data.error !== 0) {
-      if (response.config.custom.showError)
+    const {data, statusCode, errMsg} = response
+    if (statusCode && statusCode !== 200){
+      let errorMsg = errMsg
+      if (statusCode === 401){
+        //无权限
+        const userStore = $store('user')
+        const isLogin = userStore.isLogin
+        if (isLogin){
+          errorMsg = '您的登录已过期'
+        }else {
+          errorMsg = '请先登录'
+        }
+        userStore.logout(true)
+        showAuthModal()
+      }
+      if (response.config.custom.showError){
         uni.showToast({
-          title: response.data.msg || '服务器开小差啦,请稍后再试~',
+          title: errorMessage || '服务器开小差啦,请稍后再试~',
           icon: 'none',
           mask: true,
         });
-      return Promise.resolve(response.data);
+      }
     }
-    if (
-      response.data.error === 0 &&
-      response.data.msg !== '' &&
-      response.config.custom.showSuccess
-    ) {
-      uni.showToast({
-        title: response.config.custom.successMsg || response.data.msg,
-        icon: 'none',
-      });
-    }
-    return Promise.resolve(response.data);
+    return Promise.resolve(data);
+    // if (response.data.error !== 0) {
+    //   if (response.config.custom.showError)
+    //     uni.showToast({
+    //       title: response.data.msg || '服务器开小差啦,请稍后再试~',
+    //       icon: 'none',
+    //       mask: true,
+    //     });
+    //   return Promise.resolve(response.data);
+    // }
+    // if (
+    //   response.data.error === 0 &&
+    //   response.data.msg !== '' &&
+    //   response.config.custom.showSuccess
+    // ) {
+    //   uni.showToast({
+    //     title: response.config.custom.successMsg || response.data.msg,
+    //     icon: 'none',
+    //   });
+    // }
   },
   (error) => {
     const userStore = $store('user');

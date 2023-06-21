@@ -7,7 +7,7 @@
           <image
             class="avatar-img"
             :src="
-              isLogin
+              isLogin && userInfo.avatar
                 ? sheep.$url.cdn(userInfo.avatar)
                 : sheep.$url.static('/static/img/shop/default_avatar.png')
             "

@@ -40,19 +40,18 @@
               </label>
             </radio-group>
             <s-goods-item
-              :title="item.goods.title"
-              :img="item.sku_price.image || item.goods.image"
-              :price="item.sku_price.price"
-              :skuText="item.sku_price.goods_sku_text"
+              :title="item.productName"
+              :img="item.pic"
+              :price="item.price"
+              :skuText="item.spDataValue"
               priceColor="#FF3000"
               :titleWidth="400"
             >
               <template v-if="!state.editMode" v-slot:tool>
                 <su-number-box
                   :min="0"
-                  :max="item.sku_price.stock"
                   :step="1"
-                  v-model="item.goods_num"
+                  v-model="item.quantity"
                   @change="onNumberChange($event, item)"
                 ></su-number-box>
               </template>
@@ -105,6 +104,7 @@
 <script setup>
   import sheep from '@/sheep';
   import { computed, reactive, unref } from 'vue';
+  import {onLoad} from "@dcloudio/uni-app";
 
   const sys_navBar = sheep.$platform.navbar;
   const cart = sheep.$store('cart');
@@ -157,14 +157,18 @@
       return;
     }
     cart.update({
-      goods_id: cartItem.goods_id,
-      goods_num: e,
-      goods_sku_price_id: cartItem.goods_sku_price_id,
+      id: cartItem.id,
+      quantity: e,
     });
   }
   async function onDelete() {
     cart.delete(state.selectedIds);
   }
+
+  onLoad(  () => {
+    console.log('state',state)
+  } )
+
 </script>
 
 <style lang="scss" scoped>

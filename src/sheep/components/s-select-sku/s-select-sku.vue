@@ -70,7 +70,7 @@
               :min="1"
 
               :step="1"
-              v-model="state.selectedSkuPrice.goods_num"
+              v-model="state.selectedSkuPrice.buyNum"
             ></su-number-box>
           </view>
         </scroll-view>
@@ -175,6 +175,7 @@
       // if (state.selectedSkuPrice.stock <= 0) {
       //   sheep.$helper.toast('库存不足');
       // } else {
+      console.log('加入购物车的商品：', state.selectedSkuPrice)
         emits('addCart', state.selectedSkuPrice);
       // }
     } else {

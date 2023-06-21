@@ -15,7 +15,7 @@ const cart = defineStore({
       if (!state.selectedIds.length) return price.toFixed(2);
       state.list.forEach((item) => {
         price += state.selectedIds.includes(item.id)
-          ? Number(item.sku_price.price) * item.goods_num
+          ? Number(item.price) * item.quantity
           : 0;
       });
       return price.toFixed(2);
@@ -24,42 +24,48 @@ const cart = defineStore({
   actions: {
     // 获取购物车列表
     async getList() {
-      const { data, error } = await cartApi.list();
-      if (error === 0) {
-        this.list = data;
-      }
+      const list = await cartApi.list();
+      list.forEach(it => {
+        let str = "";
+        const obj = JSON.parse(it.spData);
+        Object.keys(obj).forEach(key => {
+          str += key + "：" + obj[key] + " ";
+        });
+        it.spDataValue = str;
+      });
+      this.list = list;
     },
     // 添加购物车
     async add(goodsInfo) {
-      const { error } = await cartApi.append({
-        goods_id: goodsInfo.goods_id,
-        goods_num: goodsInfo.goods_num,
-        goods_sku_price_id: goodsInfo.id,
+      const res = await cartApi.append({
+        productId: goodsInfo.productId,
+        skuId: goodsInfo.id,
+        productName: goodsInfo.productName,
+        pic: goodsInfo.pic,
+        quantity: goodsInfo.buyNum,
+        spData: goodsInfo.spData
       });
-      if (error === 0) {
+      if (res > 0) {
         this.getList();
       }
     },
 
     // 更新购物车
     async update(goodsInfo) {
-      const { error } = await cartApi.update({
-        goods_id: goodsInfo.goods_id,
-        goods_num: goodsInfo.goods_num,
-        goods_sku_price_id: goodsInfo.goods_sku_price_id,
-      });
-      if (error === 0) {
-        // this.getList();
+      console.log('goodsInfo',goodsInfo)
+      const res = await cartApi.update(goodsInfo);
+      if (res > 0) {
+        this.getList();
       }
     },
 
     // 移除购物车
     async delete(ids) {
-      if (typeof ids === 'array') {
+      if (ids instanceof Array) {
         ids = ids.join(',');
       }
-      const { error } = await cartApi.delete(ids);
-      if (error === 0) {
+      const res = await cartApi.delete(ids);
+      if (res > 0) {
         this.selectAll(false);
         this.getList();
       }
