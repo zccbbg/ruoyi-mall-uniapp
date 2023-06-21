@@ -104,7 +104,7 @@
 <script setup>
   import sheep from '@/sheep';
   import { computed, reactive, unref } from 'vue';
-  import {onLoad} from "@dcloudio/uni-app";
+  import {onLoad, onShow} from "@dcloudio/uni-app";
 
   const sys_navBar = sheep.$platform.navbar;
   const cart = sheep.$store('cart');
@@ -165,10 +165,9 @@
     cart.delete(state.selectedIds);
   }
 
-  onLoad(  () => {
-    console.log('state',state)
-  } )
-
+  onShow( () => {
+    sheep.$store('cart').getList()
+  })
 </script>
 
 <style lang="scss" scoped>
