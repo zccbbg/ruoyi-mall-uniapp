@@ -165,9 +165,6 @@
     cart.delete(state.selectedIds);
   }
 
-  onShow( () => {
-    sheep.$store('cart').getList()
-  })
 </script>
 
 <style lang="scss" scoped>
