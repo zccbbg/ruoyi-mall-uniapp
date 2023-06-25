@@ -7,53 +7,53 @@
       border
       class="form-box"
     >
-      <view class="ss-flex ss-row-center ss-col-center ss-p-t-60 ss-p-b-0 bg-white">
-        <view class="header-box-content">
-          <su-image
-            class="content-img"
-            isPreview
-            :current="0"
-            :src="sheep.$url.cdn(state.model.avatar)"
-            :height="160"
-            :width="160"
-            :radius="80"
-            mode="scaleToFill"
-          ></su-image>
-          <view class="avatar-action">
-            <!-- #ifdef MP -->
-            <button
-              class="ss-reset-button avatar-action-btn"
-              open-type="chooseAvatar"
-              @chooseavatar="onChooseAvatar"
-              >修改</button
-            >
-            <!-- #endif -->
-            <!-- #ifndef MP -->
-            <button class="ss-reset-button avatar-action-btn" @tap="onChangeAvatar">修改</button>
-            <!-- #endif -->
-          </view>
-        </view>
-      </view>
+<!--      <view class="ss-flex ss-row-center ss-col-center ss-p-t-60 ss-p-b-0 bg-white">-->
+<!--        <view class="header-box-content">-->
+<!--          <su-image-->
+<!--            class="content-img"-->
+<!--            isPreview-->
+<!--            :current="0"-->
+<!--            :src="sheep.$url.cdn(state.model.avatar)"-->
+<!--            :height="160"-->
+<!--            :width="160"-->
+<!--            :radius="80"-->
+<!--            mode="scaleToFill"-->
+<!--          ></su-image>-->
+<!--          <view class="avatar-action">-->
+<!--            &lt;!&ndash; #ifdef MP &ndash;&gt;-->
+<!--            <button-->
+<!--              class="ss-reset-button avatar-action-btn"-->
+<!--              open-type="chooseAvatar"-->
+<!--              @chooseavatar="onChooseAvatar"-->
+<!--              >修改</button-->
+<!--            >-->
+<!--            &lt;!&ndash; #endif &ndash;&gt;-->
+<!--            &lt;!&ndash; #ifndef MP &ndash;&gt;-->
+<!--            <button class="ss-reset-button avatar-action-btn" @tap="onChangeAvatar">修改</button>-->
+<!--            &lt;!&ndash; #endif &ndash;&gt;-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
 
       <view class="bg-white ss-p-x-30">
-        <uni-forms-item name="username" label="用户名" @tap="onChangeUsername" class="label-box">
-          <uni-easyinput
-            v-model="userInfo.username"
-            disabled
-            :inputBorder="false"
-            :styles="{ disableColor: '#fff' }"
-            placeholder="设置用户名"
-            :clearable="false"
-            :placeholderStyle="placeholderStyle"
-          >
-            <template v-slot:right>
-              <su-radio class="ss-flex" v-if="userInfo.verification?.username" :modelValue="true" />
-              <button v-else class="ss-reset-button">
-                <text class="_icon-forward" style="color: #bbbbbb; font-size: 26rpx"></text>
-              </button>
-            </template>
-          </uni-easyinput>
-        </uni-forms-item>
+<!--        <uni-forms-item name="username" label="用户名" @tap="onChangeUsername" class="label-box">-->
+<!--          <uni-easyinput-->
+<!--            v-model="userInfo.username"-->
+<!--            disabled-->
+<!--            :inputBorder="false"-->
+<!--            :styles="{ disableColor: '#fff' }"-->
+<!--            placeholder="设置用户名"-->
+<!--            :clearable="false"-->
+<!--            :placeholderStyle="placeholderStyle"-->
+<!--          >-->
+<!--            <template v-slot:right>-->
+<!--              <su-radio class="ss-flex" v-if="userInfo.verification?.username" :modelValue="true" />-->
+<!--              <button v-else class="ss-reset-button">-->
+<!--                <text class="_icon-forward" style="color: #bbbbbb; font-size: 26rpx"></text>-->
+<!--              </button>-->
+<!--            </template>-->
+<!--          </uni-easyinput>-->
+<!--        </uni-forms-item>-->
 
         <uni-forms-item name="nickname" label="昵称">
           <uni-easyinput
@@ -85,7 +85,7 @@
 
         <uni-forms-item name="mobile" label="手机号" @tap="onChangeMobile">
           <uni-easyinput
-            v-model="userInfo.mobile"
+            v-model="state.model.phone"
             placeholder="请绑定手机号"
             :inputBorder="false"
             disabled
@@ -106,7 +106,7 @@
 
         <uni-forms-item name="password" label="登录密码" @tap="onSetPassword">
           <uni-easyinput
-            v-model="userInfo.password"
+            v-model="state.model.password"
             :placeholder="userInfo.verification?.password ? '修改登录密码' : '点击设置登录密码'"
             :inputBorder="false"
             :styles="{ disableColor: '#fff' }"

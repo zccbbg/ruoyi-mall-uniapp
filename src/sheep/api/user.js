@@ -154,51 +154,53 @@ export default {
       method: 'POST',
       data,
     }),
+    address: {
+        default: () =>
+            request({
+                url: 'h5/member/address/default',
+                method: 'GET',
+                custom: {
+                    showError: false,
+                },
+            }),
+        list: () =>
+            request({
+                url: 'h5/member/address/list',
+                method: 'GET',
+                custom: {
+                    showError: false,
+                },
+            }),
+        create: (data) =>
+            request({
+                url: 'h5/member/address/create',
+                method: 'POST',
+                data,
+                custom: {
+                    showSuccess: true,
+                },
+            }),
+        update: (data) =>
+            request({
+                url: 'h5/member/address/update',
+                method: 'PUT',
+                data,
+                custom: {
+                    showSuccess: true,
+                },
+            }),
+        detail: (id) =>
+            request({
+                url: 'h5/member/address/' + id,
+                method: 'GET',
+            }),
+        delete: (id) =>
+            request({
+                url: 'h5/member/address/' + id,
+                method: 'DELETE',
+            }),
+    },
 
-  address: {
-    default: () =>
-      request({
-        url: 'user/address/default',
-        method: 'GET',
-        custom: {
-          showError: false,
-        },
-      }),
-    list: () =>
-      request({
-        url: 'user/address',
-        method: 'GET',
-        custom: {},
-      }),
-    create: (data) =>
-      request({
-        url: 'user/address',
-        method: 'POST',
-        data,
-        custom: {
-          showSuccess: true,
-        },
-      }),
-    update: (id, data) =>
-      request({
-        url: 'user/address/' + id,
-        method: 'PUT',
-        data,
-        custom: {
-          showSuccess: true,
-        },
-      }),
-    detail: (id) =>
-      request({
-        url: 'user/address/' + id,
-        method: 'GET',
-      }),
-    delete: (id) =>
-      request({
-        url: 'user/address/' + id,
-        method: 'DELETE',
-      }),
-  },
   invoice: {
     list: () =>
       request({

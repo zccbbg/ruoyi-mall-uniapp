@@ -9,13 +9,13 @@
           class="ss-m-r-10"
           size="small"
           custom-style="background-color: var(--ui-BG-Main); border-color: var(--ui-BG-Main); color: #fff;"
-          v-if="props.item.is_default"
+          v-if="props.item.isDefault === 1"
           text="默认"
         ></uni-tag>
-        {{ props.item.province_name }} {{ props.item.city_name }} {{ props.item.district_name }}
+        <text class="address-text">{{ props.item.name }} {{ props.item.phone }}</text>
       </view>
-      <view class="address-text">{{ props.item.address }}</view>
-      <view class="person-text">{{ props.item.consignee }} {{ props.item.mobile }}</view>
+      <view class="address-text">{{ props.item.province }} {{ props.item.city }} {{ props.item.district }}</view>
+      <view class="person-text">{{ props.item.detailAddress }}</view>
     </view>
     <view v-else><view class="address-text ss-m-b-10">请选择收货地址</view></view>
     <slot>

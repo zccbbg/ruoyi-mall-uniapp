@@ -213,6 +213,41 @@ export const address = {
   ],
 };
 
+export const detailAddress = {
+  rules: [
+    {
+      required: true,
+      errorMessage: '请输入详细地址',
+    },
+  ],
+};
+
+export const name = {
+  rules: [
+    {
+      required: true,
+      errorMessage: '请输入收货人姓名',
+    },
+  ],
+};
+
+export const phone = {
+  rules: [
+    {
+      required: true,
+      errorMessage: '请输入手机号',
+    },
+    {
+      validateFunction: function (rule, value, data, callback) {
+        if (!test.mobile(value)) {
+          callback('手机号码格式不正确');
+        }
+        return true;
+      },
+    },
+  ],
+};
+
 export default {
   mobile,
   alipayAccount,
@@ -224,7 +259,10 @@ export default {
   account,
   consignee,
   address,
+  detailAddress,
   region,
   taxNo,
   taxName,
+  name,
+  phone
 };

@@ -3,7 +3,7 @@ import request from '@/sheep/request';
 export default {
   area: () =>
     request({
-      url: 'data/area',
+      url: '/h5/area',
       method: 'GET',
     }),
   faq: () =>
