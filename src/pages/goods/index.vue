@@ -191,18 +191,20 @@
 
   // 立即购买
   function onBuy(e) {
+    console.log('下单物品：',e)
     sheep.$router.go('/pages/order/confirm', {
       data: JSON.stringify({
         order_type: 'goods',
         goods_list: [
           {
-            goods_id: e.goods_id,
-            goods_num: e.goods_num,
-            goods_sku_price_id: e.id,
+            goods_id: e.productId,
+            goods_num: e.buyNum,
+            skuId: e.id
           },
         ],
       }),
     });
+    state.showSelectSku = false
   }
   //营销活动
   function onActivity() {

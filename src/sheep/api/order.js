@@ -43,7 +43,7 @@ export default {
   // 计算订单信息
   calc: (data) =>
     request({
-      url: 'order/order/calc',
+      url: '/h5/order/addOrderCheck',
       method: 'POST',
       data,
     }),

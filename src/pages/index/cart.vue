@@ -133,9 +133,9 @@
     state.selectedList = state.list.filter((item) => state.selectedIds.includes(item.id));
     state.selectedList.map((item) => {
       goods_list.push({
-        goods_id: item.goods_id,
-        goods_num: item.goods_num,
-        goods_sku_price_id: item.goods_sku_price_id,
+        goods_id: item.productId,
+        goods_num: item.quantity,
+        skuId: item.skuId
       });
     });
     if (goods_list.length === 0) {
