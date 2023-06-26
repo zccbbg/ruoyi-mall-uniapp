@@ -50,7 +50,7 @@ export default {
   // 创建订单
   create: (data) =>
     request({
-      url: 'order/order/create',
+      url: '/h5/order/add',
       method: 'POST',
       data,
     }),

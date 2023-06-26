@@ -228,41 +228,51 @@
       sheep.$helper.toast('请选择收货地址');
       return;
     }
-
-    if (exchangeNow.value) {
-      uni.showModal({
-        title: '提示',
-        content: '确定使用积分立即兑换?',
-        cancelText: '再想想',
-        success: async function (res) {
-          if (res.confirm) {
-            submitOrder();
-          }
-        },
-      });
-    } else {
-      submitOrder();
-    }
+    submitOrder();
+    // if (exchangeNow.value) {
+    //   uni.showModal({
+    //     title: '提示',
+    //     content: '确定使用积分立即兑换?',
+    //     cancelText: '再想想',
+    //     success: async function (res) {
+    //       if (res.confirm) {
+    //         submitOrder();
+    //       }
+    //     },
+    //   });
+    // } else {
+    // }
   }
 
   // 创建订单&跳转
   async function submitOrder() {
-    const { error, data } = await sheep.$api.order.create(state.orderPayload);
-    if (error === 0) {
+    const params = {
+      addressId:state.orderPayload.address_id,
+      note: state.orderPayload.remark,
+      from: state.orderPayload.from,
+      payType: 2,
+      skuList: state.orderInfo.skuList
+    }
+    console.log('订单params：', params)
+    const res = await sheep.$api.order.create(params);
+      sheep.$helper.toast('下单成功')
       // 更新购物车列表
       if (state.orderPayload.from === 'cart') {
         sheep.$store('cart').getList();
       }
-      if (exchangeNow.value) {
-        sheep.$router.redirect('/pages/pay/result', {
-          orderSN: data.order_sn,
-        });
-      } else {
-        sheep.$router.redirect('/pages/pay/index', {
-          orderSN: data.order_sn,
-        });
-      }
-    }
+      sheep.$router.redirect('/pages/pay/result', {
+        orderSN: res,
+        orderType: 'memberConsumer',
+      });
+      // if (exchangeNow.value) {
+      //   sheep.$router.redirect('/pages/pay/result', {
+      //     orderSN: data.order_sn,
+      //   });
+      // } else {
+      //   sheep.$router.redirect('/pages/pay/index', {
+      //     orderSN: data.order_sn,
+      //   });
+      // }
   }
 
   // 检查库存&计算订单价格

@@ -19,28 +19,20 @@
       <view class="tip-text ss-m-b-30" v-if="payResult == 'failed'">支付失败</view>
       <view class="tip-text ss-m-b-30" v-if="payResult == 'closed'">该订单已关闭</view>
       <view class="tip-text ss-m-b-30" v-if="payResult == 'waiting'">检测支付结果...</view>
-      <view class="pay-total-num ss-flex" v-if="payResult === 'success'">
-        <view v-if="Number(state.orderInfo.pay_fee) > 0">￥{{ state.orderInfo.pay_fee }}</view>
-        <view v-if="state.orderInfo.score_amount && Number(state.orderInfo.pay_fee) > 0">+</view>
-        <view class="price-text ss-flex ss-col-center" v-if="state.orderInfo.score_amount">
-          <image
-            :src="sheep.$url.static('/static/img/shop/goods/score1.svg')"
-            class="score-img"
-          ></image>
-          <view>{{ state.orderInfo.score_amount }}</view>
-        </view>
+      <view class="pay-total-num ss-flex" v-if="payResult === 'success' && state.orderType !== 'memberConsumer'">
+          <view>{{ state.totalAmount }}</view>
       </view>
       <view class="btn-box ss-flex ss-row-center ss-m-t-50">
         <button class="back-btn ss-reset-button" @tap="sheep.$router.go('/pages/index/index')">
           返回首页
         </button>
-        <button
-          class="check-btn ss-reset-button"
-          v-if="payResult === 'failed'"
-          @tap="sheep.$router.redirect('/pages/pay/index', { orderSN: state.orderId })"
-        >
-          重新支付
-        </button>
+<!--        <button-->
+<!--          class="check-btn ss-reset-button"-->
+<!--          v-if="payResult === 'failed'"-->
+<!--          @tap="sheep.$router.redirect('/pages/pay/index', { orderSN: state.orderId })"-->
+<!--        >-->
+<!--          重新支付-->
+<!--        </button>-->
         <button
           class="check-btn ss-reset-button"
           v-if="payResult === 'success'"
@@ -48,27 +40,7 @@
         >
           查看订单
         </button>
-        <button
-          class="check-btn ss-reset-button"
-          v-if="
-            payResult === 'success' &&
-            ['groupon', 'groupon_ladder'].includes(state.orderInfo.activity_type)
-          "
-          @tap="sheep.$router.redirect('/pages/activity/groupon/order')"
-        >
-          我的拼团
-        </button>
       </view>
-      <!-- #ifdef MP -->
-      <view class="subscribe-box ss-flex ss-m-t-44">
-        <image
-          class="subscribe-img"
-          :src="sheep.$url.static('/static/img/shop/order/cargo.png')"
-        ></image>
-        <view class="subscribe-title ss-m-r-48 ss-m-l-16">获取实时发货信息与订单状态</view>
-        <view class="subscribe-start" @tap="subscribeMessage">立即订阅</view>
-      </view>
-      <!-- #endif -->
     </view>
   </s-layout>
 </template>
@@ -79,8 +51,9 @@
   import sheep from '@/sheep';
 
   const state = reactive({
+    mode: '支付成功',
     orderId: 0,
-    orderType: 'goods',
+    orderType: 'memberConsumer',
     result: 'unpaid', // 支付状态
     orderInfo: {}, // 订单详情
     counter: 0, // 获取结果次数
@@ -102,6 +75,9 @@
     }
   });
   async function getOrderInfo(orderId) {
+    //直接设置支付成功
+    state.result = "paid"
+    return
     let checkPayResult;
     state.counter++;
     if (state.orderType === 'recharge') {
