@@ -170,7 +170,7 @@ const onSave = async () => {
   } else {
     res = await sheep.$api.user.address.create(params);
   }
-  if (res.code === 200) {
+  if (res > 0) {
     sheep.$router.back();
   }
 };
@@ -194,7 +194,7 @@ onLoad(async (options) => {
     res = await sheep.$api.user.address.detail(options.id);
     state.model = {
       ...state.model,
-      ...res.data,
+      ...res,
     };
   }
 

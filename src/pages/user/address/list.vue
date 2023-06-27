@@ -49,7 +49,9 @@
   };
 
   onShow(async () => {
-    state.list = (await sheep.$api.user.address.list()).data;
+    const res = await sheep.$api.user.address.list();
+    state.list = res
+    console.log('res:', res)
     state.loading = false;
   });
 
