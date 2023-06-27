@@ -319,13 +319,13 @@ export default {
       }),
   },
   //数量接口
-  data: () =>
-    request({
-      url: 'user/user/data',
-      method: 'GET',
-      custom: {
-        showLoading: false,
-        auth: true,
-      },
-    }),
+  // data: () =>
+  //   request({
+  //     url: 'user/user/data',
+  //     method: 'GET',
+  //     custom: {
+  //       showLoading: false,
+  //       auth: true,
+  //     },
+  //   }),
 };

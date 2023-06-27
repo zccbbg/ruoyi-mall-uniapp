@@ -99,7 +99,6 @@
     const data = Base64.encode(JSON.stringify(state.model))
     sheep.$api.user.accountLogin(data).then((res) => {
       if (res){
-        console.log('res:',res)
         sheep.$helper.toast('登录成功')
         closeAuthModal();
       }

@@ -99,7 +99,7 @@ const user = defineStore({
       const nowTime = new Date().getTime();
       if (this.lastUpdateTime + 5000 > nowTime) return;
       await this.getInfo();
-      this.getNumData();
+      // this.getNumData();
       this.lastUpdateTime = nowTime;
       return this.userInfo;
     },
