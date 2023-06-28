@@ -103,11 +103,11 @@ http.interceptors.response.use(
     response.config.url.includes('h5/register')) {
       $store('user').setToken(response.data.token);
     }
-    console.log('response:',response)
+    console.log('响应拦截器的response:',response)
     response.config.custom.showLoading && closeLoading();
-    const {data, statusCode, errMsg} = response
+    const { data } = response
     if (data && data.code && data.code !== 200){
-      let errorMsg = errMsg
+      let errorMsg = data.msg
       if (data.code === 401){
         //无权限
         const userStore = $store('user')
@@ -117,20 +117,21 @@ http.interceptors.response.use(
         }else {
           errorMsg = '请先登录'
         }
+        sheep.$helper.toast(errorMsg)
         userStore.logout(true)
         showAuthModal()
       }
-      if (data.code === 500){
-        sheep.$helper.toast(data.msg)
-        return Promise.reject(data.msg())
+      else if (data.code === 500){
+        sheep.$helper.toast(errorMsg)
       }
-      if (response.config.custom.showError){
+      else {
         uni.showToast({
-          title: errorMessage || '服务器开小差啦,请稍后再试~',
+          title: errorMsg || '服务器开小差啦,请稍后再试~',
           icon: 'none',
           mask: true,
         });
       }
+      return Promise.reject(errorMsg)
     }
     return Promise.resolve(data);
     // if (response.data.error !== 0) {
