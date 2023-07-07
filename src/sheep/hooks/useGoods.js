@@ -73,23 +73,18 @@ export function formatGoodsSwiper(list) {
 
 export function formatOrderColor(type) {
   if (
-    type === 'apply_refund' ||
-    type === 'groupon_ing' ||
-    type === 'nocomment' ||
-    type === 'noget' ||
-    type === 'nosend'
+      type === 2 ||
+      type === 1
   ) {
     return 'warning-color';
   } else if (
-    type === 'closed' ||
-    type === 'groupon_invalid' ||
-    type === 'cancel' ||
-    type === 'refund_agree'
+      type === 4 ||
+      type === 5
   ) {
     return 'danger-color';
-  } else if (type === 'completed') {
+  } else if (type === 3) {
     return 'success-color';
-  } else if (type === 'unpaid') {
+  } else if (type === 0) {
     return 'info-color';
   }
 }
@@ -133,5 +128,26 @@ function getDayjsTime(time) {
   if (time.length === 10) {
     // 'unixtime'
     return dayjs.unix(parseInt(time));
+  }
+}
+
+export function getOrderStatusName(status) {
+  switch (status) {
+    case 0:return '待付款';
+    case 1: return '待发货';
+    case 2: return '待收货'
+    case 3: return '已完成'
+    case 4: return '已取消'
+    case 5: return '无效订单'
+  }
+}
+export function getOrderAfterSaleStatusName(status) {
+  //1：无售后或售后关闭，2：售后处理中，3：退款中，4： 退款成功 5-退款失败
+  switch (status) {
+    case 1:return '无售后或售后关闭';
+    case 2: return '售后处理中';
+    case 3: return '退款中'
+    case 4: return '退款成功'
+    case 5: return '退款失败'
   }
 }

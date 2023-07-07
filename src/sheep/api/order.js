@@ -33,7 +33,7 @@ export default {
   // 订单列表
   list: (params) =>
     request({
-      url: 'order/order',
+      url: '/h5/order/page',
       method: 'GET',
       params,
       custom: {

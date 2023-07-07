@@ -57,7 +57,7 @@
     // },
     {
       title: '售后单',
-      value: '0',
+      value: '4',
       icon: '/static/img/shop/order/change_order.png',
       path: '/pages/order/aftersale/list',
       type: 'aftersale',

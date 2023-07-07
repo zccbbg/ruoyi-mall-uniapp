@@ -22,98 +22,80 @@
         @tap="onOrderDetail(order.order_sn)"
       >
         <view class="order-card-header ss-flex ss-col-center ss-row-between ss-p-x-20">
-          <view class="order-no">订单号：{{ order.order_sn }}</view>
-          <view class="order-state ss-font-26" :class="formatOrderColor(order.status_code)">{{
-            order.status_text
-          }}</view>
+          <view class="order-no">订单号：{{ order.orderSn }}</view>
+          <view class="order-state ss-font-26" :class="formatOrderColor(order.status)">
+            <text>{{getOrderStatusName(order.status) }}</text>
+            <text v-if="order.aftersaleStatus > 1" class="danger-color">（{{getOrderAfterSaleStatusName(order.aftersaleStatus) }}）</text>
+          </view>
         </view>
-        <view class="border-bottom" v-for="item in order.items" :key="item.id">
+        <view class="border-bottom" v-for="item in order.orderItemList" :key="item.id">
           <s-goods-item
-            :img="item.goods_image"
-            :title="item.goods_title"
-            :skuText="item.goods_sku_text"
-            :price="item.goods_price"
-            :score="order.score_amount"
-            :num="item.goods_num"
+            :img="item.pic"
+            :title="item.productName"
+            :skuText="item.spDataValue"
+            :price="item.salePrice"
+            :num="item.quantity"
           >
-            <template #tool>
-              <view class="ss-flex">
-                <button
-                  class="ss-reset-button apply-btn"
-                  v-if="item.btns.includes('aftersale')"
-                  @tap.stop="
-                    sheep.$router.go('/pages/order/aftersale/apply', {
-                      item: JSON.stringify(item),
-                    })
-                  "
-                >
-                  申请售后
-                </button>
-                <button
-                  class="ss-reset-button apply-btn"
-                  v-if="item.btns.includes('re_aftersale')"
-                  @tap.stop="
-                    sheep.$router.go('/pages/order/aftersale/apply', {
-                      item: JSON.stringify(item),
-                    })
-                  "
-                >
-                  重新售后
-                </button>
+<!--            <template #tool>-->
+<!--              <view class="ss-flex">-->
+<!--                <button-->
+<!--                  class="ss-reset-button apply-btn"-->
+<!--                  v-if="item.btns.includes('aftersale')"-->
+<!--                  @tap.stop="-->
+<!--                    sheep.$router.go('/pages/order/aftersale/apply', {-->
+<!--                      item: JSON.stringify(item),-->
+<!--                    })-->
+<!--                  "-->
+<!--                >-->
+<!--                  申请售后-->
+<!--                </button>-->
+<!--                <button-->
+<!--                  class="ss-reset-button apply-btn"-->
+<!--                  v-if="item.btns.includes('re_aftersale')"-->
+<!--                  @tap.stop="-->
+<!--                    sheep.$router.go('/pages/order/aftersale/apply', {-->
+<!--                      item: JSON.stringify(item),-->
+<!--                    })-->
+<!--                  "-->
+<!--                >-->
+<!--                  重新售后-->
+<!--                </button>-->
 
-                <button
-                  class="ss-reset-button apply-btn"
-                  v-if="item.btns.includes('aftersale_info')"
-                  @tap.stop="
-                    sheep.$router.go('/pages/order/aftersale/detail', {
-                      id: item.ext.aftersale_id,
-                    })
-                  "
-                >
-                  售后详情
-                </button>
-                <button
-                  class="ss-reset-button apply-btn"
-                  v-if="item.btns.includes('buy_again')"
-                  @tap.stop="
-                    sheep.$router.go('/pages/goods/index', {
-                      id: item.goods_id,
-                    })
-                  "
-                >
-                  再次购买
-                </button>
-              </view>
-            </template>
+<!--                <button-->
+<!--                  class="ss-reset-button apply-btn"-->
+<!--                  v-if="item.btns.includes('aftersale_info')"-->
+<!--                  @tap.stop="-->
+<!--                    sheep.$router.go('/pages/order/aftersale/detail', {-->
+<!--                      id: item.ext.aftersale_id,-->
+<!--                    })-->
+<!--                  "-->
+<!--                >-->
+<!--                  售后详情-->
+<!--                </button>-->
+<!--                <button-->
+<!--                  class="ss-reset-button apply-btn"-->
+<!--                  v-if="item.btns.includes('buy_again')"-->
+<!--                  @tap.stop="-->
+<!--                    sheep.$router.go('/pages/goods/index', {-->
+<!--                      id: item.goods_id,-->
+<!--                    })-->
+<!--                  "-->
+<!--                >-->
+<!--                  再次购买-->
+<!--                </button>-->
+<!--              </view>-->
+<!--            </template>-->
           </s-goods-item>
         </view>
         <view class="pay-box ss-m-t-30 ss-flex ss-row-right ss-p-r-20">
-          <view v-if="order.total_discount_fee > 0" class="ss-flex ss-col-center ss-m-r-8">
-            <view class="discounts-title">优惠:￥</view>
-            <view class="discounts-money">{{ order.total_discount_fee }}</view>
-          </view>
-          <view class="ss-flex ss-col-center ss-m-r-8">
-            <view class="discounts-title">运费:￥</view>
-            <view class="discounts-money">{{ order.dispatch_amount }}</view>
-          </view>
           <view class="ss-flex ss-col-center">
-            <view class="discounts-title pay-color">总金额:</view>
-            <view class="discounts-money pay-color" v-if="Number(order.order_amount) > 0"
-              >￥{{ order.order_amount }}</view
-            >
-            <view v-if="order.score_amount && Number(order.order_amount) > 0">+</view>
-            <view class="price-text ss-flex ss-col-center" v-if="order.score_amount">
-              <image
-                :src="sheep.$url.static('/static/img/shop/goods/score1.svg')"
-                class="score-img"
-              ></image>
-              <view>{{ order.score_amount }}</view>
-            </view>
+            <view class="discounts-title pay-color">共{{calcGoodsCount(order.orderItemList)}}件商品， </view>
+            <view class="discounts-title pay-color">实付：</view>
+            <view class="discounts-money pay-color">￥{{ order.payAmount.toFixed(2) }}</view>
           </view>
         </view>
         <view
           class="order-card-footer ss-flex ss-col-center ss-p-x-20"
-          :class="order.btns.length > 3 ? 'ss-row-between' : 'ss-row-right'"
         >
           <!-- <su-popover>
             <button class="more-btn ss-reset-button" @click.stop>更多</button>
@@ -131,90 +113,47 @@
               </view>
             </template>
           </su-popover> -->
-          <view class="ss-flex ss-col-center">
-            <button
-              v-if="order.btns.includes('groupon')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onOrderGroupon(order)"
-            >
-              {{ order.status_code === 'groupon_ing' ? '邀请拼团' : '拼团详情' }}
-            </button>
-            <button
-              v-if="order.btns.includes('invoice')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onOrderInvoice(order.invoice?.id)"
-            >
-              查看发票
-            </button>
-            <button
-              v-if="order.btns.length === 0"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onOrderDetail(order.order_sn)"
-            >
+          <view class="ss-flex ss-col-center ml-auto">
+            <button class="apply-btn ss-reset-button" v-if="order.aftersaleStatus === 1" @tap.stop="onOrderDetail(order.id,'orderId')">
               查看详情
             </button>
-
-            <button
-              v-if="order.btns.includes('confirm')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onConfirm(order.id)"
-            >
-              确认收货
-            </button>
-
-            <button
-              v-if="order.btns.includes('express')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onExpress(order.id)"
-            >
+            <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="apply-btn ss-reset-button"
+                    @tap.stop="onExpress(order.id)">
               查看物流
             </button>
-
-            <button
-              v-if="order.btns.includes('apply_refund')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onRefund(order.id)"
-            >
-              申请退款
+            <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="tool-btn ss-reset-button ui-BG-Main-Gradient"
+                    @tap.stop="onConfirm(order.id)">
+              确认收货
             </button>
-            <button
-              v-if="order.btns.includes('re_apply_refund')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onRefund(order.id)"
-            >
-              重新退款
-            </button>
-
-            <button
-              v-if="order.btns.includes('cancel')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onCancel(order.id)"
-            >
+<!--            <button-->
+<!--                v-if="canRefund(order) && [1,3].includes(order.status)" class="delete-btn ss-reset-button"-->
+<!--                @tap.stop="onRefund(order)">-->
+<!--              申请退款-->
+<!--            </button>-->
+            <button v-if="order.status === 0" class="apply-btn ss-reset-button" @tap.stop="onCancel([order.id])">
               取消订单
             </button>
-
-            <button
-              v-if="order.btns.includes('comment')"
-              class="tool-btn ss-reset-button"
-              @tap.stop="onComment(order.order_sn)"
-            >
-              评价晒单
-            </button>
-
-            <button
-              v-if="order.btns.includes('delete')"
-              class="delete-btn ss-reset-button"
-              @tap.stop="onDelete(order.id)"
-            >
-              删除订单
-            </button>
-
-            <button
-              v-if="order.btns.includes('pay')"
-              class="tool-btn ss-reset-button ui-BG-Main-Gradient"
-              @tap.stop="onPay(order.order_sn)"
-            >
+<!--            &lt;!&ndash;                <button&ndash;&gt;-->
+<!--            &lt;!&ndash;                  v-if="[0,4,5].includes(order.status)"&ndash;&gt;-->
+<!--            &lt;!&ndash;                  class="delete-btn ss-reset-button"&ndash;&gt;-->
+<!--            &lt;!&ndash;                  @tap.stop="onDelete(order.id)"&ndash;&gt;-->
+<!--            &lt;!&ndash;                >&ndash;&gt;-->
+<!--            &lt;!&ndash;                  删除订单&ndash;&gt;-->
+<!--            &lt;!&ndash;                </button>&ndash;&gt;-->
+            <button v-if="order.status === 0" class="tool-btn ss-reset-button ui-BG-Main-Gradient" @tap.stop="onPay(payOrder.payId,calcTotalAmount(payOrder.children))">
               继续支付
+            </button>
+            <button class="ss-reset-button apply-btn" v-if="order.aftersaleStatus > 1"
+                    @tap.stop="sheep.$router.go('/pages/order/aftersale/detail', {id: order.id })">
+              售后详情
+            </button>
+            <button class="ss-reset-button apply-btn" v-if="[2,5].includes(order.aftersaleStatus)"
+                    @tap.stop="cancelRefund(order.id)">
+              取消售后
+            </button>
+            <button class="ss-reset-button apply-btn" v-if="order.status === 3 && order.aftersaleStatus === 1"
+                    @tap.stop="sheep.$router.go('/pages/goods/index', {id: order.items[0].productId})">
+              再次购买
             </button>
           </view>
         </view>
@@ -236,9 +175,9 @@
 <script setup>
   import { computed, reactive } from 'vue';
   import { onLoad, onReachBottom, onPullDownRefresh } from '@dcloudio/uni-app';
-  import { formatOrderColor } from '@/sheep/hooks/useGoods';
+  import { formatOrderColor, getOrderStatusName, getOrderAfterSaleStatusName } from '@/sheep/hooks/useGoods';
   import sheep from '@/sheep';
-  import _ from 'lodash';
+  import _, {clone} from 'lodash';
 
   const pagination = {
     data: [],
@@ -251,9 +190,9 @@
     currentTab: 0,
     pagination: {
       data: [],
-      current_page: 1,
-      total: 1,
-      last_page: 1,
+      page: 1,
+      total: 0,
+      size: 5
     },
     loadStatus: '',
     deleteOrderId: 0,
@@ -263,33 +202,33 @@
   const tabMaps = [
     {
       name: '全部',
-      value: 'all',
+      value: '-1',
     },
     {
       name: '待付款',
-      value: 'unpaid',
+      value: '0',
     },
     {
       name: '待发货',
-      value: 'nosend',
+      value: '1',
     },
     {
       name: '待收货',
-      value: 'noget',
+      value: '2',
     },
-    // {
-    //   name: '待评价',
-    //   value: 'nocomment',
-    // },
+    {
+      name: '售后单',
+      value: '-2',
+    },
   ];
 
   // 切换选项卡
   function onTabsChange(e) {
     if (state.currentTab === e.index) return;
 
-    state.pagination = pagination;
+    state.pagination = clone(pagination);
     state.currentTab = e.index;
-
+    state.pagination.data = []
     getOrderList();
   }
 
@@ -352,6 +291,15 @@
     });
   }
 
+  // 计算商品数量
+  function calcGoodsCount(data){
+    let sum = 0
+    data.forEach(it => {
+      sum += it.quantity
+    })
+    return sum
+  }
+
   // 取消订单
   async function onCancel(orderId) {
     uni.showModal({
@@ -407,26 +355,30 @@
   }
 
   // 获取订单列表
-  async function getOrderList(page = 1, list_rows = 5) {
+  async function getOrderList() {
     state.loadStatus = 'loading';
     let res = await sheep.$api.order.list({
-      type: tabMaps[state.currentTab].value,
-      list_rows,
-      page,
+      page: state.pagination.page - 1,
+      size: state.pagination.size,
+      status: tabMaps[state.currentTab].value
     });
-    state.error = res.error;
-    if (res.error === 0) {
-      let orderList = _.concat(state.pagination.data, res.data.data);
-      state.pagination = {
-        ...res.data,
-        data: orderList,
-      };
-
-      if (state.pagination.current_page < state.pagination.last_page) {
-        state.loadStatus = 'more';
-      } else {
-        state.loadStatus = 'noMore';
-      }
+    const {content, totalElements, totalPages} = res;
+    content.forEach(it => {
+      it.orderItemList.forEach(item => {
+        let str = "";
+        const obj = JSON.parse(item.spData);
+        Object.keys(obj).forEach((key) => {
+          str += key + "：" + obj[key] + " ";
+        });
+        item.spDataValue = str;
+      })
+    })
+    state.pagination.data = _.concat(state.pagination.data, content);
+    state.pagination.total = totalElements
+    if (state.pagination.page < totalPages) {
+      state.loadStatus = 'more';
+    } else {
+      state.loadStatus = 'noMore';
     }
   }
 
@@ -440,7 +392,8 @@
   // 加载更多
   function loadmore() {
     if (state.loadStatus !== 'noMore') {
-      getOrderList(state.pagination.current_page + 1);
+      state.pagination.page++
+      getOrderList();
     }
   }
 
@@ -451,7 +404,7 @@
 
   //下拉刷新
   onPullDownRefresh(() => {
-    state.pagination = pagination;
+    state.pagination = clone(pagination);
     getOrderList();
     setTimeout(function () {
       uni.stopPullDownRefresh();
@@ -467,8 +420,8 @@
   }
   .tool-btn {
     width: 160rpx;
-    height: 60rpx;
-    background: #f6f6f6;
+    height: 55rpx;
+    background: white;
     font-size: 26rpx;
     border-radius: 30rpx;
     margin-right: 10rpx;
@@ -479,13 +432,14 @@
   }
   .delete-btn {
     width: 160rpx;
-    height: 56rpx;
+    height: 55rpx;
     color: #ff3000;
     background: #fee;
-    border-radius: 28rpx;
+    border-radius: 30rpx;
     font-size: 26rpx;
     margin-right: 10rpx;
     line-height: normal;
+    border: 1rpx solid #ff3000;
 
     &:last-of-type {
       margin-right: 0;
@@ -493,13 +447,17 @@
   }
 
   .apply-btn {
-    width: 140rpx;
-    height: 50rpx;
-    border-radius: 25rpx;
-    font-size: 24rpx;
+    width: 160rpx;
+    height: 55rpx;
+    border-radius: 30rpx;
+    font-size: 26rpx;
     border: 2rpx solid #dcdcdc;
     line-height: normal;
-    margin-left: 16rpx;
+    margin-left: 10rpx;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
   }
 
   .swiper-box {
