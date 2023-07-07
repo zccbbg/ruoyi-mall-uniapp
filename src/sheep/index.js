@@ -47,7 +47,7 @@ function ShoproDebug() {
   // #endif
 
   // 同步前端页面到后端
-  $api.app.pageSync(ROUTES);
+  // $api.app.pageSync(ROUTES);
 }
 
 export default sheep;
