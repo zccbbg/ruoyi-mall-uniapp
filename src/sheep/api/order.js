@@ -2,9 +2,10 @@ import request from '@/sheep/request';
 
 export default {
   // 订单详情
-  detail: (id) =>
+  detail: (orderId) =>
     request({
-      url: 'order/order/' + id,
+      url: '/h5/order/orderDetail',
+      params: orderId,
       method: 'GET',
     }),
   // 发票详情

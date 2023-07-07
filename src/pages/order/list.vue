@@ -19,7 +19,6 @@
         class="bg-white order-list-card-box ss-r-10 ss-m-t-14 ss-m-20"
         v-for="order in state.pagination.data"
         :key="order.id"
-        @tap="onOrderDetail(order.order_sn)"
       >
         <view class="order-card-header ss-flex ss-col-center ss-row-between ss-p-x-20">
           <view class="order-no">订单号：{{ order.orderSn }}</view>
@@ -114,7 +113,7 @@
             </template>
           </su-popover> -->
           <view class="ss-flex ss-col-center ml-auto">
-            <button class="apply-btn ss-reset-button" v-if="order.aftersaleStatus === 1" @tap.stop="onOrderDetail(order.id,'orderId')">
+            <button class="apply-btn ss-reset-button" v-if="order.aftersaleStatus === 1" @tap.stop="onOrderDetail(order.orderId,'orderId')">
               查看详情
             </button>
             <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="apply-btn ss-reset-button"
@@ -233,9 +232,9 @@
   }
 
   // 订单详情
-  function onOrderDetail(orderSN) {
+  function onOrderDetail(id) {
     sheep.$router.go('/pages/order/detail', {
-      orderSN,
+      id,
     });
   }
 
