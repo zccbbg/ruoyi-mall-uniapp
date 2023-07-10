@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import userApi from '@/sheep/api/user';
+import orderApi from '@/sheep/api/order';
 import commissionApi from '@/sheep/api/commission';
 import $share from '@/sheep/platform/share';
 import { isEmpty, cloneDeep, clone } from 'lodash';
@@ -65,10 +66,8 @@ const user = defineStore({
 
     // 获取订单、优惠券等其他资产信息
     async getNumData() {
-      const { error, data } = await userApi.data();
-      if (error === 0) {
-        this.numData = data;
-      }
+      const res = await orderApi.count();
+      this.numData = res || {}
     },
 
     // 添加分享记录
@@ -98,8 +97,7 @@ const user = defineStore({
       }
       const nowTime = new Date().getTime();
       if (this.lastUpdateTime + 5000 > nowTime) return;
-      await this.getInfo();
-      // this.getNumData();
+      Promise.all([this.getInfo(),this.getNumData()])
       this.lastUpdateTime = nowTime;
       return this.userInfo;
     },

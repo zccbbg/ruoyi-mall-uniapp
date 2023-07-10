@@ -8,7 +8,7 @@
     >
       <uni-badge
         class="uni-badge-left-margin"
-        :text="numData.order_num[item.type]"
+        :text="numData[item.type]"
         absolute="rightTop"
         size="small"
       >

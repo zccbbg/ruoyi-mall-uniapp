@@ -65,8 +65,9 @@ export default {
   // 确认收货
   confirm: (id) =>
     request({
-      url: 'order/order/confirm/' + id,
-      method: 'PUT',
+      url: '/h5/order/orderComplete',
+      params: {orderId: id},
+      method: 'GET'
     }),
   // 评价订单
   comment: (id, data) =>
@@ -136,4 +137,9 @@ export default {
       url: 'order/express/' + id + `${orderId ? '/' + orderId : ''}`,
       method: 'GET',
     }),
+  count: () =>
+    request({
+      url: '/h5/order/countOrder',
+      method: 'GET'
+    })
 };

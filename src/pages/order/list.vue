@@ -121,7 +121,7 @@
               查看物流
             </button>
             <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="tool-btn ss-reset-button ui-BG-Main-Gradient"
-                    @tap.stop="onConfirm(order.id)">
+                    @tap.stop="onConfirm(order.orderId)">
               确认收货
             </button>
 <!--            <button-->
@@ -150,10 +150,10 @@
                     @tap.stop="cancelRefund(order.id)">
               取消售后
             </button>
-            <button class="ss-reset-button apply-btn" v-if="order.status === 3 && order.aftersaleStatus === 1"
-                    @tap.stop="sheep.$router.go('/pages/goods/index', {id: order.items[0].productId})">
-              再次购买
-            </button>
+<!--            <button class="ss-reset-button apply-btn" v-if="order.status === 3 && order.aftersaleStatus === 1"-->
+<!--                    @tap.stop="sheep.$router.go('/pages/goods/index', {id: order.items[0].productId})">-->
+<!--              再次购买-->
+<!--            </button>-->
           </view>
         </view>
       </view>
@@ -273,10 +273,11 @@
       content: '请确认包裹全部到达后再确认收货',
       success: async function (res) {
         if (res.confirm) {
-          const { error, data } = await sheep.$api.order.confirm(orderId);
-          if (error === 0) {
-            let index = state.pagination.data.findIndex((order) => order.id === orderId);
-            state.pagination.data[index] = data;
+          const res = await sheep.$api.order.confirm(orderId);
+          if (res) {
+            sheep.$helper.toast('收货成功')
+            state.pagination = clone(pagination)
+            getOrderList()
           }
         }
       },
@@ -285,6 +286,7 @@
 
   // 查看物流
   async function onExpress(orderId) {
+    return
     sheep.$router.go('/pages/order/express/list', {
       orderId,
     });
@@ -409,6 +411,11 @@
       uni.stopPullDownRefresh();
     }, 800);
   });
+
+  function reloadData(){
+    state.pagination = clone(pagination)
+    getOrderList()
+  }
 </script>
 
 <style lang="scss" scoped>
