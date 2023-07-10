@@ -117,7 +117,7 @@
               查看详情
             </button>
             <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="apply-btn ss-reset-button"
-                    @tap.stop="onExpress(order.id)">
+                    @tap.stop="onExpress(order.orderId)">
               查看物流
             </button>
             <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="tool-btn ss-reset-button ui-BG-Main-Gradient"
@@ -129,7 +129,7 @@
 <!--                @tap.stop="onRefund(order)">-->
 <!--              申请退款-->
 <!--            </button>-->
-            <button v-if="order.status === 0" class="apply-btn ss-reset-button" @tap.stop="onCancel([order.id])">
+            <button v-if="order.status === 0" class="apply-btn ss-reset-button" @tap.stop="onCancel(order.orderId)">
               取消订单
             </button>
 <!--            &lt;!&ndash;                <button&ndash;&gt;-->
@@ -308,10 +308,12 @@
       content: '确定要取消订单吗?',
       success: async function (res) {
         if (res.confirm) {
-          const { error, data } = await sheep.$api.order.cancel(orderId);
-          if (error === 0) {
-            let index = state.pagination.data.findIndex((order) => order.id === orderId);
-            state.pagination.data[index] = data;
+          const idList = [orderId]
+          const res = await sheep.$api.order.cancel({idList});
+          if (res) {
+            sheep.$helper.toast('取消成功')
+            state.pagination = clone(pagination)
+            getOrderList()
           }
         }
       },

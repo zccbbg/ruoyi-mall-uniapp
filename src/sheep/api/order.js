@@ -83,10 +83,11 @@ export default {
       method: 'PUT',
     }),
   // 取消订单
-  cancel: (id) =>
+  cancel: (data) =>
     request({
-      url: 'order/order/cancel/' + id,
-      method: 'PUT',
+      url: '/h5/order/orderCancel',
+      data,
+      method: 'POST'
     }),
   // 删除订单
   delete: (id) =>

@@ -82,7 +82,7 @@
           <view class="ss-flex ss-flex-1">
             <!--            <text class="title">{{state.orderInfo.unpaid ? '交易单号':'订单编号'}}：</text>-->
             <text class="title">订单编号：</text>
-            <text class="detail">{{ state.orderInfo.orderId }}</text>
+            <text class="detail">{{ state.orderInfo.orderSn }}</text>
           </view>
           <button class="ss-reset-button copy-btn" @tap="onCopy">复制</button>
         </view>
@@ -128,19 +128,19 @@
     </view>
 
     <!-- 底部按钮 -->
-<!--    <su-fixed bottom placeholder bg="bg-white" v-if="![3,4].includes(state.status)">-->
-<!--      <view class="footer-box ss-flex ss-col-center ss-row-right">-->
-<!--        <button class="ss-reset-button apply-btn" v-if="state.orderInfo.unpaid" @tap="onCancel(state.orderInfo.children.map(it=>it.id),true)">-->
-<!--          取消订单-->
-<!--        </button>-->
+    <su-fixed bottom placeholder bg="bg-white" v-if="![3,4].includes(state.status)">
+      <view class="footer-box ss-flex ss-col-center ss-row-right">
+        <button class="ss-reset-button apply-btn" v-if="state.status === 0" @tap="onCancel(state.orderId)">
+          取消订单
+        </button>
 <!--        <button class="ss-reset-button pay-btn ui-BG-Main-Gradient" v-if="state.orderInfo.unpaid" @tap="onPay(state.orderInfo.payId)">-->
 <!--          继续支付-->
 <!--        </button>-->
-<!--&lt;!&ndash;        <button&ndash;&gt;-->
-<!--&lt;!&ndash;            v-if="canRefund(firstOrder)" class="delete-btn ss-reset-button"&ndash;&gt;-->
-<!--&lt;!&ndash;            @tap="onRefund(firstOrder)">&ndash;&gt;-->
-<!--&lt;!&ndash;          申请退款&ndash;&gt;-->
-<!--&lt;!&ndash;        </button>&ndash;&gt;-->
+<!--        <button-->
+<!--            v-if="canRefund(firstOrder)" class="delete-btn ss-reset-button"-->
+<!--            @tap="onRefund(firstOrder)">-->
+<!--          申请退款-->
+<!--        </button>-->
 <!--        <button class="ss-reset-button apply-btn" v-if="firstOrder.aftersaleStatus > 1"-->
 <!--                @tap.stop="sheep.$router.go('/pages/order/aftersale/detail', {id: firstOrder.id })">-->
 <!--          售后详情-->
@@ -149,27 +149,27 @@
 <!--                @tap="onExpress(firstOrder.id)">-->
 <!--          查看物流-->
 <!--        </button>-->
-<!--        <button class="ss-reset-button apply-btn ui-BG-Main-Gradient" v-if="firstOrder.status === 2 && firstOrder.aftersaleStatus === 1"-->
-<!--                @tap="onConfirm(firstOrder.id)">-->
-<!--          确认收货-->
-<!--        </button>-->
+        <button class="ss-reset-button apply-btn ui-BG-Main-Gradient" v-if="state.status === 2 && state.orderInfo.aftersaleStatus === 1"
+                @tap="onConfirm(state.orderId)">
+          确认收货
+        </button>
 <!--        <button v-if="firstOrder.status === 1 && firstOrder.deliveryType === 2 && firstOrder.aftersaleStatus === 1"-->
 <!--                class="ss-reset-button apply-btn" @tap="showCode(firstOrder.id)">-->
 <!--          自提码-->
 <!--        </button>-->
-<!--        <button class="ss-reset-button apply-btn" v-if="firstOrder.status === 3 && firstOrder.aftersaleStatus === 1"-->
+<!--        <button class="ss-reset-button apply-btn" v-if="state.status === 3 && state.orderInfo.aftersaleStatus === 1"-->
 <!--                @tap.stop="sheep.$router.go('/pages/goods/index', {id: firstOrder?.items[0].productId})">-->
 <!--          再次购买-->
 <!--        </button>-->
-<!--        &lt;!&ndash;        <button&ndash;&gt;-->
-<!--        &lt;!&ndash;          class="ss-reset-button cancel-btn"&ndash;&gt;-->
-<!--        &lt;!&ndash;          v-if="state.orderInfo.btns?.includes('comment')"&ndash;&gt;-->
-<!--        &lt;!&ndash;          @tap="onComment(state.orderInfo.order_sn)"&ndash;&gt;-->
-<!--        &lt;!&ndash;          >评价晒单</button&ndash;&gt;-->
-<!--        &lt;!&ndash;        >&ndash;&gt;-->
-<!--        &lt;!&ndash;        </button>&ndash;&gt;-->
-<!--      </view>-->
-<!--    </su-fixed>-->
+        <!--        <button-->
+        <!--          class="ss-reset-button cancel-btn"-->
+        <!--          v-if="state.orderInfo.btns?.includes('comment')"-->
+        <!--          @tap="onComment(state.orderInfo.order_sn)"-->
+        <!--          >评价晒单</button-->
+        <!--        >-->
+        <!--        </button>-->
+      </view>
+    </su-fixed>
 <!--    <su-popup :show="show" @close="show = false" type="center" class="popup-box">-->
 <!--      <view class="QRCodeBox">-->
 <!--        <view class="QRCode">-->
@@ -185,6 +185,7 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { formatOrderColor,getOrderStatusName } from '@/sheep/hooks/useGoods';
   import { computed, reactive, ref } from 'vue';
+  import {clone} from "lodash";
 
   const minute = ref(0)
   const second = ref(0)
@@ -251,9 +252,11 @@
       content: '确定要取消订单吗?',
       success: async function (res) {
         if (res.confirm) {
-          const { error, data } = await sheep.$api.order.cancel(orderId);
-          if (error === 0) {
-            getOrderDetail(data.order_sn);
+          const idList = [orderId]
+          const res = await sheep.$api.order.cancel({idList});
+          if (res) {
+            sheep.$helper.toast('取消成功')
+            getOrderDetail(state.orderId)
           }
         }
       },
@@ -285,9 +288,10 @@
 
   // 确认收货
   async function onConfirm(orderId) {
-    const { error, data } = await sheep.$api.order.confirm(orderId);
-    if (error === 0) {
-      getOrderDetail(data.order_sn);
+    const res = await sheep.$api.order.confirm(orderId);
+    if (res) {
+      sheep.$helper.toast('收货成功')
+      getOrderDetail(state.orderId);
     }
   }
 
@@ -326,11 +330,15 @@
       item.spDataValue = str;
     })
     state.orderInfo = res;
-    if (state.timeToPay) {
-      state.status = 0
+    state.orderId = res.orderId
+    // if (state.timeToPay) {
+    //   state.status = 0
+    //   time(res.timeToPay)
+    // } else {
+    state.status = res.status
+    // }
+    if (res.status === 0 && res.timeToPay){
       time(res.timeToPay)
-    } else {
-      state.status = res.status
     }
     const {receiverName, receiverPhone, receiverProvince, receiverCity, receiverDistrict, receiverDetailAddress} = res
     state.address = {
