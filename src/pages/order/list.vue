@@ -21,7 +21,7 @@
         :key="order.id"
       >
         <view class="order-card-header ss-flex ss-col-center ss-row-between ss-p-x-20">
-          <view class="order-no">订单号：{{ order.orderSn }}</view>
+          <view class="order-no">{{ order.status === 0 ? '交易单号：' + order.payId : '订单号：' + order.orderSN }}</view>
           <view class="order-state ss-font-26" :class="formatOrderColor(order.status)">
             <text>{{getOrderStatusName(order.status) }}</text>
             <text v-if="order.aftersaleStatus > 1" class="danger-color">（{{getOrderAfterSaleStatusName(order.aftersaleStatus) }}）</text>
@@ -139,7 +139,7 @@
 <!--            &lt;!&ndash;                >&ndash;&gt;-->
 <!--            &lt;!&ndash;                  删除订单&ndash;&gt;-->
 <!--            &lt;!&ndash;                </button>&ndash;&gt;-->
-            <button v-if="order.status === 0" class="tool-btn ss-reset-button ui-BG-Main-Gradient" @tap.stop="onPay(payOrder.payId,calcTotalAmount(payOrder.children))">
+            <button v-if="order.status === 0" class="tool-btn ss-reset-button ui-BG-Main-Gradient" @tap.stop="onPay({orderSn:order.payId,totalAmount: order.totalAmount})">
               继续支付
             </button>
             <button class="ss-reset-button apply-btn" v-if="order.aftersaleStatus > 1"
@@ -253,9 +253,11 @@
   }
 
   // 继续支付
-  function onPay(orderSN) {
+  function onPay(data) {
+    const {orderSN, totalAmount} = data
     sheep.$router.go('/pages/pay/index', {
       orderSN,
+      totalAmount
     });
   }
 
