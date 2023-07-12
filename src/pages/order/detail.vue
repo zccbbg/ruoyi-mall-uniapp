@@ -81,10 +81,10 @@
         <view class="notice-item--center">
           <view class="ss-flex ss-flex-1">
             <!--            <text class="title">{{state.orderInfo.unpaid ? '交易单号':'订单编号'}}：</text>-->
-            <text class="title">订单编号：</text>
-            <text class="detail">{{ state.orderInfo.orderSn }}</text>
+            <text class="title">{{ state.status === 0 ? '交易单号：' : '订单号：' }}</text>
+            <text class="detail">{{ state.status === 0 ? state.orderInfo.payId : state.orderInfo.orderSn }}</text>
           </view>
-          <button class="ss-reset-button copy-btn" @tap="onCopy">复制</button>
+          <button class="ss-reset-button copy-btn" @tap="onCopy(state.status === 0 ? state.orderInfo.payId : state.orderInfo.orderSn)">复制</button>
         </view>
         <view class="notice-item">
           <text class="title">下单时间：</text>
@@ -223,8 +223,8 @@
   });
 
   // 复制
-  const onCopy = () => {
-    sheep.$helper.copyText(state.orderInfo.order_sn);
+  const onCopy = (data) => {
+    sheep.$helper.copyText(data);
   };
   //退款总额
   const refundFee = computed(() => {
