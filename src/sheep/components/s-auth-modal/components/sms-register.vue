@@ -101,6 +101,30 @@
 
   // 3.短信注册
   async function smsRegisterSubmit() {
+    // new Promise(resolve => {
+    //   let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+    //   let code = getUrlCode().code; //是否存在code
+    //   console.log('wechat给的code：',code)
+    //   let local = window.location.href;
+    //   if (!code) {
+    //     //不存在就打开上面的地址进行授权
+    //     window.location.href =
+    //         "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+    //         appid +
+    //         "&redirect_uri=http://mall.ichengle.top/api/captchaImage" +
+    //         "&response_type=code&scope=snsapi_base#wechat_redirect";
+    //     code = getUrlCode().code
+    //     console.log('wechat给的code：',code)
+    //   }
+    //   if (code){
+    //     resolve(code)
+    //   }
+    // }).then(
+    //     value => {
+    //       console.log('wechat给的code：',value)
+    //     }
+    // )
+    // return
     const validate = await unref(smsRegisterRef)
       .validate()
       .catch((error) => {
@@ -115,6 +139,7 @@
     state.model.uuid = sheep.$store('user').getUUID()
     sheep.$api.user.smsRegister({
       ...state.model,
+      // wechatCode: '041wfHkl28zJDb4EGUll27vGl93wfHk6',
       shareInfo: uni.getStorageSync('shareLog') || {},
     }).then((res) => {
       console.log('注册result：', res)
@@ -125,6 +150,21 @@
         mask: true,
       });
     });
+  }
+
+  function getUrlCode() {
+    // 截取url中的code方法
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+      }
+    }
+    console.log(theRequest);
+    return theRequest;
   }
 
   // 发送验证码

@@ -4,7 +4,7 @@ export default {
   // 预支付
   prepay: (data) =>
     request({
-      url: 'pay/prepay',
+      url: '/h5/order/orderPay',
       method: 'POST',
       data,
       custom: {

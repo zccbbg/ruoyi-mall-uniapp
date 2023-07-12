@@ -4,7 +4,7 @@
     <view class="bg-white ss-modal-box ss-flex-col">
       <view class="modal-header ss-flex-col ss-col-center ss-row-center">
         <view class="money-box ss-m-b-20">
-          <text class="money-text">{{ state.orderInfo.pay_fee }}</text>
+          <text class="money-text">{{ state.totalAmount }}</text>
         </view>
         <view class="time-text">
           <text>{{ payDescText }}</text>
@@ -81,6 +81,7 @@
   import { computed, reactive } from 'vue';
   import { onLoad } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
+  import wx from "weixin-jsapi";
   import { useDurationTime } from '@/sheep/hooks/useGoods';
 
   const userInfo = computed(() => sheep.$store('user').userInfo);
@@ -88,10 +89,12 @@
   // 检测支付环境
   const state = reactive({
     orderType: 'goods',
-    payment: '',
+    payment: 'wechat',
+    totalAmount: '',
     orderInfo: {},
     payStatus: 0, // 0=检测支付环境, -2=未查询到支付单信息， -1=支付已过期， 1=待支付，2=订单已支付
     payMethods: [],
+    payId: ''
   });
 
   const allowedPayment = computed(() => {
@@ -139,46 +142,94 @@
       sheep.$helper.toast('请选择支付方式');
       return;
     }
-    if (state.payment === 'money') {
+    if (state.payment === 'wechat') {
       uni.showModal({
         title: '提示',
         content: '确定要支付吗?',
         success: function (res) {
           if (res.confirm) {
-            sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
+            // sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
+            sheep.$api.pay.prepay({payId: state.payId, type: 2}).then(response => {
+              const payData = {}
+              // const appId = response.appId;
+              // const timeStamp = response.timeStamp
+              // const nonceStr = response.nonceStr;
+              // const prepayId = response.package_;
+              // const signType = response.signType;
+              // const paySign = response.paySign
+              payData.appId = response.appId
+              payData.timeStamp = response.timeStamp
+              payData.nonceStr = response.nonceStr
+              payData.package = response.package_
+              payData.signType = response.signType
+              payData.paySign = response.paySign
+              payData.jsApiList = ['chooseWXPay']
+              // 以下都是微信提供的方法，也可以去官方文档自行复制
+              if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                  document.addEventListener(
+                      "WeixinJSBridgeReady",
+                      onBridgeReady,
+                      false
+                  );
+                } else if (document.attachEvent) {
+                  document.attachEvent("WeixinJSBridgeReady", onBridgeReady);
+                  document.attachEvent("onWeixinJSBridgeReady", onBridgeReady);
+                }
+              } else {
+                onBridgeReady(payData);   // 将支付参数传入微信提供的支付方法
+              }
+            })
           }
         },
       });
-    } else if (state.payment === 'offline') {
-      uni.showModal({
-        title: '提示',
-        content: '确定要下单吗?',
-        success: function (res) {
-          if (res.confirm) {
-            sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
-          }
-        },
-      });
-    } else {
-      sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
     }
+    // else if (state.payment === 'offline') {
+    //   uni.showModal({
+    //     title: '提示',
+    //     content: '确定要下单吗?',
+    //     success: function (res) {
+    //       if (res.confirm) {
+    //         sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
+    //       }
+    //     },
+    //   });
+    // } else {
+    //   sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
+    // }
   };
 
-  const payDescText = computed(() => {
-    if (state.payStatus === 2) {
-      return '该订单已支付';
-    }
-    if (state.payStatus === 1 && state.orderInfo.ext.expired_time !== 0) {
-      const time = useDurationTime(state.orderInfo.ext.expired_time);
-      if (time.ms <= 0) {
-        state.payStatus = -1;
-        return '';
+  // 微信内置方法，调起支付
+  function onBridgeReady(payData) {
+    WeixinJSBridge.invoke("getBrandWCPayRequest", payData, function(res) {
+      if (res.err_msg == "get_brand_wcpay_request:ok") {
+        // 使用以上方式判断前端返回,微信团队郑重提示：
+        //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+        // 可以写自己的需求逻辑，可以给用户做提示
+      } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+
+        // '支付过程中用户取消！'
+      } else if (res.err_msg == "get_brand_wcpay_request:fail") {
+        // '支付失败！'
       }
-      return `剩余支付时间 ${time.h}:${time.m}:${time.s} `;
-    }
-    if (state.payStatus === -2) {
-      return '未查询到支付单信息';
-    }
+    });
+  }
+
+  const payDescText = computed(() => {
+    // if (state.payStatus === 2) {
+    //   return '该订单已支付';
+    // }
+    // if (state.payStatus === 1 && state.orderInfo.ext.expired_time !== 0) {
+    //   const time = useDurationTime(state.orderInfo.ext.expired_time);
+    //   if (time.ms <= 0) {
+    //     state.payStatus = -1;
+    //     return '';
+    //   }
+    //   return `剩余支付时间 ${time.h}:${time.m}:${time.s} `;
+    // }
+    // if (state.payStatus === -2) {
+    //   return '未查询到支付单信息';
+    // }
 
     return '';
   });
@@ -211,38 +262,41 @@
   }
 
   async function setGoodsOrder(id) {
-    const { data, error } = await sheep.$api.order.detail(id);
-    if (error === 0) {
-      state.orderInfo = data;
-      if (state.orderInfo.ext.offline_status === 'none') {
-        payMethods.forEach((item, index, array) => {
-          if (item.value === 'offline') {
-            array.splice(index, 1);
-          }
-        });
-      } else if (state.orderInfo.ext.offline_status === 'disabled') {
-        payMethods.forEach((item) => {
-          if (item.value === 'offline') {
-            item.disabled = true;
-          }
-        });
-      }
-      state.payMethods = payMethods;
-      checkPayStatus();
-    } else {
-      state.payStatus = -2;
-    }
+    state.payStatus = 1
+    state.payMethods = payMethods.filter(it=>it.value==='wechat')
+    // const { data, error } = await sheep.$api.order.detail(id);
+    // if (error === 0) {
+    //   state.orderInfo = data;
+    //   if (state.orderInfo.ext.offline_status === 'none') {
+    //     payMethods.forEach((item, index, array) => {
+    //       if (item.value === 'offline') {
+    //         array.splice(index, 1);
+    //       }
+    //     });
+    //   } else if (state.orderInfo.ext.offline_status === 'disabled') {
+    //     payMethods.forEach((item) => {
+    //       if (item.value === 'offline') {
+    //         item.disabled = true;
+    //       }
+    //     });
+    //   }
+    //   state.payMethods = payMethods;
+    //   checkPayStatus();
+    // } else {
+    //   state.payStatus = -2;
+    // }
   }
 
+
   onLoad((options) => {
-    if (
-      sheep.$platform.name === 'WechatOfficialAccount' &&
-      sheep.$platform.os === 'ios' &&
-      !sheep.$platform.landingPage.includes('pages/pay/index')
-    ) {
-      location.reload();
-      return;
-    }
+    // if (
+    //   sheep.$platform.name === 'WechatOfficialAccount' &&
+    //   sheep.$platform.os === 'ios' &&
+    //   !sheep.$platform.landingPage.includes('pages/pay/index')
+    // ) {
+    //   location.reload();
+    //   return;
+    // }
     let id = '';
     if (options.orderSN) {
       id = options.orderSN;
@@ -250,6 +304,10 @@
     if (options.id) {
       id = options.id;
     }
+    if (options.totalAmount){
+      state.totalAmount = options.totalAmount
+    }
+    state.payId = id
     if (options.type === 'recharge') {
       state.orderType = 'recharge';
       // 充值订单

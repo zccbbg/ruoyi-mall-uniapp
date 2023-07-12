@@ -255,13 +255,14 @@
     }
     console.log('订单params：', params)
     const res = await sheep.$api.order.create(params);
-      sheep.$helper.toast('下单成功')
+      // sheep.$helper.toast('下单成功')
       // 更新购物车列表
       if (state.orderPayload.from === 'cart') {
         sheep.$store('cart').getList();
       }
-      sheep.$router.redirect('/pages/pay/result', {
+      sheep.$router.redirect('/pages/pay/index', {
         orderSN: res,
+        totalAmount: state.orderInfo.orderTotalAmount,
         orderType: 'memberConsumer',
       });
       // if (exchangeNow.value) {

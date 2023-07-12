@@ -18,6 +18,7 @@ const defaultUserInfo = {
   commission: '--', // 佣金
   score: '--', // 积分
   verification: {}, // 认证字段
+  openId: ''
 };
 
 // 默认订单、优惠券等其他资产信息
