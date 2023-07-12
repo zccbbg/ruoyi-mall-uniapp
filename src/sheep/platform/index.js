@@ -75,8 +75,8 @@ const useProvider = (_provider = '') => {
 };
 
 // 支付服务转发
-const pay = (payment, orderType, orderSN) => {
-  return new Pay(payment, orderType, orderSN);
+const pay = (payment, orderType, orderSN, totalAmount) => {
+  return new Pay(payment, orderType, orderSN, totalAmount);
 };
 
 /**

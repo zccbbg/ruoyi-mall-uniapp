@@ -13,10 +13,11 @@ import { getRootUrl } from '@/sheep/helper';
  */
 
 export default class SheepPay {
-  constructor(payment, orderType, orderSN) {
+  constructor(payment, orderType, orderSN, totalAmount) {
     this.payment = payment;
     this.orderSN = orderSN;
     this.orderType = orderType;
+    this.totalAmount = totalAmount;
     this.payAction();
   }
 
@@ -86,25 +87,25 @@ export default class SheepPay {
   prepay() {
     return new Promise((resolve, reject) => {
       let data = {
-        order_sn: this.orderSN,
-        payment: this.payment,
+        payId: this.orderSN,
+        type: 2,
       };
-      if (uni.getStorageSync('openid')) {
-        data.openid = uni.getStorageSync('openid');
-      }
+      // if (uni.getStorageSync('openid')) {
+      //   data.openid = uni.getStorageSync('openid');
+      // }
       sheep.$api.pay.prepay(data).then((res) => {
-        res.error === 0 && resolve(res);
-        if (res.error === -1 && res.msg === 'miss_openid') {
-          uni.showModal({
-            title: '微信支付',
-            content: '请先绑定微信再使用微信支付',
-            success: function (res) {
-              if (res.confirm) {
-                sheep.$platform.useProvider('wechat').bind();
-              }
-            },
-          });
-        }
+        res && resolve(res);
+        // if (res.error === -1 && res.msg === 'miss_openid') {
+        //   uni.showModal({
+        //     title: '微信支付',
+        //     content: '请先绑定微信再使用微信支付',
+        //     success: function (res) {
+        //       if (res.confirm) {
+        //         sheep.$platform.useProvider('wechat').bind();
+        //       }
+        //     },
+        //   });
+        // }
       });
     });
   }
@@ -112,12 +113,9 @@ export default class SheepPay {
   // 微信公众号JSSDK支付
   async wechatOfficialAccountPay() {
     let that = this;
-    let { error, data, msg } = await this.prepay();
-    if (error !== 0) {
-      console.log('支付错误', msg);
-      return;
-    }
-    $wxsdk.wxpay(data.pay_data, {
+    let data = await this.prepay();
+    console.log('h5 jssdk支付')
+    $wxsdk.wxpay(data, {
       success: () => {
         that.payResult('success');
       },

@@ -148,38 +148,40 @@
         content: '确定要支付吗?',
         success: function (res) {
           if (res.confirm) {
-            // sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
-            sheep.$api.pay.prepay({payId: state.payId, type: 2}).then(response => {
-              const payData = {}
-              // const appId = response.appId;
-              // const timeStamp = response.timeStamp
-              // const nonceStr = response.nonceStr;
-              // const prepayId = response.package_;
-              // const signType = response.signType;
-              // const paySign = response.paySign
-              payData.appId = response.appId
-              payData.timeStamp = response.timeStamp
-              payData.nonceStr = response.nonceStr
-              payData.package = response.package_
-              payData.signType = response.signType
-              payData.paySign = response.paySign
-              payData.jsApiList = ['chooseWXPay']
-              // 以下都是微信提供的方法，也可以去官方文档自行复制
-              if (typeof WeixinJSBridge == "undefined") {
-                if (document.addEventListener) {
-                  document.addEventListener(
-                      "WeixinJSBridgeReady",
-                      onBridgeReady,
-                      false
-                  );
-                } else if (document.attachEvent) {
-                  document.attachEvent("WeixinJSBridgeReady", onBridgeReady);
-                  document.attachEvent("onWeixinJSBridgeReady", onBridgeReady);
-                }
-              } else {
-                onBridgeReady(payData);   // 将支付参数传入微信提供的支付方法
-              }
-            })
+            sheep.$platform.pay(state.payment, state.orderType, state.payId,state.totalAmount);
+            // sheep.$api.pay.wechatOfficialAccountPay(state.payment, state.orderType, state.orderInfo.order_sn);
+            // sheep.$api.pay.prepay({payId: state.payId, type: 2}).then(response => {
+            //   const payData = {}
+            //   // const appId = response.appId;
+            //   // const timeStamp = response.timeStamp
+            //   // const nonceStr = response.nonceStr;
+            //   // const prepayId = response.package_;
+            //   // const signType = response.signType;
+            //   // const paySign = response.paySign
+            //   payData.debug = true
+            //   payData.appId = response.appId
+            //   payData.timeStamp = response.timeStamp
+            //   payData.nonceStr = response.nonceStr
+            //   payData.package = response.package_
+            //   payData.signType = response.signType
+            //   payData.paySign = response.paySign
+            //   payData.jsApiList = ['chooseWXPay']
+            //   // 以下都是微信提供的方法，也可以去官方文档自行复制
+            //   if (typeof WeixinJSBridge == "undefined") {
+            //     if (document.addEventListener) {
+            //       document.addEventListener(
+            //           "WeixinJSBridgeReady",
+            //           onBridgeReady,
+            //           false
+            //       );
+            //     } else if (document.attachEvent) {
+            //       document.attachEvent("WeixinJSBridgeReady", onBridgeReady);
+            //       document.attachEvent("onWeixinJSBridgeReady", onBridgeReady);
+            //     }
+            //   } else {
+            //     onBridgeReady(payData);   // 将支付参数传入微信提供的支付方法
+            //   }
+            // })
           }
         },
       });
@@ -289,14 +291,14 @@
 
 
   onLoad((options) => {
-    // if (
-    //   sheep.$platform.name === 'WechatOfficialAccount' &&
-    //   sheep.$platform.os === 'ios' &&
-    //   !sheep.$platform.landingPage.includes('pages/pay/index')
-    // ) {
-    //   location.reload();
-    //   return;
-    // }
+    if (
+      sheep.$platform.name === 'WechatOfficialAccount' &&
+      sheep.$platform.os === 'ios' &&
+      !sheep.$platform.landingPage.includes('pages/pay/index')
+    ) {
+      location.reload();
+      return;
+    }
     let id = '';
     if (options.orderSN) {
       id = options.orderSN;

@@ -78,7 +78,7 @@ export default {
     // 网页jssdk
     jssdk: (data) =>
       request({
-        url: 'third/wechat/jssdk',
+        url: '/no-auth/wechat/jssdk',
         method: 'GET',
         data,
         custom: {
