@@ -77,10 +77,11 @@ export default {
       data,
     }),
   // 申请退款
-  applyRefund: (id) =>
+  applyRefund: (data) =>
     request({
-      url: 'order/order/applyRefund/' + id,
-      method: 'PUT',
+      url: '/h5/order/applyRefund',
+      data,
+      method: 'POST',
     }),
   // 取消订单
   cancel: (data) =>
