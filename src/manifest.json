@@ -223,7 +223,7 @@
     "template": "index.html",
     "router": {
       "mode": "hash",
-      "base": "./"
+      "base": "/uni/"
     },
     "sdkConfigs": {
       "maps": {}
@@ -231,7 +231,7 @@
     "async": {
       "timeout": 20000
     },
-    "title": "星品购",
+    "title": "若依mall",
     "optimization": {
       "treeShaking": {
         "enable": true

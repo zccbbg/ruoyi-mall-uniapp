@@ -1,9 +1,9 @@
 {
   "id": "shopro",
   "name": "shopro",
-  "displayName": "星品购",
+  "displayName": "若依mall",
   "version": "1.0.1",
-  "description": "Shopro-B2C商城，一套代码，同时发行到iOS、Android、H5、微信小程序多个平台，请使用手机扫码快速体验强大功能",
+  "description": "若依mall，基于Shopro-B2C商城前端开发，一套代码，同时发行到iOS、Android、H5、微信小程序多个平台，请使用手机扫码快速体验强大功能",
   "scripts": {
     "prettier": "prettier --write  \"{pages,sheep}/**/*.{js,json,tsx,css,less,scss,vue,html,md}\"",
     "dev:app": "uni -p app",
