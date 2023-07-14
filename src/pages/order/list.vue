@@ -124,11 +124,12 @@
                     @tap.stop="onConfirm(order.orderId)">
               确认收货
             </button>
-<!--            <button-->
-<!--                v-if="canRefund(order) && [1,3].includes(order.status)" class="delete-btn ss-reset-button"-->
-<!--                @tap.stop="onRefund(order)">-->
-<!--              申请退款-->
-<!--            </button>-->
+            <!-- 仅待发货状态可以申请退款 -->
+            <button
+                v-if="[1,2,3].includes(order.status)" class="delete-btn ss-reset-button"
+                @tap.stop="onRefund(order)">
+              申请退款
+            </button>
             <button v-if="order.status === 0" class="apply-btn ss-reset-button" @tap.stop="onCancel(order.orderId)">
               取消订单
             </button>
@@ -341,23 +342,25 @@
   }
 
   // 申请退款
-  async function onRefund(orderId) {
-    uni.showModal({
-      title: '提示',
-      content: '确定要申请退款吗?',
-      success: async function (res) {
-        if (res.confirm) {
+  async function onRefund(order) {
+    sheep.$router.go('/pages/order/aftersale/apply',{item:JSON.stringify(order)})
+    // uni.showModal({
+    //   title: '提示',
+    //   content: '确定要申请退款吗?',
+    //   success: async function (res) {
+    //     if (res.confirm) {
+          // sheep.$api.order.applyRefund()
           // #ifdef MP
-          sheep.$platform.useProvider('wechat').subscribeMessage('order_apply_refund');
-          // #endif
-          const { error, data } = await sheep.$api.order.applyRefund(orderId);
-          if (error === 0) {
-            let index = state.pagination.data.findIndex((order) => order.id === orderId);
-            state.pagination.data[index] = data;
-          }
-        }
-      },
-    });
+          // sheep.$platform.useProvider('wechat').subscribeMessage('order_apply_refund');
+          // // #endif
+          // const { error, data } = await sheep.$api.order.applyRefund(orderId);
+          // if (error === 0) {
+          //   let index = state.pagination.data.findIndex((order) => order.id === orderId);
+          //   state.pagination.data[index] = data;
+          // }
+    //     }
+    //   },
+    // });
   }
 
   // 获取订单列表

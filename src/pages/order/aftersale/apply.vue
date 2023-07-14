@@ -2,13 +2,13 @@
 <template>
   <s-layout title="申请售后">
     <!-- 售后商品 -->
-    <view class="goods-box">
+    <view class="border-bottom" v-for="item in state.goodsItem" :key="item.id">
       <s-goods-item
-        :img="state.goodsItem.goods_image"
-        :title="state.goodsItem.goods_title"
-        :skuText="state.goodsItem.goods_sku_text"
-        :price="state.goodsItem.goods_price"
-        :num="state.goodsItem.goods_num"
+        :img="item.pic"
+        :title="item.productName"
+        :skuText="item.spDataValue"
+        :price="item.salePrice"
+        :num="item.quantity"
       ></s-goods-item>
     </view>
 
@@ -24,10 +24,11 @@
               :key="index"
             >
               <radio
-                :checked="formData.type === item.value"
+                :checked="formData.applyRefundType === item.value"
                 color="var(--ui-BG-Main)"
                 style="transform: scale(0.8)"
                 :value="item.value"
+                :disabled="state.disabled"
               />
               <view class="item-value ss-m-l-8">{{ item.text }}</view>
             </label>
@@ -44,51 +45,51 @@
           <text class="cicon-forward" style="height: 28rpx"></text>
         </view>
       </view>
-      <view class="refund-item u-m-b-20">
-        <view class="item-title ss-m-b-20">联系方式</view>
-        <view class="input-box u-flex">
-          <uni-easyinput
-            :inputBorder="false"
-            type="number"
-            v-model="formData.mobile"
-            placeholder="请输入您的联系电话"
-            paddingLeft="10"
-          />
-        </view>
-      </view>
+<!--      <view class="refund-item u-m-b-20">-->
+<!--        <view class="item-title ss-m-b-20">联系方式</view>-->
+<!--        <view class="input-box u-flex">-->
+<!--          <uni-easyinput-->
+<!--            :inputBorder="false"-->
+<!--            type="number"-->
+<!--            v-model="formData.mobile"-->
+<!--            placeholder="请输入您的联系电话"-->
+<!--            paddingLeft="10"-->
+<!--          />-->
+<!--        </view>-->
+<!--      </view>-->
 
       <!-- 留言 -->
-      <view class="refund-item">
-        <view class="item-title ss-m-b-20">相关描述</view>
-        <view class="describe-box">
-          <uni-easyinput
-            :inputBorder="false"
-            class="describe-content"
-            type="textarea"
-            maxlength="120"
-            autoHeight
-            v-model="formData.content"
-            placeholder="客官~请描述您遇到的问题，建议上传照片"
-          ></uni-easyinput>
-          <view class="upload-img">
-            <s-uploader
-              v-model:url="formData.images"
-              fileMediatype="image"
-              limit="9"
-              mode="grid"
-              :imageStyles="{ width: '168rpx', height: '168rpx' }"
-            />
-          </view>
-        </view>
-      </view>
+<!--      <view class="refund-item">-->
+<!--        <view class="item-title ss-m-b-20">相关描述</view>-->
+<!--        <view class="describe-box">-->
+<!--          <uni-easyinput-->
+<!--            :inputBorder="false"-->
+<!--            class="describe-content"-->
+<!--            type="textarea"-->
+<!--            maxlength="120"-->
+<!--            autoHeight-->
+<!--            v-model="formData.description"-->
+<!--            placeholder="客官~请描述您遇到的问题，建议上传照片"-->
+<!--          ></uni-easyinput>-->
+<!--          <view class="upload-img">-->
+<!--            <s-uploader-->
+<!--              v-model:url="formData.images"-->
+<!--              fileMediatype="image"-->
+<!--              limit="9"-->
+<!--              mode="grid"-->
+<!--              :imageStyles="{ width: '168rpx', height: '168rpx' }"-->
+<!--            />-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
     </uni-forms>
     <!-- 底部按钮 -->
     <su-fixed bottom placeholder>
       <view class="foot-wrap">
         <view class="foot_box ss-flex ss-col-center ss-row-between ss-p-x-30">
-          <button class="ss-reset-button contcat-btn" @tap="sheep.$router.go('/pages/chat/index')"
-            >联系客服</button
-          >
+<!--          <button class="ss-reset-button contcat-btn" @tap="sheep.$router.go('/pages/chat/index')"-->
+<!--            >联系客服</button-->
+<!--          >-->
           <button class="ss-reset-button ui-BG-Main-Gradient sub-btn" @tap="submit">提交</button>
         </view>
       </view>
@@ -132,25 +133,22 @@
   import { reactive, ref, unref } from 'vue';
   const form = ref(null);
   const state = reactive({
+    disabled: false,
     showModal: false,
     currentValue: 0,
-    goodsItem: {},
+    goodsItem: [],
     // showSuccess: false,
     reasonText: '',
     //售后类型
     refundTypeList: [
       {
         text: '仅退款',
-        value: 'refund',
+        value: 1,
       },
       {
         text: '退/换货',
-        value: 'return',
-      },
-      {
-        text: '其他',
-        value: 'other',
-      },
+        value: 2,
+      }
     ],
     refundReasonList: [
       {
@@ -180,34 +178,35 @@
     ],
   });
   const formData = reactive({
-    type: '',
+    orderId: '',
+    applyRefundType: '',
     reason: '',
-    mobile: '',
-    content: '',
-    images: [],
+    // description: '',
+    // images: [],
+    quantity: null
   });
   const rules = reactive({});
 
   // 提交表单
   async function submit() {
-    let data = {
-      ...formData,
-      order_id: state.goodsItem.order_id,
-      order_item_id: state.goodsItem.id,
-    };
-    const res = await sheep.$api.order.aftersale.apply(data);
-    if (res.error === 0) {
-      uni.showToast({
-        title: res.msg,
-      });
-      // state.showSuccess = true;
-      sheep.$router.go('/pages/order/aftersale/list');
+    let data = {...formData}
+    if (!data.applyRefundType) {
+      sheep.$helper.toast('请选择售后类型');
+      return;
     }
+    if (!data.reason) {
+      sheep.$helper.toast('请选择申请原因');
+      return;
+    }
+    await sheep.$api.order.applyRefund(data);
+    setTimeout(()=>{
+      sheep.$router.go('/pages/order/list',{type: 4});
+    },500)
   }
 
   //选择售后类型
   function onRefundChange(e) {
-    formData.type = e.detail.value;
+    formData.applyRefundType = e.detail.value;
   }
 
   //选择申请原因
@@ -230,7 +229,23 @@
     state.reasonText = title;
   }
   onLoad((options) => {
-    state.goodsItem = JSON.parse(options.item);
+    const order = JSON.parse(options.item);
+    state.goodsItem = order.orderItemList
+    formData.orderId = order.orderId
+    let sum = 0
+    order.orderItemList.forEach(it => {
+      sum += it.quantity
+    })
+    formData.quantity = sum
+    if (order.status == 1){
+      formData.applyRefundType = 1
+      state.disabled = true
+    }else if(order.state == 3){
+      formData.applyRefundType = 2
+      state.disabled = true
+    }else {
+      state.disabled = false
+    }
   });
 </script>
 
@@ -290,7 +305,7 @@
     background-color: #fff;
 
     .sub-btn {
-      width: 336rpx;
+      width: 100%;
       line-height: 74rpx;
       border-radius: 38rpx;
       color: rgba(#fff, 0.9);
