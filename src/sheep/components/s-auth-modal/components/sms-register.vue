@@ -101,30 +101,6 @@
 
   // 3.短信注册
   async function smsRegisterSubmit() {
-    // new Promise(resolve => {
-    //   let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
-    //   let code = getUrlCode().code; //是否存在code
-    //   console.log('wechat给的code：',code)
-    //   let local = window.location.href;
-    //   if (!code) {
-    //     //不存在就打开上面的地址进行授权
-    //     window.location.href =
-    //         "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-    //         appid +
-    //         "&redirect_uri=http://mall.ichengle.top/api/captchaImage" +
-    //         "&response_type=code&scope=snsapi_base#wechat_redirect";
-    //     code = getUrlCode().code
-    //     console.log('wechat给的code：',code)
-    //   }
-    //   if (code){
-    //     resolve(code)
-    //   }
-    // }).then(
-    //     value => {
-    //       console.log('wechat给的code：',value)
-    //     }
-    // )
-    // return
     const validate = await unref(smsRegisterRef)
       .validate()
       .catch((error) => {
@@ -136,20 +112,44 @@
       sheep.$helper.toast('请勾选同意');
       return;
     }
-    state.model.uuid = sheep.$store('user').getUUID()
-    sheep.$api.user.smsRegister({
-      ...state.model,
-      // wechatCode: '041wfHkl28zJDb4EGUll27vGl93wfHk6',
-      shareInfo: uni.getStorageSync('shareLog') || {},
-    }).then((res) => {
-      console.log('注册result：', res)
-      closeAuthModal();
-      uni.showToast({
-        title: '注册成功',
-        icon: 'none',
-        mask: true,
-      });
-    });
+    new Promise((resolve, reject) => {
+      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+      let code = getUrlCode().code; //是否存在code
+      if (!code) {
+        //不存在就打开上面的地址进行授权
+        window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+            appid +
+            "&redirect_uri=https://mall.ichengle.top/uni/pages/index/user" +
+            "&response_type=code&scope=snsapi_base#wechat_redirect";
+        code = getUrlCode().code
+      }
+      if (code){
+        resolve(code)
+      }
+      else {
+        reject('code error')
+      }
+    }).then(
+        value => {
+          state.model.uuid = sheep.$store('user').getUUID()
+          sheep.$api.user.smsRegister({
+            ...state.model,
+            wechatCode: value,
+            shareInfo: uni.getStorageSync('shareLog') || {},
+          }).then((res) => {
+            closeAuthModal();
+            uni.showToast({
+              title: '注册成功',
+              icon: 'none',
+              mask: true,
+            });
+          });
+        }
+    ).catch(err => {
+      sheep.$helper.toast(err)
+    })
+
   }
 
   function getUrlCode() {
