@@ -237,15 +237,18 @@
       sum += it.quantity
     })
     formData.quantity = sum
-    if (order.status == 1){
-      formData.applyRefundType = 1
-      state.disabled = true
-    }else if(order.state == 3){
-      formData.applyRefundType = 2
-      state.disabled = true
-    }else {
-      state.disabled = false
-    }
+    //目前只能退款，先写死
+    formData.applyRefundType = 1
+    state.disabled = true
+    // if (order.status == 1){
+    //   formData.applyRefundType = 1
+    //   state.disabled = true
+    // }else if(order.status == 3){
+    //   formData.applyRefundType = 2
+    //   state.disabled = true
+    // }else {
+    //   state.disabled = false
+    // }
   });
 </script>
 

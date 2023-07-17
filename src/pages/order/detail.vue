@@ -133,14 +133,14 @@
         <button class="ss-reset-button apply-btn" v-if="state.status === 0" @tap="onCancel(state.orderId)">
           取消订单
         </button>
-<!--        <button class="ss-reset-button pay-btn ui-BG-Main-Gradient" v-if="state.orderInfo.unpaid" @tap="onPay(state.orderInfo.payId)">-->
-<!--          继续支付-->
-<!--        </button>-->
-<!--        <button-->
-<!--            v-if="canRefund(firstOrder)" class="delete-btn ss-reset-button"-->
-<!--            @tap="onRefund(firstOrder)">-->
-<!--          申请退款-->
-<!--        </button>-->
+        <button class="ss-reset-button pay-btn ui-BG-Main-Gradient" v-if="state.status === 0" @tap="onPay({orderSn: state.orderInfo.payId, totalAmount: state.orderInfo.totalAmount})">
+          继续支付
+        </button>
+        <button
+            v-if="[1,2,3].includes(state.status) && state.orderInfo.aftersaleStatus === 1" class="delete-btn ss-reset-button"
+            @tap="onRefund(state.orderInfo)">
+          申请退款
+        </button>
 <!--        <button class="ss-reset-button apply-btn" v-if="firstOrder.aftersaleStatus > 1"-->
 <!--                @tap.stop="sheep.$router.go('/pages/order/aftersale/detail', {id: firstOrder.id })">-->
 <!--          售后详情-->
@@ -235,9 +235,12 @@
     return refundFee;
   });
   // 去支付
-  function onPay(orderSN) {
+  function onPay(data) {
+    console.log('data',data)
     sheep.$router.go('/pages/pay/index', {
-      orderSN,
+      orderSN:data.orderSn,
+      totalAmount: data.totalAmount,
+      orderType: 'memberConsumer'
     });
   }
 
@@ -264,19 +267,8 @@
   }
 
   // 申请退款
-  async function onRefund(orderId) {
-    uni.showModal({
-      title: '提示',
-      content: '确定要申请退款吗?',
-      success: async function (res) {
-        if (res.confirm) {
-          const { error, data } = await sheep.$api.order.applyRefund(orderId);
-          if (error === 0) {
-            getOrderDetail(data.order_sn);
-          }
-        }
-      },
-    });
+  async function onRefund(order) {
+    sheep.$router.go('/pages/order/aftersale/apply',{item:JSON.stringify(order)})
   }
 
   // 查看物流
