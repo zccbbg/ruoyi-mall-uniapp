@@ -59,7 +59,7 @@
       title: '售后单',
       value: '4',
       icon: '/static/img/shop/order/change_order.png',
-      path: '/pages/order/aftersale/list',
+      path: '/pages/order/list',
       type: 'aftersale',
     },
     {

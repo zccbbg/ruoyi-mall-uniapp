@@ -117,8 +117,9 @@ export default {
     //取消售后
     cancel: (id) =>
       request({
-        url: 'order/aftersale/cancel/' + id,
-        method: 'PUT',
+        url: '/h5/order/cancelRefund',
+        params: {orderId: id},
+        method: 'GET',
       }),
     //删除售后单
     delete: (id) =>

@@ -124,9 +124,8 @@
                     @tap.stop="onConfirm(order.orderId)">
               确认收货
             </button>
-            <!-- 仅待发货状态可以申请退款 -->
             <button
-                v-if="[1,2,3].includes(order.status)" class="delete-btn ss-reset-button"
+                v-if="[1,2,3].includes(order.status) && order.aftersaleStatus === 1" class="delete-btn ss-reset-button"
                 @tap.stop="onRefund(order)">
               申请退款
             </button>
@@ -144,11 +143,11 @@
               继续支付
             </button>
             <button class="ss-reset-button apply-btn" v-if="order.aftersaleStatus > 1"
-                    @tap.stop="sheep.$router.go('/pages/order/aftersale/detail', {id: order.id })">
+                    @tap.stop="sheep.$router.go('/pages/order/aftersale/detail', {id: order.orderId })">
               售后详情
             </button>
             <button class="ss-reset-button apply-btn" v-if="[2,5].includes(order.aftersaleStatus)"
-                    @tap.stop="cancelRefund(order.id)">
+                    @tap.stop="cancelRefund(order.orderId)">
               取消售后
             </button>
 <!--            <button class="ss-reset-button apply-btn" v-if="order.status === 3 && order.aftersaleStatus === 1"-->
@@ -344,23 +343,20 @@
   // 申请退款
   async function onRefund(order) {
     sheep.$router.go('/pages/order/aftersale/apply',{item:JSON.stringify(order)})
-    // uni.showModal({
-    //   title: '提示',
-    //   content: '确定要申请退款吗?',
-    //   success: async function (res) {
-    //     if (res.confirm) {
-          // sheep.$api.order.applyRefund()
-          // #ifdef MP
-          // sheep.$platform.useProvider('wechat').subscribeMessage('order_apply_refund');
-          // // #endif
-          // const { error, data } = await sheep.$api.order.applyRefund(orderId);
-          // if (error === 0) {
-          //   let index = state.pagination.data.findIndex((order) => order.id === orderId);
-          //   state.pagination.data[index] = data;
-          // }
-    //     }
-    //   },
-    // });
+  }
+
+  async function cancelRefund(id) {
+    uni.showModal({
+      title: '提示',
+      content: '确定要取消售后吗?',
+      success: async function (res) {
+        if (res.confirm) {
+          await sheep.$api.order.aftersale.cancel(id);
+          sheep.$helper.toast('取消成功')
+          reloadData();
+        }
+      },
+    });
   }
 
   // 获取订单列表
