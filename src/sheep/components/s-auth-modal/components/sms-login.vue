@@ -136,11 +136,11 @@ const smsLoginRef = ref(null);
       if (sheep.$platform.name !== 'H5') {
         //微信环境才去拿code
         //不存在就打开上面的地址进行授权
-        // window.location.href =
-        //     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-        //     appid +
-        //     "&redirect_uri=" + encodeURIComponent(local) +
-        //     "&response_type=code&scope=snsapi_base#wechat_redirect";
+        window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+            appid +
+            "&redirect_uri=" + encodeURIComponent(local) +
+            "&response_type=code&scope=snsapi_base#wechat_redirect";
       }
     }else {
       const data = Base64.encode(JSON.stringify({
