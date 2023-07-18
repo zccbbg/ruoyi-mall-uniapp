@@ -46,7 +46,7 @@ export default {
   // 绑定openid
   getWechatUserAuth: (params) =>
     request({
-      url: '/h5/member/getWechatUserAuth',
+      url: '/no-auth/wechat/getWechatUserAuth',
       method: 'POST',
       data: params
     }),

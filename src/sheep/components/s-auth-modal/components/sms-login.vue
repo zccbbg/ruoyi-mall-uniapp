@@ -147,7 +147,6 @@ const smsLoginRef = ref(null);
         code: code
       }))
       state.model.authInfo = await sheep.$api.user.getWechatUserAuth(data)
-      showAuthModal('smsLogin')
     }
   })
 </script>
