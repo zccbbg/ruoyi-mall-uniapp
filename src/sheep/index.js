@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import 'dayjs/locale/zh-cn';
+import {Base64} from "js-base64";
 
 dayjs.locale('zh-cn');
 dayjs.extend(relativeTime);
@@ -32,20 +33,42 @@ export async function ShoproInit() {
   // 平台初始化加载(各平台provider提供不同的加载流程)
   $platform.load();
 
-  if (process.env.NODE_ENV === 'development') {
-    ShoproDebug();
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   ShoproDebug();
+  // }
 
-  //获取微信授权code
-  if (!sheep.$store('app').authInfo){
-    let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
-    window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-        appid +
-        "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/uni/#/') +
-        "&response_type=code&scope=snsapi_base#wechat_redirect";
+  // 获取微信授权code
+  const code = getUrlCode().code;
+  if (!code && !sheep.$store('app').authInfo ){
+    setTimeout(()=>{
+      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+      window.location.href =
+          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+          appid +
+          "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/uni/#/') +
+          "&response_type=code&scope=snsapi_base#wechat_redirect";
+    },1000)
+  }else {
+    const data = Base64.encode(JSON.stringify({code}));
+    sheep.$store('app').authInfo = await sheep.$api.user.getWechatUserAuth(data);
   }
 }
+
+function getUrlCode() {
+  // 截取url中的code方法
+  var url = location.search;
+  var theRequest = new Object();
+  if (url.indexOf("?") != -1) {
+    var str = url.substr(1);
+    var strs = str.split("&");
+    for (var i = 0; i < strs.length; i++) {
+      theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+    }
+  }
+  console.log(theRequest);
+  return theRequest;
+}
+
 
 // 开发模式
 function ShoproDebug() {
