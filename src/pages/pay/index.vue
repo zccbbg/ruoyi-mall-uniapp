@@ -244,7 +244,7 @@
           code: code
         }))
         await sheep.$api.user.getWechatUserAuth(data).then((response) => {
-          sheep.$api.user.setWechatInfo(JSON.stringify(response))
+          sheep.$api.user.setWechatInfo(Base64.encode(JSON.stringify(response)))
           sheep.$store('user').userInfo.openId = response.openid
         })
       }
