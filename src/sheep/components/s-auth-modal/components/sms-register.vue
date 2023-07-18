@@ -115,12 +115,13 @@
     new Promise((resolve, reject) => {
       let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
       let code = getUrlCode().code; //是否存在code
+      console.log('code:',code)
       if (!code) {
         //不存在就打开上面的地址进行授权
         window.location.href =
             "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
             appid +
-            "&redirect_uri=https://mall.ichengle.top/uni/pages/index/user" +
+            "&redirect_uri=" + encodeURIComponent("https://mall.ichengle.top/uni/#/pages/index/user") +
             "&response_type=code&scope=snsapi_base#wechat_redirect";
         code = getUrlCode().code
       }
@@ -135,8 +136,7 @@
           state.model.uuid = sheep.$store('user').getUUID()
           sheep.$api.user.smsRegister({
             ...state.model,
-            wechatCode: value,
-            shareInfo: uni.getStorageSync('shareLog') || {},
+            wechatCode: value
           }).then((res) => {
             closeAuthModal();
             uni.showToast({
@@ -172,7 +172,7 @@
     sheep.$api.user.validatePhone(Base64.encode(state.model.mobile)).then((res) => {
       console.log('res:',res)
       if (res && res.ifSuccess){
-        getSmsCode('smsRegister', state.model.mobile)
+    getSmsCode('smsRegister', state.model.mobile)
       }
     })
 

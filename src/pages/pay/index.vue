@@ -83,6 +83,7 @@
   import sheep from '@/sheep';
   import wx from "weixin-jsapi";
   import { useDurationTime } from '@/sheep/hooks/useGoods';
+  import {Base64} from "js-base64";
 
   const userInfo = computed(() => sheep.$store('user').userInfo);
 
@@ -138,6 +139,10 @@
   ];
 
   const onPay = () => {
+    if (sheep.$platform.name === 'H5') {
+      sheep.$helper.toast('请在微信中打开支付')
+      return;
+    }
     if (state.payment === '') {
       sheep.$helper.toast('请选择支付方式');
       return;
@@ -148,73 +153,11 @@
         content: '确定要支付吗?',
         success: function (res) {
           if (res.confirm) {
-            sheep.$platform.pay(state.payment, state.orderType, state.payId,state.totalAmount);
-            // sheep.$api.pay.wechatOfficialAccountPay(state.payment, state.orderType, state.orderInfo.order_sn);
-            // sheep.$api.pay.prepay({payId: state.payId, type: 2}).then(response => {
-            //   const payData = {}
-            //   // const appId = response.appId;
-            //   // const timeStamp = response.timeStamp
-            //   // const nonceStr = response.nonceStr;
-            //   // const prepayId = response.package_;
-            //   // const signType = response.signType;
-            //   // const paySign = response.paySign
-            //   payData.debug = true
-            //   payData.appId = response.appId
-            //   payData.timeStamp = response.timeStamp
-            //   payData.nonceStr = response.nonceStr
-            //   payData.package = response.package_
-            //   payData.signType = response.signType
-            //   payData.paySign = response.paySign
-            //   payData.jsApiList = ['chooseWXPay']
-            //   // 以下都是微信提供的方法，也可以去官方文档自行复制
-            //   if (typeof WeixinJSBridge == "undefined") {
-            //     if (document.addEventListener) {
-            //       document.addEventListener(
-            //           "WeixinJSBridgeReady",
-            //           onBridgeReady,
-            //           false
-            //       );
-            //     } else if (document.attachEvent) {
-            //       document.attachEvent("WeixinJSBridgeReady", onBridgeReady);
-            //       document.attachEvent("onWeixinJSBridgeReady", onBridgeReady);
-            //     }
-            //   } else {
-            //     onBridgeReady(payData);   // 将支付参数传入微信提供的支付方法
-            //   }
-            // })
+            sheep.$platform.pay(state.payment, state.orderType, state.payId, state.totalAmount);
           }
-        },
-      });
+        }
+      })
     }
-    // else if (state.payment === 'offline') {
-    //   uni.showModal({
-    //     title: '提示',
-    //     content: '确定要下单吗?',
-    //     success: function (res) {
-    //       if (res.confirm) {
-    //         sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
-    //       }
-    //     },
-    //   });
-    // } else {
-    //   sheep.$platform.pay(state.payment, state.orderType, state.orderInfo.order_sn);
-    // }
-  };
-
-  // 微信内置方法，调起支付
-  function onBridgeReady(payData) {
-    WeixinJSBridge.invoke("getBrandWCPayRequest", payData, function(res) {
-      if (res.err_msg == "get_brand_wcpay_request:ok") {
-        // 使用以上方式判断前端返回,微信团队郑重提示：
-        //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-        // 可以写自己的需求逻辑，可以给用户做提示
-      } else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-
-        // '支付过程中用户取消！'
-      } else if (res.err_msg == "get_brand_wcpay_request:fail") {
-        // '支付失败！'
-      }
-    });
   }
 
   const payDescText = computed(() => {
@@ -266,31 +209,46 @@
   async function setGoodsOrder(id) {
     state.payStatus = 1
     state.payMethods = payMethods.filter(it=>it.value==='wechat')
-    // const { data, error } = await sheep.$api.order.detail(id);
-    // if (error === 0) {
-    //   state.orderInfo = data;
-    //   if (state.orderInfo.ext.offline_status === 'none') {
-    //     payMethods.forEach((item, index, array) => {
-    //       if (item.value === 'offline') {
-    //         array.splice(index, 1);
-    //       }
-    //     });
-    //   } else if (state.orderInfo.ext.offline_status === 'disabled') {
-    //     payMethods.forEach((item) => {
-    //       if (item.value === 'offline') {
-    //         item.disabled = true;
-    //       }
-    //     });
-    //   }
-    //   state.payMethods = payMethods;
-    //   checkPayStatus();
-    // } else {
-    //   state.payStatus = -2;
-    // }
   }
 
 
-  onLoad((options) => {
+  function getUrlCode() {
+    // 截取url中的code方法
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+      }
+    }
+    console.log(theRequest);
+    return theRequest;
+  }
+
+  onLoad(async (options) => {
+    if (sheep.$platform.name !== 'H5' && !sheep.$store('user').userInfo.openId) {
+      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+      let code = getUrlCode().code;
+      let local = window.location.href;
+      if (!code){
+        //没有openId,去拿code获取openId
+        window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+            appid +
+            "&redirect_uri=" + encodeURIComponent(local) +
+            "&response_type=code&scope=snsapi_base#wechat_redirect";
+      }else {
+        const data = Base64.encode(JSON.stringify({
+          code: code
+        }))
+        await sheep.$api.user.getWechatUserAuth(data).then((response) => {
+          sheep.$api.user.setWechatInfo(JSON.stringify(response))
+          sheep.$store('user').userInfo.openId = response.openid
+        })
+      }
+    }
     if (
       sheep.$platform.name === 'WechatOfficialAccount' &&
       sheep.$platform.os === 'ios' &&
@@ -319,7 +277,7 @@
       // 商品订单
       setGoodsOrder(id);
     }
-  });
+  })
 </script>
 
 <style lang="scss" scoped>

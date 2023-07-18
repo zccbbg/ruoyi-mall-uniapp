@@ -4,12 +4,12 @@
     <!-- 标题栏 -->
     <view class="head-box ss-m-b-60">
       <view class="ss-flex ss-m-b-20">
-        <view class="head-title-active ss-m-r-40" @tap="showAuthModal('accountLogin')"
-          >账号登录</view
-        >
+<!--        <view class="head-title-active ss-m-r-40" @tap="showAuthModal('accountLogin')"-->
+<!--          >账号登录</view-->
+<!--        >-->
         <view class="head-title head-title-line head-title-animation">短信登录</view>
       </view>
-      <view class="head-subtitle">未注册手机号请先点击下方立即注册</view>
+<!--      <view class="head-subtitle">未注册手机号请先点击下方立即注册</view>-->
     </view>
 
     <!-- 表单项 -->
@@ -56,18 +56,19 @@
       </uni-forms-item>
     </uni-forms>
 
-    <button class="ss-reset-button type-btn" @tap="showAuthModal('smsRegister')"> 立即注册 </button>
+<!--    <button class="ss-reset-button type-btn" @tap="showAuthModal('smsRegister')"> 立即注册 </button>-->
   </view>
 </template>
 
 <script setup>
-  import { computed, watch, ref, reactive, unref } from 'vue';
-  import sheep from '@/sheep';
-  import { code, mobile } from '@/sheep/validate/form';
-  import { showAuthModal, closeAuthModal, getSmsCode, getSmsTimer } from '@/sheep/hooks/useModal';
-  import {Base64} from 'js-base64'
+import {reactive, ref, unref} from 'vue';
+import sheep from '@/sheep';
+import {code, mobile} from '@/sheep/validate/form';
+import {closeAuthModal, getSmsCode, getSmsTimer, showAuthModal} from '@/sheep/hooks/useModal';
+import {Base64} from 'js-base64'
+import {onLoad} from "@dcloudio/uni-app";
 
-  const smsLoginRef = ref(null);
+const smsLoginRef = ref(null);
 
   const props = defineProps({
     agreeStatus: {
@@ -83,7 +84,8 @@
     model: {
       mobile: '', // 手机号
       code: '', // 验证码
-      uuid: null // uuid
+      uuid: null, // uuid
+      authInfo: {}
     },
     rules: {
       code,
@@ -106,12 +108,48 @@
     }
     state.model.uuid = sheep.$store('user').getUUID()
     const data = Base64.encode(JSON.stringify(state.model))
-    const res = await sheep.$api.user.smsLogin(data);
-    if (res){
+    sheep.$api.user.smsLogin(data).then((response) => {
       sheep.$helper.toast('登录成功')
       closeAuthModal();
-    }
+    })
   }
+  function getUrlCode() {
+    // 截取url中的code方法
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+      }
+    }
+    console.log(theRequest);
+    return theRequest;
+  }
+
+  onLoad( async () => {
+    let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+    let code = getUrlCode().code;
+    let local = window.location.href;
+    if (!code) {
+      if (sheep.$platform.name !== 'H5') {
+        //微信环境才去拿code
+        //不存在就打开上面的地址进行授权
+        // window.location.href =
+        //     "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+        //     appid +
+        //     "&redirect_uri=" + encodeURIComponent(local) +
+        //     "&response_type=code&scope=snsapi_base#wechat_redirect";
+      }
+    }else {
+      const data = Base64.encode(JSON.stringify({
+        code: code
+      }))
+      state.model.authInfo = await sheep.$api.user.getWechatUserAuth(data)
+      showAuthModal('smsLogin')
+    }
+  })
 </script>
 
 <style lang="scss" scoped>

@@ -43,6 +43,20 @@ export default {
         loadingMsg: '登录中',
       },
     }),
+  // 绑定openid
+  getWechatUserAuth: (params) =>
+    request({
+      url: '/h5/member/getWechatUserAuth',
+      method: 'POST',
+      data: params
+    }),
+  // 设置会员微信信息
+  setWechatInfo: (params) =>
+    request({
+      url: '/h5/member/setWechatInfo',
+      method: 'POST',
+      data: params
+    }),
   // 短信注册
   smsRegister: (data) =>
     request({

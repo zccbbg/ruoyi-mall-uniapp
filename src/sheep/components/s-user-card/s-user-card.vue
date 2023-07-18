@@ -28,16 +28,16 @@
       </view>
     </view>
 
-    <view
-      class="bind-mobile-box ss-flex ss-row-between ss-col-center"
-      v-if="isLogin && !userInfo.verification?.mobile"
-    >
-      <view class="ss-flex">
-        <text class="cicon-mobile-o"></text>
-        <view class="mobile-title ss-m-l-20"> 点击绑定手机号确保账户安全 </view>
-      </view>
-      <button class="ss-reset-button bind-btn" @tap="onBind">去绑定</button>
-    </view>
+<!--    <view-->
+<!--      class="bind-mobile-box ss-flex ss-row-between ss-col-center"-->
+<!--      v-if="isLogin && !userInfo.verification?.mobile"-->
+<!--    >-->
+<!--      <view class="ss-flex">-->
+<!--        <text class="cicon-mobile-o"></text>-->
+<!--        <view class="mobile-title ss-m-l-20"> 点击绑定手机号确保账户安全 </view>-->
+<!--      </view>-->
+<!--      <button class="ss-reset-button bind-btn" @tap="onBind">去绑定</button>-->
+<!--    </view>-->
   </view>
 </template>
 

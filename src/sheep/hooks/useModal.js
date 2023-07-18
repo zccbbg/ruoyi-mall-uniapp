@@ -8,7 +8,7 @@ import {Base64} from 'js-base64'
 import sheep from '@/sheep';
 
 // 打开授权弹框
-export function showAuthModal(type = 'accountLogin') {
+export function showAuthModal(type = 'smsLogin') {
   const modal = $store('modal');
   if (modal.auth !== '') {
     closeAuthModal();
