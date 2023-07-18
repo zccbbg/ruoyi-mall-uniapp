@@ -49,6 +49,7 @@
   import { onLoad, onPageScroll, onPullDownRefresh } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
   import $share from '@/sheep/platform/share';
+  import {Base64} from "js-base64";
 
   const categoryList = ref([])
   const goodsCard = {
@@ -151,6 +152,30 @@
   });
 
   onPageScroll(() => {});
+
+  function getUrlCode() {
+    // 截取url中的code方法
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      var strs = str.split("&");
+      for (var i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
+      }
+    }
+    console.log(theRequest);
+    return theRequest;
+  }
+
+
+  onLoad(async () => {
+    const code = getUrlCode().code;
+    if (code){
+      const data = Base64.encode(JSON.stringify({code}));
+      sheep.$store('app').authInfo = await sheep.$api.user.getWechatUserAuth(data);
+    }
+  })
 
   // 获取商品分类
   function getCategoryList(){

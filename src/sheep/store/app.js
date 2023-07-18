@@ -49,6 +49,7 @@ const app = defineStore({
       },
     },
     shareInfo: {}, // 全局分享信息
+    authInfo: null
   }),
   actions: {
     // 获取Shopro应用配置和模板

@@ -211,43 +211,12 @@
     state.payMethods = payMethods.filter(it=>it.value==='wechat')
   }
 
-
-  function getUrlCode() {
-    // 截取url中的code方法
-    var url = location.search;
-    var theRequest = new Object();
-    if (url.indexOf("?") != -1) {
-      var str = url.substr(1);
-      var strs = str.split("&");
-      for (var i = 0; i < strs.length; i++) {
-        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
-      }
-    }
-    console.log(theRequest);
-    return theRequest;
-  }
-
   onLoad(async (options) => {
-    if (sheep.$platform.name !== 'H5' && !sheep.$store('user').userInfo.openId) {
-      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
-      let code = getUrlCode().code;
-      let local = window.location.href;
-      if (!code){
-        //没有openId,去拿code获取openId
-        window.location.href =
-            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-            appid +
-            "&redirect_uri=" + encodeURIComponent(local) +
-            "&response_type=code&scope=snsapi_base#wechat_redirect";
-      }else {
-        const data = Base64.encode(JSON.stringify({
-          code: code
-        }))
-        await sheep.$api.user.getWechatUserAuth(data).then((response) => {
-          sheep.$api.user.setWechatInfo(Base64.encode(JSON.stringify(response)))
-          sheep.$store('user').userInfo.openId = response.openid
-        })
-      }
+    const authInfo = sheep.$store('app').authInfo
+    if (!sheep.$store('user').userInfo.openId && authInfo) {
+      await sheep.$api.user.setWechatInfo(Base64.encode(JSON.stringify(authInfo)))
+      sheep.$store('user').userInfo.openId = authInfo.openid
+      sheep.$store('app').authInfo = null
     }
     if (
       sheep.$platform.name === 'WechatOfficialAccount' &&

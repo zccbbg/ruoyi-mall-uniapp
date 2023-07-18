@@ -35,6 +35,16 @@ export async function ShoproInit() {
   if (process.env.NODE_ENV === 'development') {
     ShoproDebug();
   }
+
+  //获取微信授权code
+  if (!sheep.$store('app').authInfo){
+    let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
+    window.location.href =
+        "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
+        appid +
+        "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/uni/#/') +
+        "&response_type=code&scope=snsapi_base#wechat_redirect";
+  }
 }
 
 // 开发模式

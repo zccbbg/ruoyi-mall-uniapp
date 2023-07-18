@@ -107,48 +107,17 @@ const smsLoginRef = ref(null);
       return;
     }
     state.model.uuid = sheep.$store('user').getUUID()
+    if (sheep.$store('app').authInfo){
+      state.model.authInfo = sheep.$store('app').authInfo
+      sheep.$store('app').authInfo = null
+    }
     const data = Base64.encode(JSON.stringify(state.model))
     sheep.$api.user.smsLogin(data).then((response) => {
       sheep.$helper.toast('登录成功')
       closeAuthModal();
     })
   }
-  function getUrlCode() {
-    // 截取url中的code方法
-    var url = location.search;
-    var theRequest = new Object();
-    if (url.indexOf("?") != -1) {
-      var str = url.substr(1);
-      var strs = str.split("&");
-      for (var i = 0; i < strs.length; i++) {
-        theRequest[strs[i].split("=")[0]] = strs[i].split("=")[1];
-      }
-    }
-    console.log(theRequest);
-    return theRequest;
-  }
 
-  onLoad( async () => {
-    let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
-    let code = getUrlCode().code;
-    let local = window.location.href;
-    if (!code) {
-      if (sheep.$platform.name !== 'H5') {
-        //微信环境才去拿code
-        //不存在就打开上面的地址进行授权
-        window.location.href =
-            "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-            appid +
-            "&redirect_uri=" + encodeURIComponent(local) +
-            "&response_type=code&scope=snsapi_base#wechat_redirect";
-      }
-    }else {
-      const data = Base64.encode(JSON.stringify({
-        code: code
-      }))
-      state.model.authInfo = await sheep.$api.user.getWechatUserAuth(data)
-    }
-  })
 </script>
 
 <style lang="scss" scoped>
