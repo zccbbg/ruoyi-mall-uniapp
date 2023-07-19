@@ -39,6 +39,8 @@
 
   // 搜索
   function onSearch(keyword) {
+    sheep.$helper.toast('功能暂未开发')
+    return;
     if (!keyword) return;
     saveSearchHistory(keyword);
     sheep.$router.go('/pages/goods/list', { keyword });

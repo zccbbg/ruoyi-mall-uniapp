@@ -15,7 +15,7 @@
     <s-menu-grid v-if="type === 'menuGrid'" :data="data" />
 
     <s-user-card v-if="type === 'userCard'" />
-    <s-wallet-card v-if="type === 'walletCard'" />
+<!--    <s-wallet-card v-if="type === 'walletCard'" />-->
     <s-order-card v-if="type === 'orderCard'" :data="data" />
 
     <s-coupon-card v-if="type === 'couponCard'" />

@@ -41,9 +41,9 @@
 <!--                </view>-->
               </view>
               <!-- 已售 -->
-              <view class="sales-text">
-                {{ formatSales(state.goodsInfo.sales_show_type, 10000) }}
-              </view>
+<!--              <view class="sales-text">-->
+<!--                {{ formatSales(state.goodsInfo.sales_show_type, 10000) }}-->
+<!--              </view>-->
             </view>
             <view class="discounts-box ss-flex ss-row-between ss-m-b-28">
               <div class="tag-content">

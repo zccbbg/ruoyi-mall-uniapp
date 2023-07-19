@@ -120,9 +120,9 @@
           </view>
         </view>
 
-        <view class="ss-m-t-16 ss-flex ss-col-center ss-flex-wrap">
-          <view class="sales-text">{{ salesAndStock }}</view>
-        </view>
+<!--        <view class="ss-m-t-16 ss-flex ss-col-center ss-flex-wrap">-->
+<!--          <view class="sales-text">{{ salesAndStock }}</view>-->
+<!--        </view>-->
       </view>
 
       <slot name="cart">
@@ -190,9 +190,9 @@
               <view class="ss-m-l-8">{{ data.original_price }}</view>
             </view>
           </view>
-          <view class="ss-m-t-8 ss-flex ss-col-center ss-flex-wrap">
-            <view class="sales-text">{{ salesAndStock }}</view>
-          </view>
+<!--          <view class="ss-m-t-8 ss-flex ss-col-center ss-flex-wrap">-->
+<!--            <view class="sales-text">{{ salesAndStock }}</view>-->
+<!--          </view>-->
         </view>
       </view>
 
@@ -254,9 +254,9 @@
               <view class="ss-m-l-8">{{ data.original_price }}</view>
             </view>
           </view>
-          <view class="ss-m-t-16 ss-flex ss-flex-wrap">
-            <view class="sales-text">{{ salesAndStock }}</view>
-          </view>
+<!--          <view class="ss-m-t-16 ss-flex ss-flex-wrap">-->
+<!--            <view class="sales-text">{{ salesAndStock }}</view>-->
+<!--          </view>-->
         </view>
       </view>
 

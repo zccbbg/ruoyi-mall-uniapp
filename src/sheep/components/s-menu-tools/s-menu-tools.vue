@@ -4,11 +4,11 @@
     <view class="tools-wrap ss-m-x-30 ss-m-b-16">
       <view class="title ss-m-b-34 ss-p-t-20">快捷菜单</view>
       <view class="container-list ss-flex ss-flex-wrap">
-        <view class="list-item ss-m-b-24" v-for="item in list" :key="item.title">
+        <view class="list-item ss-m-b-24" v-for="(item, index) in list" :key="item.title">
           <view class="ss-flex-col ss-col-center">
             <button
               class="ss-reset-button list-image ss-flex ss-row-center ss-col-center"
-              @tap="onClick(item)"
+              @tap="onClick(item, index)"
             >
               <image v-if="show" :src="sheep.$url.static(item.icon)" class="list-icon"></image>
             </button>
@@ -27,7 +27,11 @@
 
   const show = computed(() => sheep.$store('modal').menu);
 
-  function onClick(item) {
+  function onClick(item, index) {
+    if (index === 1 || index > 3){
+      sheep.$helper.toast('功能暂未开发')
+      return
+    }
     closeMenuTools();
     if (item.url) sheep.$router.go(item.url);
   }

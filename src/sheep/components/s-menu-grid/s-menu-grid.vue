@@ -3,7 +3,7 @@
     <uni-grid-item
       v-for="(item, index) in data.list"
       :key="index"
-      @tap="sheep.$router.go(item.url)"
+      @tap="sheep.$helper.toast('功能暂未开发')"
     >
       <view class="grid-item-box ss-flex ss-flex-col ss-row-center ss-col-center">
         <view class="img-box">

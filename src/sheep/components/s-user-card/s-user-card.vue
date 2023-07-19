@@ -22,7 +22,7 @@
         </view>
       </view>
       <view class="right-box ss-m-r-52">
-        <button class="ss-reset-button" @tap="showShareModal">
+        <button class="ss-reset-button" @tap="sheep.$helper.toast('功能暂未开发')">
           <text class="sicon-qrcode"></text>
         </button>
       </view>

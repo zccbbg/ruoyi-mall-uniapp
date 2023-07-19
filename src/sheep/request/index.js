@@ -103,7 +103,6 @@ http.interceptors.response.use(
     response.config.url.includes('h5/register')) {
       $store('user').setToken(response.data.token);
     }
-    console.log('响应拦截器的response:',response)
     response.config.custom.showLoading && closeLoading();
     const { data } = response
     if (data && data.code && data.code !== 200){
