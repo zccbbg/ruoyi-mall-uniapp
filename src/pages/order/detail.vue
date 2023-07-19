@@ -335,9 +335,27 @@
     const {receiverName, receiverPhone, receiverProvince, receiverCity, receiverDistrict, receiverDetailAddress} = res
     state.address = {
       receiverName, receiverPhone,
-      fullAddress: receiverProvince + ' ' + receiverCity + ' ' + receiverDistrict + ' ' + receiverDetailAddress
+      fullAddress: receiverProvince + ' ' + receiverCity + ' ' + receiverDistrict + ' ' + getHiddenDetailAddress(receiverDetailAddress)
     }
   }
+
+  function getHiddenDetailAddress(data){
+    const chineseNumbers = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+    if (!data || data.length === 0){
+      return ''
+    }
+    let tempResult = data.replace((/\d/g),'*')
+    let result = ''
+    for(let i=0;i<tempResult.length;i++){
+      if (chineseNumbers.includes(tempResult[i])){
+        result += '*'
+      }else {
+        result += tempResult[i]
+      }
+    }
+    return result
+  }
+
   onLoad(async (options) => {
     let id = '';
     // if (options.orderSN) {

@@ -44,19 +44,19 @@
         </button>
 
         <!-- 公众号|App微信登录 -->
-        <button
-          v-if="
-            ['WechatOfficialAccount', 'App'].includes(sheep.$platform.name) &&
-            sheep.$platform.isWechatInstalled
-          "
-          @tap="thirdLogin('wechat')"
-          class="ss-reset-button auto-login-btn"
-        >
-          <image
-            class="auto-login-img"
-            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"
-          ></image>
-        </button>
+<!--        <button-->
+<!--          v-if="-->
+<!--            ['WechatOfficialAccount', 'App'].includes(sheep.$platform.name) &&-->
+<!--            sheep.$platform.isWechatInstalled-->
+<!--          "-->
+<!--          @tap="thirdLogin('wechat')"-->
+<!--          class="ss-reset-button auto-login-btn"-->
+<!--        >-->
+<!--          <image-->
+<!--            class="auto-login-img"-->
+<!--            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"-->
+<!--          ></image>-->
+<!--        </button>-->
 
         <!-- iOS登录 -->
         <button
