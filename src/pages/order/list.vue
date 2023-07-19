@@ -180,9 +180,9 @@
 
   const pagination = {
     data: [],
-    current_page: 1,
-    total: 1,
-    last_page: 1,
+    page: 1,
+    total: 0,
+    size: 5
   };
   // 数据
   const state = reactive({
@@ -362,6 +362,7 @@
   // 获取订单列表
   async function getOrderList() {
     state.loadStatus = 'loading';
+    console.log('size:', state.pagination)
     let res = await sheep.$api.order.list({
       page: state.pagination.page - 1,
       size: state.pagination.size,
