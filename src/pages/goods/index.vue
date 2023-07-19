@@ -186,7 +186,9 @@
 
   // 添加购物车
   function onAddCart(e) {
-    sheep.$store('cart').add(e);
+    sheep.$store('cart').add(e).then(res => {
+      state.showSelectSku = false
+    });
   }
 
   // 立即购买

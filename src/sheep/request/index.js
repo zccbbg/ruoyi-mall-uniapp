@@ -132,6 +132,13 @@ http.interceptors.response.use(
       }
       return Promise.reject(errorMsg)
     }
+    //成功的提示
+    if (response.config.custom.showSuccess && response.config.custom.successMsg) {
+      uni.showToast({
+        title: response.config.custom.successMsg,
+        icon: 'none',
+      });
+    }
     return Promise.resolve(data);
     // if (response.data.error !== 0) {
     //   if (response.config.custom.showError)

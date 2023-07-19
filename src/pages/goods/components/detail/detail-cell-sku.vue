@@ -22,7 +22,6 @@
     },
   });
   const value = computed(() => {
-    console.log('modelValue,',props.modelValue)
     let str = '';
     if (props.modelValue) {
       const obj = JSON.parse(props.modelValue);

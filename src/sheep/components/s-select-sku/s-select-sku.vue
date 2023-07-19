@@ -125,7 +125,6 @@
   if (props.goodsInfo.skus.length < 2) {
     state.selectedSkuPrice = {...props.goodsInfo.skus[0], buyNum:1,productName:props.goodsInfo.product.name}
     state.currentSkuMap = JSON.parse(state.selectedSkuPrice.spData);
-    console.log('selectedSkuPrice', state.selectedSkuPrice)
   }
 
   const skuList = props.goodsInfo.skus;
@@ -175,7 +174,6 @@
       // if (state.selectedSkuPrice.stock <= 0) {
       //   sheep.$helper.toast('库存不足');
       // } else {
-      console.log('加入购物车的商品：', state.selectedSkuPrice)
         emits('addCart', state.selectedSkuPrice);
       // }
     } else {
