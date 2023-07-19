@@ -218,14 +218,14 @@
       sheep.$store('user').userInfo.openId = authInfo.openid
       sheep.$store('app').authInfo = null
     }
-    if (
-      sheep.$platform.name === 'WechatOfficialAccount' &&
-      sheep.$platform.os === 'ios' &&
-      !sheep.$platform.landingPage.includes('pages/pay/index')
-    ) {
-      location.reload();
-      return;
-    }
+    // if (
+    //   sheep.$platform.name === 'WechatOfficialAccount' &&
+    //   sheep.$platform.os === 'ios' &&
+    //   !sheep.$platform.landingPage.includes('pages/pay/index')
+    // ) {
+    //   location.reload();
+    //   return;
+    // }
     let id = '';
     if (options.orderSN) {
       id = options.orderSN;
