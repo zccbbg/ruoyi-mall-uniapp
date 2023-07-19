@@ -39,7 +39,7 @@
         <view
           v-if="shareIcon"
           class="detail-tabbar-item ss-flex ss-flex-col ss-row-center ss-col-center"
-          @tap="showShareModal"
+          @tap="sheep.$helper.toast('功能暂未开发')"
         >
           <image
             class="item-icon"
@@ -126,20 +126,22 @@
     uni.setStorageSync('tabbar', e);
   };
   async function onFavorite() {
-    const { error } = await sheep.$api.user.favorite.do(props.modelValue.id);
-    if (error === 0) {
-      if (props.modelValue.favorite) {
-        props.modelValue.favorite = 0;
-      } else {
-        props.modelValue.favorite = 1;
-      }
-    }
+    sheep.$helper.toast('功能暂未开发')
+    // const { error } = await sheep.$api.user.favorite.do(props.modelValue.id);
+    // if (error === 0) {
+    //   if (props.modelValue.favorite) {
+    //     props.modelValue.favorite = 0;
+    //   } else {
+    //     props.modelValue.favorite = 1;
+    //   }
+    // }
   }
 
   const onChat = () => {
-    sheep.$router.go('/pages/chat/index', {
-      id: props.modelValue.id,
-    });
+    sheep.$helper.toast('功能暂未开发')
+    // sheep.$router.go('/pages/chat/index', {
+    //   id: props.modelValue.id,
+    // });
   };
 </script>
 
