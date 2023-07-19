@@ -81,8 +81,8 @@
         <view class="notice-item--center">
           <view class="ss-flex ss-flex-1">
             <!--            <text class="title">{{state.orderInfo.unpaid ? '交易单号':'订单编号'}}：</text>-->
-            <text class="title">{{ state.status === 0 ? '交易单号：' : '订单号：' }}</text>
-            <text class="detail">{{ state.status === 0 ? state.orderInfo.payId : state.orderInfo.orderSn }}</text>
+            <text class="title">{{ '订单号：' }}</text>
+            <text class="detail">{{ state.orderInfo.orderSn }}</text>
           </view>
           <button class="ss-reset-button copy-btn" @tap="onCopy(state.status === 0 ? state.orderInfo.payId : state.orderInfo.orderSn)">复制</button>
         </view>

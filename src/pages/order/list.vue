@@ -21,7 +21,7 @@
         :key="order.id"
       >
         <view class="order-card-header ss-flex ss-col-center ss-row-between ss-p-x-20">
-          <view class="order-no">{{ order.status === 0 ? '交易单号：' + order.payId : '订单号：' + order.orderSn }}</view>
+          <view class="order-no">{{ '订单号：' + order.orderSn }}</view>
           <view class="order-state ss-font-26" :class="formatOrderColor(order.status)">
             <text>{{getOrderStatusName(order.status) }}</text>
             <text v-if="order.aftersaleStatus > 1" class="danger-color">（{{getOrderAfterSaleStatusName(order.aftersaleStatus) }}）</text>
