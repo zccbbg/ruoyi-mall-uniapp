@@ -104,31 +104,31 @@
           </uni-easyinput>
         </uni-forms-item>
 
-        <uni-forms-item name="password" label="登录密码" @tap="onSetPassword">
-          <uni-easyinput
-            v-model="state.model.password"
-            :placeholder="userInfo.verification?.password ? '修改登录密码' : '点击设置登录密码'"
-            :inputBorder="false"
-            :styles="{ disableColor: '#fff' }"
-            disabled
-            placeholderStyle="color:#BBBBBB;font-size:28rpx;line-height:normal"
-            :clearable="false"
-          >
-            <template v-slot:right>
-              <view class="ss-flex ss-col-center">
-                <su-radio
-                  class="ss-flex"
-                  v-if="userInfo.verification?.password"
-                  :modelValue="true"
-                />
+<!--        <uni-forms-item name="password" label="登录密码" @tap="onSetPassword">-->
+<!--          <uni-easyinput-->
+<!--            v-model="state.model.password"-->
+<!--            :placeholder="userInfo.verification?.password ? '修改登录密码' : '点击设置登录密码'"-->
+<!--            :inputBorder="false"-->
+<!--            :styles="{ disableColor: '#fff' }"-->
+<!--            disabled-->
+<!--            placeholderStyle="color:#BBBBBB;font-size:28rpx;line-height:normal"-->
+<!--            :clearable="false"-->
+<!--          >-->
+<!--            <template v-slot:right>-->
+<!--              <view class="ss-flex ss-col-center">-->
+<!--                <su-radio-->
+<!--                  class="ss-flex"-->
+<!--                  v-if="userInfo.verification?.password"-->
+<!--                  :modelValue="true"-->
+<!--                />-->
 
-                <button v-else class="ss-reset-button ss-flex ss-col-center ss-row-center">
-                  <text class="_icon-forward" style="color: #bbbbbb; font-size: 26rpx"></text>
-                </button>
-              </view>
-            </template>
-          </uni-easyinput>
-        </uni-forms-item>
+<!--                <button v-else class="ss-reset-button ss-flex ss-col-center ss-row-center">-->
+<!--                  <text class="_icon-forward" style="color: #bbbbbb; font-size: 26rpx"></text>-->
+<!--                </button>-->
+<!--              </view>-->
+<!--            </template>-->
+<!--          </uni-easyinput>-->
+<!--        </uni-forms-item>-->
       </view>
 
       <view class="bg-white ss-m-t-14">
@@ -141,64 +141,64 @@
             :border="false"
             class="list-border"
           ></uni-list-item>
-          <uni-list-item
-            clickable
-            @tap="sheep.$router.go('/pages/user/invoice/list')"
-            title="发票管理"
-            showArrow
-            :border="false"
-            class="list-border"
-          ></uni-list-item>
+<!--          <uni-list-item-->
+<!--            clickable-->
+<!--            @tap="sheep.$router.go('/pages/user/invoice/list')"-->
+<!--            title="发票管理"-->
+<!--            showArrow-->
+<!--            :border="false"-->
+<!--            class="list-border"-->
+<!--          ></uni-list-item>-->
         </uni-list>
       </view>
     </uni-forms>
 
-    <view v-if="sheep.$platform.name !== 'H5'">
-      <view class="title-box ss-p-l-30">第三方账号绑定</view>
+<!--    <view v-if="sheep.$platform.name !== 'H5'">-->
+<!--      <view class="title-box ss-p-l-30">第三方账号绑定</view>-->
 
-      <view class="account-list ss-flex ss-row-between">
-        <view v-if="'WechatOfficialAccount' === sheep.$platform.name" class="ss-flex ss-col-center">
-          <image
-            class="list-img"
-            :src="sheep.$url.static('/static/img/shop/platform/WechatOfficialAccount.png')"
-          />
-          <text class="list-name">微信公众号</text>
-        </view>
-        <view v-if="'WechatMiniProgram' === sheep.$platform.name" class="ss-flex ss-col-center">
-          <image
-            class="list-img"
-            :src="sheep.$url.static('/static/img/shop/platform/WechatMiniProgram.png')"
-          />
-          <text class="list-name">微信小程序</text>
-        </view>
-        <view v-if="'App' === sheep.$platform.name" class="ss-flex ss-col-center">
-          <image
-            class="list-img"
-            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"
-          />
-          <text class="list-name">微信开放平台</text>
-        </view>
-        <view class="ss-flex ss-col-center">
-          <view class="info ss-flex ss-col-center" v-if="state.thirdOauthInfo">
-            <image
-              class="avatar ss-m-r-20"
-              :src="sheep.$url.cdn(state.thirdOauthInfo.avatar)"
-            ></image>
-            <text class="name">{{ state.thirdOauthInfo.nickname }}</text>
-          </view>
-          <view class="bind-box ss-m-l-20">
-            <button
-              v-if="state.thirdOauthInfo"
-              class="ss-reset-button relieve-btn"
-              @tap="unBindThirdOauth"
-            >
-              解绑
-            </button>
-            <button v-else class="ss-reset-button bind-btn" @tap="bindThirdOauth">绑定</button>
-          </view>
-        </view>
-      </view>
-    </view>
+<!--      <view class="account-list ss-flex ss-row-between">-->
+<!--        <view v-if="'WechatOfficialAccount' === sheep.$platform.name" class="ss-flex ss-col-center">-->
+<!--          <image-->
+<!--            class="list-img"-->
+<!--            :src="sheep.$url.static('/static/img/shop/platform/WechatOfficialAccount.png')"-->
+<!--          />-->
+<!--          <text class="list-name">微信公众号</text>-->
+<!--        </view>-->
+<!--        <view v-if="'WechatMiniProgram' === sheep.$platform.name" class="ss-flex ss-col-center">-->
+<!--          <image-->
+<!--            class="list-img"-->
+<!--            :src="sheep.$url.static('/static/img/shop/platform/WechatMiniProgram.png')"-->
+<!--          />-->
+<!--          <text class="list-name">微信小程序</text>-->
+<!--        </view>-->
+<!--        <view v-if="'App' === sheep.$platform.name" class="ss-flex ss-col-center">-->
+<!--          <image-->
+<!--            class="list-img"-->
+<!--            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"-->
+<!--          />-->
+<!--          <text class="list-name">微信开放平台</text>-->
+<!--        </view>-->
+<!--        <view class="ss-flex ss-col-center">-->
+<!--          <view class="info ss-flex ss-col-center" v-if="state.thirdOauthInfo">-->
+<!--            <image-->
+<!--              class="avatar ss-m-r-20"-->
+<!--              :src="sheep.$url.cdn(state.thirdOauthInfo.avatar)"-->
+<!--            ></image>-->
+<!--            <text class="name">{{ state.thirdOauthInfo.nickname }}</text>-->
+<!--          </view>-->
+<!--          <view class="bind-box ss-m-l-20">-->
+<!--            <button-->
+<!--              v-if="state.thirdOauthInfo"-->
+<!--              class="ss-reset-button relieve-btn"-->
+<!--              @tap="unBindThirdOauth"-->
+<!--            >-->
+<!--              解绑-->
+<!--            </button>-->
+<!--            <button v-else class="ss-reset-button bind-btn" @tap="bindThirdOauth">绑定</button>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
+<!--    </view>-->
 
     <su-fixed bottom placeholder bg="none">
       <view class="footer-box ss-p-20">
@@ -326,12 +326,12 @@
     const userInfo = await sheep.$store('user').getInfo();
     state.model = clone(userInfo);
 
-    if (sheep.$platform.name !== 'H5') {
-      let { data, error } = await sheep.$api.user.thirdOauthInfo();
-      if (error === 0) {
-        state.thirdOauthInfo = data;
-      }
-    }
+    // if (sheep.$platform.name !== 'H5') {
+    //   let { data, error } = await sheep.$api.user.thirdOauthInfo();
+    //   if (error === 0) {
+    //     state.thirdOauthInfo = data;
+    //   }
+    // }
   };
 
   onBeforeMount(async () => {

@@ -123,15 +123,15 @@
         </s-goods-column>
       </view>
     </view>
-<!--    <uni-load-more-->
-<!--        v-if="state.pagination.total > 0"-->
-<!--        :status="state.loadStatus"-->
-<!--        :content-text="{-->
-<!--        contentdown: '上拉加载更多',-->
-<!--      }"-->
-<!--        @tap="loadmore"-->
-<!--    />-->
-<!--    <s-empty v-if="state.pagination.total === 0" icon="/static/soldout-empty.png" text="暂无商品" />-->
+    <uni-load-more
+        v-if="state.pagination.total > 0"
+        :status="state.loadStatus"
+        :content-text="{
+          contentdown: '上拉加载更多',
+        }"
+        @tap="loadmore"
+    />
+    <s-empty v-if="state.pagination.total === 0" icon="/static/soldout-empty.png" text="暂无商品" />
   </view>
 </template>
 
@@ -143,6 +143,7 @@
   import { computed, reactive, onMounted } from 'vue';
   import sheep from '@/sheep';
   import _ from "lodash";
+  import { onReachBottom } from "@dcloudio/uni-app";
 
   const pagination = {
     data: [],
@@ -155,7 +156,7 @@
     pagination: {
       page: 1,
       total: 0,
-      size: 10
+      size: 6
     },
     loadStatus: "",
     goodsList: [],
@@ -178,6 +179,11 @@
       await getList();
     }
   }
+
+  onReachBottom(() => {
+    loadmore();
+  });
+
   const { mode, tagStyle, buyNowStyle, goodsFields, goodsIds } = props.data ?? {};
   const { marginLeft, marginRight } = props.styles ?? {};
 
@@ -193,7 +199,7 @@
     }
     const res = await sheep.$api.goods.list(params, { page: state.pagination.page - 1, size: state.pagination.size });
     const {content,totalElements, totalPages } = res;
-    let goodsList = _.concat((state.goodsList, content));
+    let goodsList = _.concat(state.goodsList, content);
     state.pagination.data = goodsList;
     state.pagination.total = totalElements;
     state.goodsList = goodsList;
@@ -203,7 +209,6 @@
     }else {
       state.loadStatus = 'noMore'
     }
-    console.log('res', res)
   }
 
   onMounted(async () => {

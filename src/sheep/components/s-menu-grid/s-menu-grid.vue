@@ -3,7 +3,7 @@
     <uni-grid-item
       v-for="(item, index) in data.list"
       :key="index"
-      @tap="sheep.$helper.toast('功能暂未开发')"
+      @tap="handleGo(item)"
     >
       <view class="grid-item-box ss-flex ss-flex-col ss-row-center ss-col-center">
         <view class="img-box">
@@ -39,6 +39,16 @@
       default() {},
     },
   });
+
+  const handleGo = (item) => {
+    console.log('item:', item)
+    if (item.title.text === '收货地址'){
+      sheep.$router.go(item.url)
+    }else {
+      sheep.$helper.toast('功能暂未开发')
+    }
+  }
+
 </script>
 
 <style lang="scss" scoped>

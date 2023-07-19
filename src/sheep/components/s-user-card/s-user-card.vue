@@ -12,7 +12,6 @@
                 : sheep.$url.static('/static/img/shop/default_avatar.png')
             "
             mode="aspectFill"
-            @tap="sheep.$router.go('/pages/user/info')"
           ></image>
         </view>
         <view>

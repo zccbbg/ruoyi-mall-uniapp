@@ -164,7 +164,7 @@
 
 <style lang="scss" scoped>
 .goods-block{
-  margin: 100rpx 20rpx;
+  margin: 100rpx 20px 0px 20rpx;
 }
 .icon-text{
   display: flex;
