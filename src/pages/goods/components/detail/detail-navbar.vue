@@ -62,11 +62,11 @@
         value: 'goods',
         to: 'detail-swiper-selector',
       },
-      {
-        label: '评价',
-        value: 'comment',
-        to: 'detail-comment-selector',
-      },
+      // {
+      //   label: '评价',
+      //   value: 'comment',
+      //   to: 'detail-comment-selector',
+      // },
       {
         label: '详情',
         value: 'detail',
