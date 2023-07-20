@@ -194,11 +194,16 @@
 
   const onPreview = () => {
     if (!props.isPreview) return;
-    props.list.splice(
-      props.list.findIndex((item) => item.type === 'video'),
-      1,
-    );
-    let previewImage = props.list;
+    // props.list.splice(
+    //   props.list.findIndex((item) => item.type === 'video'),
+    //   1,
+    // );
+    let previewImage = [];
+    props.list.forEach(it=>{
+      if (it.bannerType !== 'video') {
+        previewImage.push(it)
+      }
+    })
     uni.previewImage({
       urls:
         previewImage.length < 1
