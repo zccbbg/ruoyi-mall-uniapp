@@ -17,15 +17,7 @@
           <view class="steps-item" v-for="(item, index) in state.list" :key="index">
             <view class="ss-flex">
               <text
-                class="sicon-circleclose"
-                v-if="
-                  (state.list.length - 1 == index && state.info.aftersale_status === -2) ||
-                  (state.list.length - 1 == index && state.info.aftersale_status === -1)
-                "
-              ></text>
-              <text
                 class="sicon-circlecheck"
-                v-else
                 :class="state.active >= index ? 'activity-color' : 'info-color'"
               ></text>
 
@@ -47,47 +39,61 @@
       <!-- 服务状态 -->
       <view
         class="status-box ss-flex ss-col-center ss-row-between ss-m-x-20"
-        @tap="sheep.$router.go('/pages/order/aftersale/log', { id: state.aftersaleId })"
       >
         <view class="">
-          <view class="status-text">{{ state.info.aftersale_status_desc }}</view>
-          <view class="status-time">{{ state.info.update_time }}</view>
+          <view class="status-time">更新时间：{{ state.info.updateTime }}</view>
         </view>
-        <text class="ss-iconfont _icon-forward" style="color: #666"></text>
+<!--        <view class="">-->
+<!--          <view class="status-text">{{ state.info.aftersale_status_desc }}</view>-->
+<!--          <view class="status-time">{{ state.info.update_time }}</view>-->
+<!--        </view>-->
+<!--        <text class="ss-iconfont _icon-forward" style="color: #666"></text>-->
       </view>
 
       <!-- 退款金额 -->
       <view class="aftersale-money ss-flex ss-col-center ss-row-between">
         <view class="aftersale-money--title">退款总额</view>
-        <view class="aftersale-money--num">￥{{ state.info.refund_fee }}</view>
+        <view class="aftersale-money--num">￥{{ state.info.returnAmount }}</view>
       </view>
       <!-- 服务商品 -->
       <view class="order-shop">
-        <s-goods-item
-          :title="state.info.goods_title"
-          :price="state.info.goods_price"
-          :img="state.info.goods_image"
-          priceColor="#333333"
-          :titleWidth="480"
-          :skuText="state.info.goods_sku_text"
-          :num="state.info.goods_num"
-        ></s-goods-item>
+<!--        <s-goods-item-->
+<!--          :title="state.info.goods_title"-->
+<!--          :price="state.info.goods_price"-->
+<!--          :img="state.info.goods_image"-->
+<!--          priceColor="#333333"-->
+<!--          :titleWidth="480"-->
+<!--          :skuText="state.info.goods_sku_text"-->
+<!--          :num="state.info.goods_num"-->
+<!--        ></s-goods-item>-->
+        <view class="border-bottom" v-for="item in state.info.orderItemList" :key="item.id">
+          <s-goods-item
+              :img="item.pic"
+              :title="item.productName"
+              :skuText="item.spDataValue"
+              :price="item.salePrice"
+              :num="item.quantity"
+              priceColor="#333333"
+              :titleWidth="480"
+          >
+          </s-goods-item>
+        </view>
       </view>
 
       <!-- 服务内容 -->
       <view class="aftersale-content">
         <view class="aftersale-item ss-flex ss-col-center">
           <view class="item-title">服务单号：</view>
-          <view class="item-content ss-m-r-16">{{ state.info.aftersale_sn }}</view>
+          <view class="item-content ss-m-r-16">{{ state.info.id }}</view>
           <button class="ss-reset-button copy-btn" @tap="onCopy">复制</button>
         </view>
         <view class="aftersale-item ss-flex ss-col-center">
           <view class="item-title">申请时间：</view>
-          <view class="item-content">{{ state.info.create_time }}</view>
+          <view class="item-content">{{ state.info.createTime }}</view>
         </view>
         <view class="aftersale-item ss-flex ss-col-center">
           <view class="item-title">售后类型：</view>
-          <view class="item-content">{{ state.info.type_text }}</view>
+          <view class="item-content">{{ state.info.type === 1 ? '仅退款':'退款退货' }}</view>
         </view>
         <view class="aftersale-item ss-flex ss-col-center">
           <view class="item-title">申请原因：</view>
@@ -95,7 +101,7 @@
         </view>
         <view class="aftersale-item ss-flex ss-col-center">
           <view class="item-title">相关描述：</view>
-          <view class="item-content">{{ state.info.content }}</view>
+          <view class="item-content">{{ state.info.description }}</view>
         </view>
       </view>
     </view>
@@ -108,9 +114,9 @@
       <view class="foot_box">
         <button
           class="ss-reset-button btn"
-          v-if="state.info.btns?.includes('cancel')"
-          @tap="onApply(state.info.id)"
-          >取消申请</button
+          v-if="state.info.status !== 2"
+          @tap="onApply(state.info.orderId)"
+          >取消售后</button
         >
         <!-- <button
           class="ss-reset-button btn"
@@ -118,9 +124,9 @@
           @tap="onDelete(state.info.id)"
           >删除</button
         > -->
-        <button class="ss-reset-button contcat-btn btn" @tap="sheep.$router.go('/pages/chat/index')"
-          >联系客服</button
-        >
+<!--        <button class="ss-reset-button contcat-btn btn" @tap="sheep.$router.go('/pages/chat/index')"-->
+<!--          >联系客服</button-->
+<!--        >-->
       </view>
     </su-fixed>
   </s-layout>
@@ -136,6 +142,7 @@
   const headerBg = sheep.$url.css('/static/img/shop/order/order_bg.png');
   const state = reactive({
     active: 0,
+    orderId: null,
     aftersaleId: 0,
     info: {},
     list: [
@@ -155,10 +162,9 @@
       content: '确定要取消此申请吗？',
       success: async function (res) {
         if (res.confirm) {
-          const { error } = await sheep.$api.order.aftersale.cancel(orderId);
-          if (error === 0) {
-            getDetail(state.aftersaleId);
-          }
+          await sheep.$api.order.aftersale.cancel(orderId);
+          sheep.$helper.toast('取消成功')
+          sheep.$router.go('/pages/order/list',{type: 4});
         }
       },
     });
@@ -179,26 +185,38 @@
     });
   }
   const onCopy = () => {
-    sheep.$helper.copyText(state.info.aftersale_sn);
+    sheep.$helper.copyText(state.info.id);
   };
   async function getDetail(id) {
-    const { error, data } = await sheep.$api.order.aftersale.detail(id);
+    const data = await sheep.$api.order.aftersale.detail(id);
     state.loading = true;
-    if (error === 0) {
+    if (data) {
+      data.orderItemList.forEach(item => {
+        let str = ''
+        const obj = JSON.parse(item.spData)
+        Object.keys(obj).forEach(key => {
+          str += key + "：" + obj[key] + " "
+        })
+        item.spDataValue = str
+      })
       state.info = data;
-      if (state.info.aftersale_status === -2 || state.info.aftersale_status === -1) {
-        state.list.push({ title: state.info.aftersale_status_text });
-        state.active = 2;
-      } else {
-        state.list.push({ title: '完成' });
-        state.active = state.info.aftersale_status;
+      if (state.info.type === 1){
+        //仅退款
+        state.list.push({title: '已完成'})
+        if (state.info.status === 2){
+          state.active = 2
+        }else {
+          state.active = 1
+        }
+      }else {
+        //退货退款，暂时没有
       }
     } else {
       state.info = null;
     }
   }
   onLoad((options) => {
-    state.aftersaleId = options.id;
+    state.orderId = options.id;
     getDetail(options.id);
   });
 </script>

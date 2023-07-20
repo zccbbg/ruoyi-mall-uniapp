@@ -130,8 +130,9 @@ export default {
     // 售后详情
     detail: (id) =>
       request({
-        url: 'order/aftersale/' + id,
+        url: '/h5/order/refundOrderDetail',
         method: 'GET',
+        params: {orderId: id}
       }),
   },
   //订单包裹

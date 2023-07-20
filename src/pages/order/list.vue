@@ -116,10 +116,10 @@
             <button class="apply-btn ss-reset-button" v-if="order.aftersaleStatus === 1" @tap.stop="onOrderDetail(order.orderId,'orderId')">
               查看详情
             </button>
-            <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="apply-btn ss-reset-button"
-                    @tap.stop="onExpress(order.orderId)">
-              查看物流
-            </button>
+<!--            <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="apply-btn ss-reset-button"-->
+<!--                    @tap.stop="onExpress(order.orderId)">-->
+<!--              查看物流-->
+<!--            </button>-->
             <button v-if="order.status === 2 && order.aftersaleStatus === 1" class="tool-btn ss-reset-button ui-BG-Main-Gradient"
                     @tap.stop="onConfirm(order.orderId)">
               确认收货
