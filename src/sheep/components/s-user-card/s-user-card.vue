@@ -100,7 +100,7 @@
   }
 
   function handleLogin(){
-    if (isLogin){
+    if (!isLogin.value){
       showAuthModal('smsLogin')
     }
   }
