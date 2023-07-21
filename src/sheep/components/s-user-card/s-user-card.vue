@@ -12,6 +12,7 @@
                 : sheep.$url.static('/static/img/shop/default_avatar.png')
             "
             mode="aspectFill"
+            @tap="handleLogin()"
           ></image>
         </view>
         <view>
@@ -58,6 +59,7 @@
   import { computed, reactive } from 'vue';
   import sheep from '@/sheep';
   import { showShareModal, showAuthModal } from '@/sheep/hooks/useModal';
+  import {tap} from "lodash/seq";
 
   // 用户信息
   const userInfo = computed(() => sheep.$store('user').userInfo);
@@ -95,6 +97,12 @@
 
   function onBind() {
     showAuthModal('changeMobile');
+  }
+
+  function handleLogin(){
+    if (isLogin){
+      showAuthModal('smsLogin')
+    }
   }
 </script>
 
