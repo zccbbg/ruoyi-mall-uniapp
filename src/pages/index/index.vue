@@ -1,43 +1,37 @@
 <template>
   <view>
-    <s-layout
-      title="首页"
-      navbar="custom"
-      tabbar="/pages/index/index"
-      :navbarStyle="template.style?.navbar"
-      onShareAppMessage
-    >
-
+    <s-layout title="首页" navbar="custom" tabbar="/pages/index/index" :navbarStyle="template.style?.navbar"
+              onShareAppMessage>
       <!--轮播图 -->
-<!--      <view class="banner-content">-->
-<!--        <swiper class="swiper-content" :indicator-dots="true" :autoplay="true">-->
-<!--          <swiper-item v-for="it in bannerList" :key="it.id" @tap="clickBanner(it)">-->
-<!--            <image :src="it.src" class="img"/>-->
-<!--          </swiper-item>-->
-<!--        </swiper>-->
-<!--      </view>-->
+      <!--      <view class="banner-content">-->
+      <!--        <swiper class="swiper-content" :indicator-dots="true" :autoplay="true">-->
+      <!--          <swiper-item v-for="it in bannerList" :key="it.id" @tap="clickBanner(it)">-->
+      <!--            <image :src="it.src" class="img"/>-->
+      <!--          </swiper-item>-->
+      <!--        </swiper>-->
+      <!--      </view>-->
 
       <!-- 分类 -->
-<!--      <view class="category-content">-->
-<!--        <view class="category-item" v-for="(it,idx) in categoryList"-->
-<!--              @tap="sheep.$router.go('/pages/goods/list', { categoryId: it.id })">-->
-<!--          <image :src="it.icon" class="ct-icon"/>-->
-<!--          <view class="ct-text">{{it.name}}</view>-->
-<!--        </view>-->
-<!--      </view>-->
+      <!--      <view class="category-content">-->
+      <!--        <view class="category-item" v-for="(it,idx) in categoryList"-->
+      <!--              @tap="sheep.$router.go('/pages/goods/list', { categoryId: it.id })">-->
+      <!--          <image :src="it.icon" class="ct-icon"/>-->
+      <!--          <view class="ct-text">{{it.name}}</view>-->
+      <!--        </view>-->
+      <!--      </view>-->
 
       <!-- 广告模块 -->
-<!--      <s-popup-image />-->
-<!--      <view class="icon-text">-->
-<!--        <view class="text-info">-->
-<!--          <view class="left"></view>-->
-<!--          <view class="center">-->
-<!--            推荐商品-->
-<!--          </view>-->
-<!--          <view class="right"></view>-->
-<!--        </view>-->
-<!--      </view>-->
-      <view class="goods-block" >
+      <!--      <s-popup-image />-->
+      <!--      <view class="icon-text">-->
+      <!--        <view class="text-info">-->
+      <!--          <view class="left"></view>-->
+      <!--          <view class="center">-->
+      <!--            推荐商品-->
+      <!--          </view>-->
+      <!--          <view class="right"></view>-->
+      <!--        </view>-->
+      <!--      </view>-->
+      <view class="goods-block">
         <s-goods-card :data="goodsCard.data" :styles="goodsCard.style" />
       </view>
     </s-layout>
@@ -45,178 +39,193 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue';
-  import { onLoad, onPageScroll, onPullDownRefresh } from '@dcloudio/uni-app';
-  import sheep from '@/sheep';
-  import $share from '@/sheep/platform/share';
-  import {Base64} from "js-base64";
+import {
+  computed,
+  ref
+} from 'vue';
+import {
+  onLoad,
+  onPageScroll,
+  onPullDownRefresh,
+  onReachBottom
+} from '@dcloudio/uni-app';
+import sheep from '@/sheep';
+import $share from '@/sheep/platform/share';
 
-  const categoryList = ref([])
-  const goodsCard = {
-    "data": {
-      "mode": 2,
-      "goodsFields": {
-        "title": {
-          "show": 1,
-        },
-        "subtitle": {
-          "show": 1,
-        },
-        "price": {
-          "show": 1,
-        },
-        "original_price": {
-          "show": 1,
-        },
-        "sales": {
-          "show": 1,
-        },
-        "stock": {
-          "show": 0,
-        }
+const categoryList = ref([])
+const goodsCard = {
+  "data": {
+    "mode": 2,
+    "goodsFields": {
+      "title": {
+        "show": 1,
       },
-      "buyNowStyle": {
-        // "mode": 2,
-        // "text": "立即购买",
-        // "color1": "#E9B461",
-        // "color2": "#EECC89",
-        // "src": "\/storage\/decorate\/20221115\/4782356b4587dc4f4a218f2540a0bafc.png",
-        // "right": '20rpx',
-        // "bottom":"18rpx"
+      "subtitle": {
+        "show": 1,
       },
-      "tagStyle": {
+      "price": {
+        "show": 1,
+      },
+      "original_price": {
+        "show": 1,
+      },
+      "sales": {
+        "show": 1,
+      },
+      "stock": {
         "show": 0,
-        "src": ""
-      },
-      params: {
-        orderField: 'sort',
-        orderSort: 'asc'
-      },
-      "borderRadiusTop": 6,
-      "borderRadiusBottom": 6,
-      "space": 8
+      }
     },
-    "style": {
-      "background": {
-        "type": "color",
-        "bgImage": "",
-        "bgColor": ""
-      },
-      "marginLeft": 8,
-      "marginRight": 8,
-      "marginTop": 0,
-      "marginBottom": 10,
-      "borderRadiusTop": 0,
-      "borderRadiusBottom": 0,
-      "padding": 0
-    }
-  };
-
-  // 隐藏原生tabBar
-  uni.hideTabBar();
-
-  const template = computed(() => sheep.$store('app').template.home);
-
-  onLoad((options) => {
-    // #ifdef MP
-    // 小程序识别二维码
-    if (options.scene) {
-      const sceneParams = decodeURIComponent(options.scene).split('=');
-      options[sceneParams[0]] = sceneParams[1];
-    }
-    // #endif
-
-    // 预览模板
-    if (options.templateId) {
-      sheep.$store('app').init(options.templateId);
-    }
-
-    // 解析分享信息
-    if (options.spm) {
-      $share.decryptSpm(options.spm);
-    }
-
-    // 进入指定页面(完整页面路径)
-    if (options.page) {
-      sheep.$router.go(decodeURIComponent(options.page));
-    }
-    getCategoryList()
-
-  });
-
-  // 下拉刷新
-  onPullDownRefresh(() => {
-    sheep.$store('app').init();
-    setTimeout(function () {
-      uni.stopPullDownRefresh();
-    }, 800);
-  });
-
-  onPageScroll(() => {});
-
-  // 获取商品分类
-  function getCategoryList(){
-    sheep.$api.category.list().then(res => {
-      categoryList.value = res
-    })
+    "buyNowStyle": {
+      // "mode": 2,
+      // "text": "立即购买",
+      // "color1": "#E9B461",
+      // "color2": "#EECC89",
+      // "src": "\/storage\/decorate\/20221115\/4782356b4587dc4f4a218f2540a0bafc.png",
+      // "right": '20rpx',
+      // "bottom":"18rpx"
+    },
+    "tagStyle": {
+      "show": 0,
+      "src": ""
+    },
+    params: {
+      orderField: 'sort',
+      orderSort: 'asc'
+    },
+    "borderRadiusTop": 6,
+    "borderRadiusBottom": 6,
+    "space": 8
+  },
+  "style": {
+    "background": {
+      "type": "color",
+      "bgImage": "",
+      "bgColor": ""
+    },
+    "marginLeft": 8,
+    "marginRight": 8,
+    "marginTop": 0,
+    "marginBottom": 10,
+    "borderRadiusTop": 0,
+    "borderRadiusBottom": 0,
+    "padding": 0
   }
+};
+
+// 隐藏原生tabBar
+uni.hideTabBar();
+
+const template = computed(() => sheep.$store('app').template.home);
+
+onLoad((options) => {
+  // #ifdef MP
+  // 小程序识别二维码
+  if (options.scene) {
+    const sceneParams = decodeURIComponent(options.scene).split('=');
+    options[sceneParams[0]] = sceneParams[1];
+  }
+  // #endif
+
+  // 预览模板
+  if (options.templateId) {
+    sheep.$store('app').init(options.templateId);
+  }
+
+  // 解析分享信息
+  if (options.spm) {
+    $share.decryptSpm(options.spm);
+  }
+
+  // 进入指定页面(完整页面路径)
+  if (options.page) {
+    sheep.$router.go(decodeURIComponent(options.page));
+  }
+  getCategoryList()
+});
+
+// 下拉刷新
+onPullDownRefresh(() => {
+  sheep.$store('app').init();
+  setTimeout(function() {
+    uni.stopPullDownRefresh();
+  }, 800);
+});
+// 上拉加载更多
+onReachBottom(() => {
+  // 该事件必须申明,子组件才会触发该事件
+})
+onPageScroll(() => {});
+
+// 获取商品分类
+function getCategoryList() {
+  sheep.$api.category.list().then(res => {
+    categoryList.value = res
+  })
+}
 </script>
 
 <style lang="scss" scoped>
-.goods-block{
-  margin: 100rpx 20px 0px 20rpx;
+.goods-block {
+  margin: 100 rpx 20 rpx;
 }
-.icon-text{
+
+.icon-text {
   display: flex;
   justify-content: center;
-  margin-bottom: 24rpx;
+  margin-bottom: 24 rpx;
+
   .text-info {
     display: flex;
     align-items: center;
-    width: 440rpx;
+    width: 440 rpx;
+
     .left {
-      width: 108rpx;
-      height: 2rpx;
+      width: 108 rpx;
+      height: 2 rpx;
       background: #D8D8D8;
     }
-    .center{
-      width: 128rpx;
-      height: 44rpx;
-      font-size: 32rpx;
+
+    .center {
+      width: 128 rpx;
+      height: 44 rpx;
+      font-size: 32 rpx;
       font-family: PingFangSC-Medium, PingFang SC;
       font-weight: 500;
       color: #333333;
-      line-height: 44rpx;
-      margin-left: 48rpx;
-      margin-right: 48rpx;
+      line-height: 44 rpx;
+      margin-left: 48 rpx;
+      margin-right: 48 rpx;
     }
+
     .right {
-      width: 108rpx;
-      height: 2rpx;
+      width: 108 rpx;
+      height: 2 rpx;
       background: #D8D8D8;
     }
   }
 }
 
-.category-content{
-  margin-left: 40rpx;
-  margin-right: 40rpx;
+.category-content {
+  margin-left: 40 rpx;
+  margin-right: 40 rpx;
   display: grid;
   grid-template-columns: auto auto auto 112rpx;
+
   //grid-column-gap: v-bind(ml);
   .category-item {
-    width: 112rpx;
-    margin-bottom: 48rpx;
+    width: 112 rpx;
+    margin-bottom: 48 rpx;
 
 
     .ct-icon {
-      width: 88rpx;
-      height: 88rpx;
-      padding-left: 12rpx;
+      width: 88 rpx;
+      height: 88 rpx;
+      padding-left: 12 rpx;
     }
 
     .ct-text {
-      margin-top: 16rpx;
+      margin-top: 16 rpx;
     }
   }
 
