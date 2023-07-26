@@ -85,7 +85,11 @@ export default {
         loadingMsg: '验证中',
       },
     }),
-
+  recordLogin: () =>
+    request({
+        url: '/h5/record/login',
+        method: 'GET'
+    }),
   // 修改密码
   changePassword: (data) =>
     request({
