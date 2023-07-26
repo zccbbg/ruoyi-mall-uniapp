@@ -81,8 +81,6 @@
   import { computed, reactive } from 'vue';
   import { onLoad } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
-  import wx from "weixin-jsapi";
-  import { useDurationTime } from '@/sheep/hooks/useGoods';
   import {Base64} from "js-base64";
 
   const userInfo = computed(() => sheep.$store('user').userInfo);
