@@ -102,7 +102,7 @@ const app = defineStore({
                     "poster",
                     "link"
                 ],
-                "linkAddress": "https:\/\/shopro.sheepjs.com\/#\/",
+                "linkAddress": "https:\/\/mall.ichengle.top\/uni\/#\/",
                 "posterInfo": {
                     "user_bg": "\/static\/img\/shop\/config\/user-poster-bg.png",
                     "goods_bg": "\/static\/img\/shop\/config\/goods-poster-bg.png",
