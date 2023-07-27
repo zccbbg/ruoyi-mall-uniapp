@@ -149,14 +149,14 @@ const pagination = {
   data: [],
   page: 1,
   total: 0,
-  size: 6
+  size: 10
 };
 
 const state = reactive({
   pagination: {
     page: 1,
     total: 0,
-    size: 6
+    size: 10
   },
   loadStatus: "",
   goodsList: [],
