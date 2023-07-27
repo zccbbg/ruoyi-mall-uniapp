@@ -98,7 +98,7 @@
         "oauth": {
           "apple": {},
           "weixin": {
-            "appid": "wxae7a0c156da9383b",
+            "appid": "wx9452a97d872c3fd1",
             "UniversalLinks": "https://shopro.sheepjs.com/uni-universallinks/__UNI__082C0BA/"
           }
         },
@@ -185,7 +185,7 @@
     "versionCode": 100
   },
   "mp-weixin": {
-    "appid": "wx43051b2afa4ed3d0",
+    "appid": "wx9452a97d872c3fd1",
     "setting": {
       "urlCheck": false,
       "minified": true,
@@ -194,12 +194,7 @@
     "optimization": {
       "subPackages": true
     },
-    "plugins": {
-      "live-player-plugin": {
-        "version": "1.3.5",
-        "provider": "wx2b03c6e691cd7370"
-      }
-    },
+    "plugins": {},
     "lazyCodeLoading": "requiredComponents",
     "usingComponents": {},
     "permission": {},

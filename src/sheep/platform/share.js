@@ -83,7 +83,8 @@ const buildSpmQuery = (params) => {
     from = platformMap.indexOf(params.from) + 1;
   }
   //spmParams = ...  可按需扩展
-  return `spm=${shareId}.${page}.${query}.${platform}.${from}`;
+  // return `spm=${shareId}.${page}.${query}.${platform}.${from}`;
+  return ''
 };
 
 // 构造页面分享参数
@@ -93,7 +94,7 @@ const buildSpmPath = (query) => {
 
 // 构造分享链接
 const buildSpmLink = (query, linkAddress = '') => {
-  return `${linkAddress}?${query}`;
+  return `${linkAddress}${query? '?'+query:''}`;
 };
 
 // 解析Spm

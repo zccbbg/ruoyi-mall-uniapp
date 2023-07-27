@@ -38,6 +38,7 @@ export async function ShoproInit() {
   // }
   await sheep.$api.user.recordLogin();
   // 获取微信授权code
+  /* #ifdef H5 */
   const code = getUrlCode().code;
   if (!code && !sheep.$store('app').authInfo ){
     if (!sheep.$store('user').isLogin){
@@ -52,6 +53,8 @@ export async function ShoproInit() {
     const data = Base64.encode(JSON.stringify({code}));
     sheep.$store('app').authInfo = await sheep.$api.user.getWechatUserAuth(data);
   }
+  /* #endif */
+
 }
 
 function getUrlCode() {

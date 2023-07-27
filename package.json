@@ -144,8 +144,7 @@
     "pinia-plugin-persist-uni": "^1.2.0",
     "qs-canvas": "^1.0.11",
     "vue": "3.2.45",
-    "weixin-js-sdk": "^1.6.0",
-    "weixin-jsapi": "^1.1.0"
+    "weixin-js-sdk": "^1.6.0"
   },
   "devDependencies": {
     "@dcloudio/types": "3.2.8",
