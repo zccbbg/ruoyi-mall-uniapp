@@ -233,6 +233,7 @@
       .page-body {
         width: 100%;
         position: relative;
+        margin-top: 44px;
         z-index: 1;
         flex: 1;
       }
