@@ -7,14 +7,14 @@
     >
       {{ data.text }}
     </view>
-<!--    <view-->
-<!--      v-if="data.type === 'image'"-->
-<!--      :style="[{ width: width }]"-->
-<!--      class="menu-icon-wrap ss-flex ss-row-center ss-col-center"-->
-<!--      @tap="sheep.$helper.toast('功能暂未开发')"-->
-<!--    >-->
-<!--      <image class="nav-image" :src="sheep.$url.cdn(data.src)" mode="aspectFit"></image>-->
-<!--    </view>-->
+    <view
+      v-if="data.type === 'image'"
+      :style="[{ width: width }]"
+      class="menu-icon-wrap ss-flex ss-row-center ss-col-center"
+      @tap="sheep.$helper.toast('功能暂未开发')"
+    >
+      <image class="nav-image" :src="sheep.$url.cdn(data.src)" mode="aspectFit"></image>
+    </view>
     <view class="ss-flex-1" v-if="data.type == 'search'" :style="[{ width: width }]">
       <s-search-block
         :placeholder="data.placeholder || '搜索关键字'"
