@@ -45,7 +45,7 @@ export default {
     jweixin.config({
       debug: false,
       appId: data.appId,
-      timestamp: data.timestamp,
+      timestamp: data.timeStamp,
       nonceStr: data.nonceStr,
       signature: data.signature,
       jsApiList: data.jsApiList,
