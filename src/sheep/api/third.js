@@ -53,11 +53,11 @@ export default {
       }),
 
     // 获取小程序sessionKey（后端不会给前端返回真实的sessionKey）
-    getSessionId: (data) =>
+    getSessionId: (params) =>
       request({
-        url: 'third/wechat/getSessionId',
-        method: 'POST',
-        data,
+        url: 'no-auth/wechat/getSessionId',
+        method: 'GET',
+          params,
         custom: {
           showLoading: false,
         },

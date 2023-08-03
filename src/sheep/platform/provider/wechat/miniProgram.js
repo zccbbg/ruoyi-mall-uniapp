@@ -1,6 +1,8 @@
 import { isEmpty } from 'lodash';
 import third from '@/sheep/api/third';
 import $store from '@/sheep/store';
+import Base64 from 'base-64';
+
 
 let sessionId = uni.getStorageSync('sessionId');
 let subscribeEventList = [];
@@ -14,7 +16,7 @@ function load() {
   if (!sessionStatus) {
     getSessionId();
   }
-  getSubscribeTemplate();
+  // getSubscribeTemplate();
 }
 
 // 微信小程序授权登陆
@@ -91,17 +93,12 @@ const getSessionId = async () => {
     return false;
   }
 
-  const { error, data } = await third.wechat.getSessionId({
-    platform: 'miniProgram',
-    payload: encodeURIComponent(
-      JSON.stringify({
-        code,
-        auto_login: !!($store('app').platform.auto_login && !$store('user').isLogin),
-      }),
-    ),
-  });
-  if (error === 0) {
-    uni.setStorageSync('sessionId', data.session_id);
+  const data = await third.wechat.getSessionId({code});
+  if (data.data) {
+    const decodeStr=Base64.decode(data.data);
+    const obj = JSON.parse(decodeStr)
+    uni.setStorageSync("sessionId", obj.sessionId);
+    uni.setStorageSync("openId", obj.openId);
     return true;
   }
   return false;
