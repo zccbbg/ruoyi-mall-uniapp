@@ -84,11 +84,12 @@ export default class SheepPay {
   }
 
   // 预支付
-  prepay() {
+  prepay(wechatType=1) {
     return new Promise((resolve, reject) => {
       let data = {
         payId: this.orderSN,
         type: 2,
+        wechatType
       };
       // if (uni.getStorageSync('openid')) {
       //   data.openid = uni.getStorageSync('openid');
@@ -113,7 +114,7 @@ export default class SheepPay {
   // 微信公众号JSSDK支付
   async wechatOfficialAccountPay() {
     let that = this;
-    let data = await this.prepay();
+    let data = await this.prepay(1);
     console.log('h5 jssdk支付')
     $wxsdk.wxpay(data, {
       success: () => {
@@ -153,10 +154,11 @@ export default class SheepPay {
   // 微信小程序支付
   async wechatMiniProgramPay() {
     let that = this;
-    let result = await this.prepay();
+    let result = await this.prepay(2);
+    console.log(result)
     uni.requestPayment({
       provider: 'wxpay',
-      ...result.data.pay_data,
+      ...result,
       success: (res) => {
         that.payResult('success');
       },

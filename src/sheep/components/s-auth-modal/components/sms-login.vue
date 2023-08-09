@@ -111,6 +111,9 @@ const smsLoginRef = ref(null);
       state.model.authInfo = sheep.$store('app').authInfo
       sheep.$store('app').authInfo = null
     }
+    // #ifdef MP
+    state.model.mpOpenId = uni.getStorageSync('openId');
+    // #endif
     const data = Base64.encode(JSON.stringify(state.model))
     sheep.$api.user.smsLogin(data).then((response) => {
       sheep.$helper.toast('登录成功')
