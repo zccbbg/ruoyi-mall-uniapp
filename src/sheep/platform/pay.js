@@ -155,10 +155,14 @@ export default class SheepPay {
   async wechatMiniProgramPay() {
     let that = this;
     let result = await this.prepay(2);
-    console.log(result)
+
     uni.requestPayment({
       provider: 'wxpay',
-      ...result,
+      nonceStr:result.nonceStr,
+      package: result.package_,
+      paySign:result.paySign,
+      signType:result.signType,
+      timeStamp:result.timeStamp,
       success: (res) => {
         that.payResult('success');
       },
