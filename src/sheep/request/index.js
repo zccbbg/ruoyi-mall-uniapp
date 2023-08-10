@@ -69,7 +69,11 @@ const http = new Request({
 http.interceptors.request.use(
   (config) => {
     if (config.custom.auth && !$store('user').isLogin) {
-      showAuthModal();
+      if ($platform.name === 'WechatMiniProgram') {
+        showAuthModal('wechatMiniLogin')
+      } else {
+        showAuthModal('smsLogin')
+      }
       return Promise.reject();
     }
     if (config.custom.showLoading) {
@@ -100,6 +104,7 @@ http.interceptors.response.use(
     // 自动设置登陆令牌
     if (response.config.url.includes('h5/account/login') ||
     response.config.url.includes('h5/sms/login') ||
+    response.config.url.includes('h5/wechat/login') ||
     response.config.url.includes('h5/register')) {
       $store('user').setToken(response.data.token);
     }
@@ -118,7 +123,11 @@ http.interceptors.response.use(
         }
         sheep.$helper.toast(errorMsg)
         userStore.logout(true)
-        showAuthModal()
+        if ($platform.name === 'WechatMiniProgram') {
+          showAuthModal('wechatMiniLogin')
+        } else {
+          showAuthModal('smsLogin')
+        }
       }
       else if (data.code === 500){
         sheep.$helper.toast(errorMsg)

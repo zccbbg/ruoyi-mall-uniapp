@@ -10,6 +10,7 @@
 
       <!-- 2.短信登录  smsLogin -->
       <sms-login v-if="authType === 'smsLogin'" :agreeStatus="state.protocol"></sms-login>
+      <wechat-login v-if="authType === 'wechatMiniLogin'"></wechat-login>
       <!-- 3.短信注册 smsRegister-->
       <sms-register v-if="authType === 'smsRegister'" :agreeStatus="state.protocol"></sms-register>
 
@@ -31,17 +32,17 @@
         class="auto-login-box ss-flex ss-row-center ss-col-center"
       >
         <!-- 微信小程序登录 -->
-        <button
-          v-if="sheep.$platform.name === 'WechatMiniProgram'"
-          open-type="getPhoneNumber"
-          @getphonenumber="thirdLogin('wechat', $event)"
-          class="ss-reset-button auto-login-btn"
-        >
-          <image
-            class="auto-login-img"
-            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"
-          ></image>
-        </button>
+<!--        <button-->
+<!--          v-if="sheep.$platform.name === 'WechatMiniProgram'"-->
+<!--          open-type="getPhoneNumber"-->
+<!--          @getphonenumber="thirdLogin('wechat', $event)"-->
+<!--          class="ss-reset-button auto-login-btn"-->
+<!--        >-->
+<!--          <image-->
+<!--            class="auto-login-img"-->
+<!--            :src="sheep.$url.static('/static/img/shop/platform/wechat.png')"-->
+<!--          ></image>-->
+<!--        </button>-->
 
         <!-- 公众号|App微信登录 -->
 <!--        <button-->
@@ -111,6 +112,7 @@
   import sheep from '@/sheep';
   import accountLogin from './components/account-login.vue';
   import smsLogin from './components/sms-login.vue';
+  import wechatLogin from './components/wechat-login.vue';
   import smsRegister from './components/sms-register.vue';
   import resetPassword from './components/reset-password.vue';
   import changeMobile from './components/change-mobile.vue';

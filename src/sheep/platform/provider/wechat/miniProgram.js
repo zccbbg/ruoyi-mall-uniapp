@@ -18,36 +18,26 @@ function load() {
   }
   // getSubscribeTemplate();
 }
-
 // 微信小程序授权登陆
 const login = async (e) => {
   return new Promise(async (resolve, reject) => {
+    console.log(e)
     if (e.errMsg !== 'getPhoneNumber:ok') {
       resolve(false);
       return;
     }
-
-    const { error } = await third.wechat.login({
-      platform: 'miniProgram',
-      shareInfo: uni.getStorageSync('shareLog') || {},
-      payload: encodeURIComponent(
+    const { encryptedData, iv } = e;
+    const data = Base64.encode(
         JSON.stringify({
-          sessionId: uni.getStorageSync('sessionId'),
-          code: e.code,
-          iv: e.iv,
-          encryptedData: e.encryptedData,
-        }),
-      ),
-    });
-
-    if (error === 0) {
+          data: encryptedData,
+          key: iv,
+          openId: uni.getStorageSync("openId"),
+          sessionKey: uni.getStorageSync("sessionId"),
+        })
+    )
+    third.wechat.login({ data }).then(resp => {
       resolve(true);
-    }
-
-    if (error === -1) {
-      getSessionId();
-    }
-    resolve(false);
+    });
   });
 };
 

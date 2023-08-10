@@ -5,11 +5,11 @@ export default {
   // 微信相关
   wechat: {
     // 第三方登录
-    login: (data) =>
+    login: (params) =>
       request({
-        url: 'third/wechat/login',
+        url: 'h5/wechat/login',
         method: 'POST',
-        data,
+          params,
         custom: {
           showSuccess: true,
           loadingMsg: '登陆中',

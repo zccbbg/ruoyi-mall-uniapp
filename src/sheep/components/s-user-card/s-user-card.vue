@@ -101,6 +101,10 @@
 
   function handleLogin(){
     if (!isLogin.value){
+      if (sheep.$platform.name === 'WechatMiniProgram') {
+        showAuthModal('wechatMiniLogin')
+        return;
+      }
       showAuthModal('smsLogin')
     }
   }
