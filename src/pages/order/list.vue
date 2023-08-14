@@ -1,6 +1,6 @@
 <!-- 页面 -->
 <template>
-  <s-layout title="我的订单">
+  <s-layout title="我的订单" >
     <su-sticky bgColor="#fff">
       <su-tabs
         :list="tabMaps"

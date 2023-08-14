@@ -27,18 +27,18 @@
       <view class="cart-content ss-flex-1 ss-p-x-30 ss-m-b-40">
         <view class="goods-box ss-r-10 ss-m-b-14" v-for="item in state.list" :key="item.id">
           <view class="ss-flex ss-col-center">
-            <radio-group
+            <checkbox-group
               @change="onSelectSingle(item.id)"
               class="check-box ss-flex ss-col-center ss-p-l-10"
             >
               <label class="radio ss-flex">
-                <radio
+                <checkbox
                   :checked="state.selectedIds.includes(item.id)"
                   color="var(--ui-BG-Main)"
                   style="transform: scale(0.8)"
                 />
               </label>
-            </radio-group>
+            </checkbox-group>
             <s-goods-item
               :title="item.productName"
               :img="item.pic"
@@ -63,16 +63,16 @@
       <su-fixed bottom :val="48" placeholder v-if="state.list.length > 0" :isInset="false">
         <view class="cart-footer ss-flex ss-col-center ss-row-between ss-p-x-30 border-bottom">
           <view class="footer-left ss-flex ss-col-center">
-            <radio-group @change="onSelectAll" class="check-box ss-flex ss-col-center ss-p-r-30">
+            <checkbox-group @change="onSelectAll" class="check-box ss-flex ss-col-center ss-p-r-30">
               <label class="radio ss-flex">
-                <radio
+                <checkbox
                   :checked="state.isAllSelected"
                   color="var(--ui-BG-Main)"
                   style="transform: scale(0.8)"
                 />
                 <view class="ss-m-l-8"> 全选 </view>
               </label>
-            </radio-group>
+            </checkbox-group>
             <text>合计：</text>
             <view class="text-price price-text">
               {{ state.totalPriceSelected }}
@@ -168,6 +168,31 @@
 </script>
 
 <style lang="scss" scoped>
+  :deep() {
+    checkbox .wx-checkbox-input {
+      border-radius: 50% !important;
+      color: #ffffff !important;
+    }
+
+    checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+      color: #fff;
+      background: var(--ui-BG-Main);
+    }
+
+    .wx-checkbox-input.wx-checkbox-input-checked {
+      border: none !important;
+    }
+
+    .uni-checkbox-input {
+      border-radius: 50% !important;
+      color: #ffffff !important;
+    }
+
+    .uni-checkbox-input:hover {
+      border-color: #d1d1d1 !important;
+    }
+  }
+
   :deep(.ui-fixed) {
     height: 72rpx;
   }

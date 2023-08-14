@@ -680,23 +680,23 @@ const app = defineStore({
                             "padding": 0
                         }
                     },
-                    {
-                        "type": "walletCard",
-                        "style": {
-                            "background": {
-                                "type": "color",
-                                "bgImage": "",
-                                "bgColor": "#FFFFFF"
-                            },
-                            "marginLeft": 10,
-                            "marginRight": 10,
-                            "marginTop": 0,
-                            "marginBottom": 8,
-                            "borderRadiusTop": 8,
-                            "borderRadiusBottom": 8,
-                            "padding": 0
-                        }
-                    },
+                    // {
+                    //     "type": "walletCard",
+                    //     "style": {
+                    //         "background": {
+                    //             "type": "color",
+                    //             "bgImage": "",
+                    //             "bgColor": "#FFFFFF"
+                    //         },
+                    //         "marginLeft": 10,
+                    //         "marginRight": 10,
+                    //         "marginTop": 0,
+                    //         "marginBottom": 8,
+                    //         "borderRadiusTop": 8,
+                    //         "borderRadiusBottom": 8,
+                    //         "padding": 0
+                    //     }
+                    // },
                     {
                         "type": "menuGrid",
                         "data": {

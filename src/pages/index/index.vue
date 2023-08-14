@@ -197,35 +197,41 @@
 
 <style lang="scss" scoped>
 	.goods-block {
-		margin: 100 rpx 20 rpx;
+    /* #ifdef MP-WEIXIN */
+		margin: 140rpx 20rpx;
+    /* #endif */
+
+    /* #ifdef H5 */
+    margin: 90rpx 20rpx;
+    /* #endif */
 	}
 
 	.icon-text {
 		display: flex;
 		justify-content: center;
-		margin-bottom: 24 rpx;
+		margin-bottom: 24rpx;
 
 		.text-info {
 			display: flex;
 			align-items: center;
-			width: 440 rpx;
+			width: 440rpx;
 
 			.left {
-				width: 108 rpx;
-				height: 2 rpx;
+				width: 108rpx;
+				height: 2rpx;
 				background: #D8D8D8;
 			}
 
 			.center {
-				width: 128 rpx;
-				height: 44 rpx;
-				font-size: 32 rpx;
+				width: 128rpx;
+				height: 44rpx;
+				font-size: 32rpx;
 				font-family: PingFangSC-Medium, PingFang SC;
 				font-weight: 500;
 				color: #333333;
-				line-height: 44 rpx;
-				margin-left: 48 rpx;
-				margin-right: 48 rpx;
+				line-height: 44rpx;
+				margin-left: 48rpx;
+				margin-right: 48rpx;
 			}
 
 			.right {
@@ -237,25 +243,25 @@
 	}
 
 	.category-content {
-		margin-left: 40 rpx;
-		margin-right: 40 rpx;
+		margin-left: 40rpx;
+		margin-right: 40rpx;
 		display: grid;
 		grid-template-columns: auto auto auto 112rpx;
 
 		//grid-column-gap: v-bind(ml);
 		.category-item {
-			width: 112 rpx;
-			margin-bottom: 48 rpx;
+			width: 112rpx;
+			margin-bottom: 48rpx;
 
 
 			.ct-icon {
-				width: 88 rpx;
-				height: 88 rpx;
-				padding-left: 12 rpx;
+				width: 88rpx;
+				height: 88rpx;
+				padding-left: 12rpx;
 			}
 
 			.ct-text {
-				margin-top: 16 rpx;
+				margin-top: 16rpx;
 			}
 		}
 
