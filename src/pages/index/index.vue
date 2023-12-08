@@ -120,8 +120,10 @@
 	uni.hideTabBar();
 
 	const template = computed(() => sheep.$store('app').template.home);
-
+  const barHeight = ref(0)
 	onLoad((options) => {
+    const statusBarHeight = sheep.$platform.device.statusBarHeight;
+    barHeight.value = (statusBarHeight + 54)+'px'
 		// #ifdef MP
 		// 小程序识别二维码
 		if (options.scene) {
@@ -198,11 +200,11 @@
 <style lang="scss" scoped>
 	.goods-block {
     /* #ifdef MP-WEIXIN */
-		margin: 140rpx 20rpx;
+		margin: v-bind(barHeight) 20rpx 10rpx 20rpx;
     /* #endif */
 
     /* #ifdef H5 */
-    margin: 90rpx 20rpx;
+    margin: 90rpx 20rpx 10rpx 20rpx;
     /* #endif */
 	}
 

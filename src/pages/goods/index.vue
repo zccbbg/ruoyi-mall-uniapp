@@ -109,7 +109,7 @@
         <!-- 详情tabbar -->
         <detail-tabbar v-model="state.goodsInfo">
           <!-- TODO: 缺货中 已售罄 判断 设计-->
-          <view class="buy-box ss-flex ss-col-center ss-p-r-20">
+          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-if="state.goodsInfo.totalStock > 0">
             <button
               class="ss-reset-button add-btn ui-Shadow-Main"
               @tap="state.showSelectSku = true"
@@ -123,9 +123,9 @@
               立即购买
             </button>
           </view>
-<!--          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-else>-->
-<!--            <button class="ss-reset-button disabled-btn" disabled> 已售罄 </button>-->
-<!--          </view>-->
+          <view class="buy-box ss-flex ss-col-center ss-p-r-20" v-else>
+            <button class="ss-reset-button disabled-btn" disabled> 已售罄 </button>
+          </view>
         </detail-tabbar>
         <s-coupon-get
           v-model="state.couponInfo"
@@ -263,7 +263,11 @@
       state.skeletonLoading = false;
       state.goodsInfo = res;
       state.goodsSwiper = formatGoodsSwiper(state.goodsInfo.product.albumPics.split(','));
-      console.log('图册：', state.goodsSwiper)
+      let totalStock = 0;
+      res.skus.forEach(it=>{
+        totalStock += it.stock;
+      })
+      state.goodsInfo.totalStock = totalStock;
     });
     // const { error, data } = await sheep.$api.coupon.listByGoods(state.goodsId);
     // if (error === 0) {

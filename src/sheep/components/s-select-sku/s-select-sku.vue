@@ -34,13 +34,13 @@
               </view>
             </view>
 
-<!--            <view class="stock-text ss-m-l-20">-->
-<!--              {{-->
-<!--                state.selectedSkuPrice.stock-->
-<!--                  ? formatStock(goodsInfo.stock_show_type, state.selectedSkuPrice.stock)-->
-<!--                  : formatStock(goodsInfo.stock_show_type, goodsInfo.stock)-->
-<!--              }}-->
-<!--            </view>-->
+            <view class="stock-text ss-m-l-20">
+              {{
+                state.selectedSkuPrice.stock || state.selectedSkuPrice.stock === 0
+                  ? formatStock("exact", state.selectedSkuPrice.stock)
+                  : formatStock("exact", goodsInfo.totalStock)
+              }}
+            </view>
           </view>
         </view>
       </view>
@@ -68,9 +68,10 @@
             <view class="label-text">购买数量</view>
             <su-number-box
               :min="1"
-
+              :max="state.selectedSkuPrice.stock"
               :step="1"
               v-model="state.selectedSkuPrice.buyNum"
+              @change="(val)=>state.selectedSkuPrice.buyNum = val"
             ></su-number-box>
           </view>
         </scroll-view>
@@ -171,11 +172,11 @@
   function onAddCart() {
     console.log('加入购物车')
     if (state.selectedSkuPrice.id) {
-      // if (state.selectedSkuPrice.stock <= 0) {
-      //   sheep.$helper.toast('库存不足');
-      // } else {
-        emits('addCart', state.selectedSkuPrice);
-      // }
+      if (state.selectedSkuPrice.stock < 1) {
+        sheep.$helper.toast("库存不足");
+      } else {
+        emits("addCart", state.selectedSkuPrice);
+      }
     } else {
       sheep.$helper.toast('请选择规格');
     }
@@ -183,11 +184,11 @@
 
   function onBuy() {
     if (state.selectedSkuPrice.id) {
-      // if (state.selectedSkuPrice.stock <= 0) {
-      //   sheep.$helper.toast('库存不足');
-      // } else {
+      if (state.selectedSkuPrice.stock < 1) {
+        sheep.$helper.toast("库存不足");
+      } else {
         emits('buy', state.selectedSkuPrice);
-      // }
+      }
     } else {
       sheep.$helper.toast('请选择规格');
     }
