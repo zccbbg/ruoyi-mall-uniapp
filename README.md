@@ -1,6 +1,9 @@
 ## B站讲解视频
 https://www.bilibili.com/video/BV16N4y1d7MM
 
+## node 推荐版本
+16.13.1
+
 ## 技术栈
 
 - **前端技术栈：uni-app、ES6、Vue3、Vite、Pinia;**
