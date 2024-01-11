@@ -12,7 +12,8 @@ https://www.bilibili.com/video/BV16N4y1d7MM
 # 安装依赖 (需安装nodejs环境, 使用npm国内镜像)
 $ npm install --registry=https://registry.npmmirror.com
 ```
-
+## 启动方式
+更推荐用vscode或者webstorm开发，所以请不要使用hbuilder启动。
 ```bash
 # npm 运行
 npm run dev:h5
