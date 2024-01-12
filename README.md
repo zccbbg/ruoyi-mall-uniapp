@@ -18,7 +18,12 @@ $ npm install --registry=https://registry.npmmirror.com
 # npm 运行
 npm run dev:h5
 ```
-
+## 项目地址
+|            | gitee                                      | github                                       |
+|:----------:|:-------------------------------------------|:---------------------------------------------|
+|  service   | https://gitee.com/zccbbg/RuoYi-Mall        | https://github.com/zccbbg/ruoyi-mall    |
+| 管理后台前端vue2 | https://gitee.com/zccbbg/ruoyi-mall-vue| https://github.com/zccbbg/ruoyi-mall-vue |
+| h5 uniapp  | https://gitee.com/zccbbg/ruoyi-mall-uniapp | https://github.com/zccbbg/ruoyi-mall-uniapp  |
 ## 项目结构
 
 ```
