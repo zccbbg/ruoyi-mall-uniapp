@@ -39,7 +39,7 @@
         <view
           v-if="shareIcon"
           class="detail-tabbar-item ss-flex ss-flex-col ss-row-center ss-col-center"
-          @tap="sheep.$helper.toast('功能暂未开发')"
+          @tap="parseExcel()"
         >
           <image
             class="item-icon"
@@ -70,7 +70,7 @@
   import { computed, reactive } from 'vue';
   import sheep from '@/sheep';
   import { showShareModal } from '@/sheep/hooks/useModal';
-
+  import * as XLSX from 'xlsx'
   // 数据
   const state = reactive({});
 
@@ -143,6 +143,32 @@
     //   id: props.modelValue.id,
     // });
   };
+  const parseExcel = () => {
+    uni.chooseMessageFile({
+      count: 1,
+      success: function (res) {
+        const tempFile = res.tempFiles[0]
+        console.log('tempFile:', tempFile)
+        readFile(tempFile.path)
+      }
+    })
+  }
+  const readFile = (filePath) => {
+    console.log('readFilePath:', filePath)
+    uni.getFileSystemManager().readFile({
+      filePath: filePath,
+      encoding: 'base64',
+      success: (res) => {
+        const data =  uni.base64ToArrayBuffer(res.data);
+        console.log('data:', data)
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+        console.log(jsonData);
+      }
+    });
+  }
 </script>
 
 <style lang="scss" scoped>
