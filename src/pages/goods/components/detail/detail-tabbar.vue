@@ -27,7 +27,7 @@
         <view
           v-if="serviceIcon"
           class="detail-tabbar-item ss-flex ss-flex-col ss-row-center ss-col-center"
-          @tap="onChat"
+          @tap="exportExcel"
         >
           <image
             class="item-icon"
@@ -143,6 +143,44 @@
     //   id: props.modelValue.id,
     // });
   };
+
+  const exportExcel = () => {
+    const data = [
+      { 姓名: '张三', 年龄: 18, 性别: '男' }
+    ];
+    const header = ['姓名', '年龄', '性别'];
+
+    const worksheetData = [header, ...data.map(item => header.map(key => item[key]))];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    console.log('path:', uni.env.USER_DATA_PATH)
+    uni.getFileSystemManager().writeFile({
+      filePath: `${uni.env.USER_DATA_PATH}/example.xlsx`,
+      data: wbout,
+      success: function(res) {
+        console.log('save-path:', res)
+        uni.showToast({
+          title: '导出成功',
+        });
+        //直接预览文件
+        uni.openDocument({
+          filePath: `${uni.env.USER_DATA_PATH}/example.xlsx`,
+        });
+      },
+      fail: function(res) {
+        console.log('res:', res)
+        uni.showToast({
+          title: '导出失败',
+          icon: 'none',
+        });
+      },
+    });
+  }
+
   const parseExcel = () => {
     uni.chooseMessageFile({
       count: 1,
