@@ -113,15 +113,14 @@
       return;
     }
     new Promise((resolve, reject) => {
-      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
       let code = getUrlCode().code; //是否存在code
       console.log('code:',code)
       if (!code) {
         //不存在就打开上面的地址进行授权
         window.location.href =
             "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-            appid +
-            "&redirect_uri=" + encodeURIComponent("https://mall.ichengle.top/uni/#/pages/index/user") +
+            import.meta.env.SHOPRO_APPID +
+            "&redirect_uri=" + encodeURIComponent(import.meta.env.SHOPRO_FRONT_DOMAIN + "/#/pages/index/user") +
             "&response_type=code&scope=snsapi_base#wechat_redirect";
         code = getUrlCode().code
       }

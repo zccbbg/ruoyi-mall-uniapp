@@ -723,7 +723,7 @@ const app = defineStore({
                                 {
                                     "src": "\/storage\/decorate\/20221115\/9464fe770d388c7982df73b2d1b1d457.png",
                                     "title": {
-                                        "text": "设置",
+                                        "text": "清空缓存",
                                         "color": "#333"
                                     },
                                     "tip": {

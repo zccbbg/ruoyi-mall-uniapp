@@ -105,6 +105,7 @@ const user = defineStore({
 
     // 重置用户默认数据
     resetUserData() {
+      uni.clearStorage()
       this.setToken();
       this.userInfo = clone(defaultUserInfo);
       this.numData = cloneDeep(defaultNumData);

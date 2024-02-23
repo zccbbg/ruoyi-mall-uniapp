@@ -42,17 +42,18 @@ export async function ShoproInit() {
   const code = getUrlCode().code;
   if (!code && !sheep.$store('app').authInfo ){
     if (!sheep.$store('user').isLogin){
-      let appid = "wx0a5f3d7cabd3ebbf"; //微信APPid
       window.location.href =
           "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-          appid +
-          "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/uni/#/') +
+          import.meta.env.SHOPRO_APPID +
+          "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/') +
           "&response_type=code&scope=snsapi_base#wechat_redirect";
     }
   }else {
     const data = Base64.encode(JSON.stringify({code}));
     sheep.$store('app').authInfo = await sheep.$api.user.getWechatUserAuth(data);
-    await sheep.$api.user.recordLogin();
+    if (sheep.$store('user').isLogin) {
+      await sheep.$api.user.recordLogin();
+    }
   }
   /* #endif */
 

@@ -44,7 +44,12 @@
     console.log('item:', item)
     if (item.title.text === '收货地址'){
       sheep.$router.go(item.url)
-    }else {
+    }else if (item.title.text === '清空缓存'){
+      sheep.$store('user').resetUserData()
+      uni.showToast({
+        title: '缓存清除成功',
+      });
+    } else {
       sheep.$helper.toast('功能暂未开发')
     }
   }
