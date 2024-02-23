@@ -45,7 +45,7 @@ export async function ShoproInit() {
       window.location.href =
           "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
           import.meta.env.SHOPRO_APPID +
-          "&redirect_uri=" + encodeURIComponent('https://mall.ichengle.top/') +
+          "&redirect_uri=" + encodeURIComponent(import.meta.env.SHOPRO_FRONT_DOMAIN + "/#/") +
           "&response_type=code&scope=snsapi_base#wechat_redirect";
     }
   }else {
