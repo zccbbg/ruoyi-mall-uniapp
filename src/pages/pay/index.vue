@@ -214,7 +214,7 @@
     if (!sheep.$store('user').userInfo.openId && authInfo) {
       await sheep.$api.user.setWechatInfo(Base64.encode(JSON.stringify(authInfo)))
       sheep.$store('user').userInfo.openId = authInfo.openid
-      sheep.$store('app').authInfo = null
+      // sheep.$store('app').authInfo = null
     }
     // if (
     //   sheep.$platform.name === 'WechatOfficialAccount' &&
