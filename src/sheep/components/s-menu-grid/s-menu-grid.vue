@@ -42,7 +42,7 @@
 
   const handleGo = (item) => {
     console.log('item:', item)
-    if (item.title.text === '收货地址'){
+    if (['收货地址','意见反馈'].includes(item.title.text)){
       sheep.$router.go(item.url)
     }else if (item.title.text === '清空缓存'){
       sheep.$store('user').resetUserData()
