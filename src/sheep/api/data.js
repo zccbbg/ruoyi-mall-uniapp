@@ -16,4 +16,14 @@ export default {
       url: 'data/richtext/' + id,
       method: 'GET',
     }),
+  getSysConfig: (params) =>
+    request({
+        url: '/no-auth/config/get',
+        method: 'GET',
+        params,
+        custom: {
+            showSuccess: false,
+            auth: false,
+        },
+    }),
 };

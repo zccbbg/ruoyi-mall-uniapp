@@ -8,18 +8,21 @@ import {Base64} from 'js-base64'
 import sheep from '@/sheep';
 
 // 打开授权弹框
-export function showAuthModal(type = 'smsLogin') {
+export function showAuthModal(type = 'smsLogin',centerType='bottom') {
+  console.log(centerType)
   const modal = $store('modal');
   if (modal.auth !== '') {
     closeAuthModal();
     setTimeout(() => {
       modal.$patch((state) => {
         state.auth = type;
+        state.type = centerType
       });
     }, 100);
   } else {
     modal.$patch((state) => {
       state.auth = type;
+      state.type = centerType
     });
   }
 }
