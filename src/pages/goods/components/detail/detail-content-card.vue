@@ -4,7 +4,7 @@
       <view class="line"></view>
       <view class="title ss-m-l-20 ss-m-r-20">详情</view>
     </view>
-    <view class="card-content">
+    <view class="card-content" style="line-height: 0">
       <mp-html :content="content"></mp-html>
     </view>
   </view>
