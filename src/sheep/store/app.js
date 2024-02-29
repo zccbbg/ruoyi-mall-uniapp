@@ -718,12 +718,13 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/9464fe770d388c7982df73b2d1b1d457.png",
                                     "title": {
-                                        "text": "设置",
+                                        "text": "清空缓存",
                                         "color": "#333"
                                     },
                                     "tip": {
@@ -736,7 +737,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/ac3bdfced7c4c5f17f03b48f6d3fa3ec.png",
@@ -754,12 +756,13 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/94eb324f16b6b48e65c4ea1cf7d3c1fd.png",
                                     "title": {
-                                        "text": "浏览足迹",
+                                        "text": "积分记录",
                                         "color": "#333"
                                     },
                                     "tip": {
@@ -772,7 +775,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/215f0aa658e271b3018f2d421bea694f.png",
@@ -790,7 +794,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/0c37315a83f9424a4717ef684984c9c0.png",
@@ -802,13 +807,14 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#bbb"
                                     },
-                                    "url": "\/pages\/public\/faq",
+                                    "url": "\/pages\/public\/richtext?key=mall.question&title=常见问题",
                                     "badge": {
                                         "show": 0,
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/58fe6c2a400d6d18a43949f3d8c58021.png",
@@ -826,7 +832,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/6d0a8c85ba41464b5493226c91c72459.png",
@@ -838,13 +845,14 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#bbb"
                                     },
-                                    "url": "\/pages\/public\/richtext?id=3",
+                                    "url": "\/pages\/public\/richtext?key=mall.aboutUs&title=关于我们",
                                     "badge": {
                                         "show": 0,
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/92bf692d57b8fc2e76815ce6627ef1f9.png",
@@ -856,13 +864,14 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#bbb"
                                     },
-                                    "url": "\/pages\/public\/richtext?id=2",
+                                    "url": "\/pages\/public\/richtext?key=mall.privacyAgreement&title=隐私协议",
                                     "badge": {
                                         "show": 0,
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
@@ -880,7 +889,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
@@ -898,7 +908,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/3c7eb06563d1cf28b4b34bb0d1647659.png",
@@ -916,7 +927,8 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
-                                    }
+                                    },
+                                    finish: true
                                 }
                             ]
                         },

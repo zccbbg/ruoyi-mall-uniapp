@@ -1,6 +1,6 @@
 <template>
   <!-- 规格弹窗 -->
-  <su-popup :show="authType !== ''" round="10" :showClose="true" @close="closeAuthModal">
+  <su-popup :show="authType !== ''" round="10" :showClose="true" @close="closeAuthModal" :type="type">
     <view class="login-wrap">
       <!-- 1. 账号密码登录 accountLogin -->
       <account-login
@@ -25,6 +25,11 @@
 
       <!-- 7.修改用户名 changeUsername-->
       <change-username v-if="authType === 'changeUsername'"></change-username>
+
+<!--      联系客服-->
+      <view v-if="authType === 'contact'">
+        <mp-html class="contact-content" :content="contact"></mp-html>
+      </view>
 
       <!-- 第三方登录 -->
       <view
@@ -108,7 +113,7 @@
 </template>
 
 <script setup>
-  import { computed, reactive } from 'vue';
+import {computed, onMounted, reactive, ref, watch} from 'vue';
   import sheep from '@/sheep';
   import accountLogin from './components/account-login.vue';
   import smsLogin from './components/sms-login.vue';
@@ -123,8 +128,11 @@
   const appInfo = computed(() => sheep.$store('app').info);
 
   const modalStore = sheep.$store('modal');
+
+  const contact = ref({})
   // 授权弹窗类型
   const authType = computed(() => modalStore.auth);
+  const type = computed(() => modalStore.type);
 
   const state = reactive({
     protocol: true,
@@ -156,9 +164,15 @@
       const userInfo = await sheep.$store('user').getInfo();
     }
   };
+
+  onMounted(async ()=>{
+    //获取客服信息
+    const res = await sheep.$api.data.getSysConfig({configKey:'mall.contact'});
+    contact.value = res.data || {configValue: ''}
+  })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import './index.scss';
 
   .safe-box {
@@ -172,5 +186,15 @@
 
   .agreement-text {
     color: $dark-9;
+  }
+
+  .contact-content {
+    text-align: center;
+    image  {
+      max-width: 640rpx !important; /* 设置最大宽度为容器的百分之百 */
+    }
+    rich-text {
+      text-align: center;
+    }
   }
 </style>

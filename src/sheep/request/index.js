@@ -103,10 +103,14 @@ http.interceptors.response.use(
   (response) => {
     // 自动设置登陆令牌
     if (response.config.url.includes('h5/account/login') ||
-    response.config.url.includes('h5/sms/login') ||
-    response.config.url.includes('h5/wechat/login') ||
-    response.config.url.includes('h5/register')) {
-      $store('user').setToken(response.data.token);
+        response.config.url.includes('h5/sms/login') ||
+        response.config.url.includes('h5/wechat/login') ||
+        response.config.url.includes('h5/register') ||
+        response.config.url.includes('no-auth/wechat/getWechatUserAuth')
+        ) {
+      $store('user').setToken(response.data?.token);
+    } else if (response.config.url.includes('no-auth/wechat/getSessionId')) {
+      $store('user').setToken(response.data?.data?.token);
     }
     response.config.custom.showLoading && closeLoading();
     const { data } = response

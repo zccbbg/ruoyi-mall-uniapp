@@ -40,7 +40,7 @@ export default {
   //意见反馈
   feedback: (data) =>
     request({
-      url: 'feedback',
+      url: '/h5/feedback/create',
       method: 'POST',
       data,
     }),
@@ -87,43 +87,31 @@ export default {
       }),
   },
 
-  //上传
-  upload: (file, group = 'ugc', callback) => {
-    const token = uni.getStorageSync('token');
-    uni.showLoading({
-      title: '上传中',
-    });
-    return new Promise((resolve, reject) => {
-      uni.uploadFile({
-        url: baseUrl + '/file/api/upload',
-        filePath: file,
-        name: 'file',
-        formData: {
-          group,
-        },
-        header: {
-          Accept: 'text/json',
-          Authorization: token,
-        },
-        success: (uploadFileRes) => {
-          let result = JSON.parse(uploadFileRes.data);
-          if (result.error === 1) {
-            uni.showToast({
-              icon: 'none',
-              title: result.msg,
+    //上传
+    upload: (file, callback) => {
+        const token = uni.getStorageSync('token');
+        uni.showLoading({
+            title: '上传中',
+        });
+        return new Promise((resolve, reject) => {
+            uni.uploadFile({
+                url: baseUrl + '/h5/file/upload',
+                filePath: file,
+                name: 'file',
+                header: {
+                    Authorization: token,
+                },
+                success: (uploadFileRes) => {
+                    return resolve(uploadFileRes.data);
+                },
+                fail: (error) => {
+                    console.log('上传失败：', error);
+                    return resolve(false);
+                },
+                complete: () => {
+                    uni.hideLoading();
+                },
             });
-          } else {
-            return resolve(result.data);
-          }
-        },
-        fail: (error) => {
-          console.log('上传失败：', error);
-          return resolve(false);
-        },
-        complete: () => {
-          uni.hideLoading();
-        },
-      });
-    });
-  },
+        });
+    },
 };

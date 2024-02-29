@@ -84,8 +84,9 @@ const getSessionId = async () => {
   }
 
   const data = await third.wechat.getSessionId({code});
-  if (data.data) {
-    const decodeStr=Base64.decode(data.data);
+
+  if (data?.data?.data) {
+    const decodeStr=Base64.decode(data.data.data);
     const obj = JSON.parse(decodeStr)
     uni.setStorageSync("sessionId", obj.sessionId);
     uni.setStorageSync("openId", obj.openId);

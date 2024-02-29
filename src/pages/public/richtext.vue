@@ -14,16 +14,11 @@
     content: '',
   });
 
-  async function getRichTextContent(id) {
-    const { error, data } = await sheep.$api.data.richtext(id);
-    if (error === 0) {
-      state.content = data.content;
-      if (state.title === '') {
-        state.title = data.title;
-        uni.setNavigationBarTitle({
-          title: state.title,
-        });
-      }
+  async function getRichTextContent(configKey) {
+    const res = await sheep.$api.data.getSysConfig({configKey});
+    console.log(res)
+    if (res.data) {
+      state.content = res.data;
     }
   }
   onLoad((options) => {
@@ -33,7 +28,7 @@
         title: state.title,
       });
     }
-    getRichTextContent(options.id);
+    getRichTextContent(options.key);
   });
 </script>
 

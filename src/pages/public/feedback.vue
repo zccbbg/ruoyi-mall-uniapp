@@ -28,7 +28,7 @@
             clearable
           ></uni-easyinput>
           <s-uploader
-            v-model:url="state.formData.images"
+            v-model:url="state.imageFiles"
             fileMediatype="image"
             limit="9"
             mode="grid"
@@ -51,9 +51,6 @@
     </uni-forms>
     <su-fixed bottom placeholder>
       <view class="ss-flex ss-row-between ss-p-x-30 ss-p-y-10">
-        <button class="kefu-btn ss-reset-button" @tap="sheep.$router.go('/pages/chat/index')">
-          联系客服
-        </button>
         <button class="submit-btn ss-reset-button ui-BG-Main ui-Shadow-Main" @tap="onSubmit">
           提交
         </button>
@@ -63,12 +60,10 @@
 </template>
 
 <script setup>
-  import { onLoad } from '@dcloudio/uni-app';
-  import { computed, reactive, ref, unref } from 'vue';
-  import sheep from '@/sheep';
+import {reactive} from 'vue';
+import sheep from '@/sheep';
 
-  const filesRef = ref(null);
-  const state = reactive({
+const state = reactive({
     radioList: [
       {
         type: '产品功能问题反馈',
@@ -83,7 +78,7 @@
     formData: {
       content: '',
       phone: '',
-      images: [],
+      images: '',
       type: '',
     },
     imageFiles: [],
@@ -103,10 +98,16 @@
       sheep.$helper.toast('请输入您的联系方式');
       return;
     }
+    if (state.imageFiles.length) {
+      state.formData.images = state.imageFiles.join(',')
+    }
 
-    const { error } = await sheep.$api.app.feedback(state.formData);
-    if (error === 0) {
-      sheep.$router.back();
+    const res = await sheep.$api.app.feedback(state.formData);
+    if (res) {
+      uni.showToast({title:'反馈成功'})
+      setTimeout(()=>{
+        sheep.$router.back();
+      },1000)
     }
   }
 
@@ -211,7 +212,7 @@
   }
 
   .submit-btn {
-    width: 334rpx;
+    width: 100%;
     height: 74rpx;
     border-radius: 37rpx;
   }

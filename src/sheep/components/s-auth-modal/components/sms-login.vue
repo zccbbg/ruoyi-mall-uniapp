@@ -109,7 +109,7 @@ const smsLoginRef = ref(null);
     state.model.uuid = sheep.$store('user').getUUID()
     if (sheep.$store('app').authInfo){
       state.model.authInfo = sheep.$store('app').authInfo
-      sheep.$store('app').authInfo = null
+      // sheep.$store('app').authInfo = null
     }
     // #ifdef MP
     state.model.mpOpenId = uni.getStorageSync('openId');
