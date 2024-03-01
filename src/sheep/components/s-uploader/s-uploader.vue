@@ -204,7 +204,7 @@ export default {
     return {
       files: [],
       localValue: [],
-      imgsrc: sheep.$url.static('/image/upload-camera.png'),
+      imgsrc: '/static/upload-camera.png',
     };
   },
   watch: {

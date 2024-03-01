@@ -24,15 +24,16 @@
   import { reactive, computed } from 'vue';
   import sheep from '@/sheep';
   import { showMenuTools, closeMenuTools } from '@/sheep/hooks/useModal';
+  import { showAuthModal } from "@/sheep/hooks/useModal";
 
   const show = computed(() => sheep.$store('modal').menu);
 
   function onClick(item, index) {
-    if (index === 1 || index > 3){
-      sheep.$helper.toast('功能暂未开发')
+    closeMenuTools();
+    if (item.title === '客服') {
+      showAuthModal('contact','center')
       return
     }
-    closeMenuTools();
     if (item.url) sheep.$router.go(item.url);
   }
 
@@ -46,26 +47,6 @@
       url: '/pages/index/search',
       icon: '/static/img/shop/tools/search.png',
       title: '搜索',
-    },
-    {
-      url: '/pages/index/user',
-      icon: '/static/img/shop/tools/user.png',
-      title: '个人中心',
-    },
-    {
-      url: '/pages/index/cart',
-      icon: '/static/img/shop/tools/cart.png',
-      title: '购物车',
-    },
-    {
-      url: '/pages/user/goods-log',
-      icon: '/static/img/shop/tools/browse.png',
-      title: '浏览记录',
-    },
-    {
-      url: '/pages/user/goods-collect',
-      icon: '/static/img/shop/tools/collect.png',
-      title: '我的收藏',
     },
     {
       url: '/pages/public/feedback',
