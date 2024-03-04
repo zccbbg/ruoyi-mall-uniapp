@@ -26,4 +26,23 @@ export default {
             auth: false,
         },
     }),
+    getIntegralBalance: (data) =>
+        request({
+            url: '/h5/act/integral/stat',
+            method: 'post',
+            data,
+            custom: {
+                showSuccess: false,
+            },
+        }),
+    integralHistoryList: (data, params) =>
+        request({
+            url: '/h5/act/integral/history/list',
+            method: 'post',
+            data,
+            params,
+            custom: {
+                showLoading: true,
+            },
+        }),
 };

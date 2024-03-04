@@ -20,14 +20,15 @@ export default {
     }),
   signList: (params) =>
     request({
-      url: 'activity/signin',
+      url: 'h5/act/integral/list',
       method: 'GET',
       params,
     }),
-  signAdd: () =>
+  signAdd: (params) =>
     request({
-      url: 'activity/signin',
+      url: 'h5/act/integral/add',
       method: 'POST',
+      params
     }),
   replenish: (data) =>
     request({

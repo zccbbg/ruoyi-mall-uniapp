@@ -719,7 +719,7 @@ const app = defineStore({
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
                                     },
-                                    finish: false
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/9464fe770d388c7982df73b2d1b1d457.png",
@@ -769,14 +769,14 @@ const app = defineStore({
                                         "text": "",
                                         "color": "#bbb"
                                     },
-                                    "url": "\/pages\/user\/goods-log",
+                                    "url": "\/pages\/app\/integralHistory",
                                     "badge": {
                                         "show": 0,
                                         "text": "",
                                         "color": "#FFFFFF",
                                         "bgColor": "#FF6000"
                                     },
-                                    finish: false
+                                    finish: true
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/215f0aa658e271b3018f2d421bea694f.png",

@@ -111,7 +111,6 @@
             "group": "商品"
           }
         },
-
         {
           "path": "seckill",
           "style": {
@@ -123,7 +122,6 @@
             "group": "商品"
           }
         },
-
         {
           "path": "score",
           "style": {
@@ -493,6 +491,18 @@
             "auth": true,
             "sync": true,
             "title": "签到中心",
+            "group": "应用"
+          }
+        },
+        {
+          "path": "integralHistory",
+          "style": {
+            "navigationBarTitleText": "积分记录"
+          },
+          "meta": {
+            "auth": true,
+            "sync": true,
+            "title": "积分记录",
             "group": "应用"
           }
         },

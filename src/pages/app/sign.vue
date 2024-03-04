@@ -1,22 +1,12 @@
 <!-- 页面  -->
 <template>
   <s-layout title="签到有礼">
-    <view v-if="state.loading"></view>
-    <view class="sign-wrap" v-else-if="state.data && !state.loading">
+    <view class="sign-wrap" v-if="state.rules.signStatus">
       <!-- 签到日历 -->
       <view class="content-box calendar">
-        <view class="sign-everyday ss-flex ss-col-center ss-row-between ss-p-x-30">
-          <text class="sign-everyday-title">签到日历</text>
-          <view class="sign-num-box">
-            已连续签到
-            <text class="sign-num">{{ state.continue_days }}</text>
-            天
-          </view>
-        </view>
-
         <!-- 切换年月 -->
         <view class="bar ss-flex ss-col-center ss-row-center">
-          <view class="previous" @tap="handleCalendar(0)"><text class="cicon-back"></text></view>
+          <view class="previous" @tap="handleCalendar(-1)"><text class="cicon-back"></text></view>
           <view class="date ss-m-x-20"
             >{{ state.cur_year || '--' }} 年 {{ state.cur_month || '--' }} 月</view
           >
@@ -58,15 +48,7 @@
               <!-- 未签到日期 -->
               <view
                 class="is-sign ss-flex ss-row-center"
-                v-if="item.is_replenish == 1"
-                @tap="onShowRetroactive(item.date)"
-              >
-                <view class="cell-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
-                <text class="cicon-title"></text>
-              </view>
-              <view
-                class="is-sign ss-flex ss-row-center"
-                v-if="item.is_replenish == 0 && !item.is_sign"
+                v-if="!item.is_sign && item.day"
               >
                 <view class="cell-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
               </view>
@@ -87,65 +69,25 @@
       <view class="bg-white ss-m-t-16 ss-p-t-30 ss-p-b-60 ss-p-x-40">
         <view class="activity-title ss-m-b-30">签到说明</view>
         <view class="activity-des">
-          1、每日签到固定 {{ state.data.rules.everyday }} 积分
-          <text v-if="state.data.rules.is_inc == '1'">
-            ，次日递增奖励 {{ state.data.rules.inc_num }} 积分，直到
-            {{ state.data.rules.until_day }} 天之后不再增加
-          </text>
-        </view>
-        <view class="activity-des" v-if="state.data.rules.discounts?.length > 0">
-          2、
-          <text class="" v-for="i in state.data.rules.discounts" :key="i">
-            连续签到 {{ i.full }} 天，奖励 {{ i.value }} 积分；
-          </text>
-        </view>
-        <view class="activity-des" v-if="state.data.rules.is_replenish == '1'">
-          {{ state.data.rules.discounts?.length > 0 ? '3' : '2' }}、 用户在
-          {{ state.data.rules.replenish_limit }} 天内，可补签
-          {{ state.data.rules.replenish_days }} 天，每次补签消耗
-          {{ state.data.rules.replenish_num }}积分
+          每日签到固定 {{ state.rules.signCount }} 积分
         </view>
       </view>
     </view>
     <s-empty
-      v-else-if="!state.data && !state.loading"
+      v-else
       icon="/static/data-empty.png"
       text="签到活动还未开始"
-    >
-    </s-empty>
+    />
     <su-popup :show="state.showModel" type="center" round="10" :isMaskClick="false">
       <view class="model-box ss-flex-col">
         <view class="ss-m-t-56 ss-flex-col ss-col-center">
           <text class="cicon-check-round"></text>
           <view class="score-title">{{ state.signin.score }}积分</view>
-          <view class="model-title ss-flex ss-col-center ss-m-t-22 ss-m-b-30">
-            已连续打卡{{ state.continue_days }}天
-          </view>
         </view>
         <view class="model-bg ss-flex-col ss-col-center ss-row-right">
           <view class="title ss-m-b-64">签到成功</view>
           <view class="ss-m-b-40">
             <button class="ss-reset-button confirm-btn" @tap="onConfirm">确认</button>
-          </view>
-        </view>
-      </view>
-    </su-popup>
-    <su-popup :show="state.showRetroactive" type="center" round="10" :isMaskClick="false">
-      <view class="model-box ss-flex-col">
-        <view class="ss-m-t-56 ss-flex-col ss-col-center">
-          <text class="cicon-check-round"></text>
-          <view class="score-title">消耗{{ state.data?.rules.replenish_num }}积分</view>
-          <view class="model-title ss-flex ss-col-center ss-m-t-22 ss-m-b-30">
-            已连续打卡{{ state.continue_days }}天
-          </view>
-        </view>
-        <view class="model-bg ss-flex-col ss-col-center ss-row-right">
-          <view class="title ss-m-b-64">确认补签</view>
-          <view class="ss-m-b-40 ss-flex">
-            <button class="ss-reset-button cancel-btn" @tap="state.showRetroactive = false"
-              >取消</button
-            >
-            <button class="ss-reset-button confirm-btn" @tap="onRetroactive">确认</button>
           </view>
         </view>
       </view>
@@ -157,14 +99,15 @@
   import sheep from '@/sheep';
   import { onLoad, onReady } from '@dcloudio/uni-app';
   import { computed, reactive } from 'vue';
+  import dayjs from "dayjs";
 
   const headerBg = sheep.$url.css('/static/img/shop/app/sign.png');
 
   const state = reactive({
     data: {
       days: [], //日历
-      rules: {}, //规则
     },
+    rules: {signCount: 1,signStatus: 1},
     cur_year: 0, //当前选的年
     cur_month: 0, //当前选的月
     cur_day: 0, //当前选择的天
@@ -199,61 +142,69 @@
       },
     ], //星期
     showModel: false, //签到弹框
-    continue_days: 0, //连续签到天数
     signin: {}, // 签到
-    showRetroactive: false, //补签弹框
-    date: '', //补签选中日期
     isSign: 0, //今天是否签到
     loading: true,
   });
   async function onSign() {
-    const { error, data } = await sheep.$api.activity.signAdd();
-    if (error === 0) {
+    const res = await sheep.$api.activity.signAdd({amount: state.rules.signCount});
+    if (res) {
       state.showModel = true;
-      state.signin = data;
-      // getData();
+      state.signin = {score: state.rules.signCount};
     }
   }
 
-  function onShowRetroactive(e) {
-    state.showRetroactive = true;
-    state.date = e;
-  }
   //签到确认刷新页面
   function onConfirm() {
     state.showModel = false;
-    getData();
-  }
-  //补签
-  async function onRetroactive() {
-    const { error, data } = await sheep.$api.activity.replenish({
-      date: state.date,
-    });
-    if (error === 0) {
-      state.showRetroactive = false;
-      getData();
-    }
+    handleCalendar(0);
   }
 
-  async function getData(mouth) {
-    const { error, data } = await sheep.$api.activity.signList(mouth);
-    if (error === 0) {
-      state.data = data;
-    } else {
-      state.data = null;
+  //初始化天数
+  function initDays(day) {
+    const today = dayjs(dayjs().format('YYYY-MM-DD'))
+    let current = dayjs()
+    if (day) {
+      current = current.add(day, 'month')
     }
-    state.loading = false;
+    const year = current.year()
+    const month = current.month() + 1
+    const days = current.daysInMonth()
+    const list = []
+    for (let i = 0; i < days; i++) {
+      const date = year + '-' + (month > 9 ? month : '0'+ month) + '-'+(i > 8 ? i + 1 : '0'+ (i + 1))
+      const now = dayjs(year + '-' + (month > 9 ? month : '0'+ month) + '-'+(i > 8 ? i + 1 : '0'+ (i + 1)))
+      list.push({
+        "is_sign": 0,
+        date,
+        time: now.millisecond() / 1000,
+        day: i+1,
+        week: now.day(),
+        current: now.isBefore(today)? 'before' : (now.isAfter(today) ? 'after':'today'),
+      })
+    }
+    state.data.days = list
+  }
+
+  async function getData(month) {
+    const res = await sheep.$api.activity.signList({month});
+    const signList = []
+    res.forEach(it=>{
+      signList.push(dayjs(it.createTime).date())
+    })
+
     if (state.data) {
       state.data.days.forEach((i, index) => {
+        i.is_sign = signList.includes(i.day) ? 1 : 0
         if (index < i.week) {
           index++;
-          var obj = {
+          let obj = {
             day: null,
             is_sign: false,
           };
           state.data.days.unshift(obj);
         }
-        if (index == 1) {
+        if (index === 1) {
           let arr = i.date.split('-');
           state.cur_year = arr[0];
           state.cur_month = arr[1];
@@ -261,46 +212,48 @@
       });
       if (state.data.days[0].day == null) {
         state.data.days.forEach((i, index) => {
-          if (i.current == 'today') {
+          if (i.current === 'today') {
             state.isSign = i.is_sign;
           }
         });
       }
-      state.continue_days = data.continue_days;
     }
   }
 
-  onReady(() => {
-    getData();
+  onReady(async () => {
+    await getSignRule()
+    initDays(0)
+    getData(0);
   });
 
+  async function getSignRule(){
+    const res = await sheep.$api.data.getSysConfig({configKey:'activity-integral-income-set-key'});
+    state.rules = res.data ? JSON.parse(res.data) : {signCount: 1,signStatus: 1}
+  }
+
   // 切换控制年月，上一个月，下一个月
-  const handleCalendar = (type) => {
-    const cur_year = parseInt(state.cur_year);
-    const cur_month = parseInt(state.cur_month);
-    var newMonth;
-    var newYear = cur_year;
-    if (type === 0) {
-      //上个月
-      newMonth = cur_month - 1;
-      if (newMonth < 1) {
-        newYear = cur_year - 1;
-        newMonth = 12;
-      } else if (newMonth < 10) {
-        newMonth = '0' + newMonth;
-      }
-    } else {
-      newMonth = cur_month + 1;
-      if (newMonth > 12) {
-        newYear = cur_year + 1;
-        newMonth = 1;
-      } else if (newMonth < 10) {
-        newMonth = '0' + newMonth;
-      }
+  const handleCalendar = (minus) => {
+    const cur_year = parseInt(state.cur_year), cur_month = parseInt(state.cur_month);
+    let newMonth, newYear = cur_year;
+    newMonth = cur_month + minus;
+    if (newMonth < 1) {
+      newYear = cur_year - 1;
+      newMonth = 12;
+    } else if (newMonth < 10) {
+      newMonth = '0' + newMonth;
     }
-    getData({
-      month: newYear + '-' + newMonth,
-    });
+    if (newMonth > 12) {
+      newYear = cur_year + 1;
+      newMonth = 1;
+    }
+    const today = dayjs();
+    const current = dayjs(newYear + '-' + newMonth + '-01')
+    let monthsDiff = current.diff(today, 'months', true).toFixed();
+    if (monthsDiff === '-0') {
+      monthsDiff = 0
+    }
+    initDays(monthsDiff)
+    getData(monthsDiff);
   };
 </script>
 
