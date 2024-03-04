@@ -1,10 +1,10 @@
 <template>
 <view>
-  <view class="head-box ss-flex-col">
-    <view class="ss-flex ss-m-b-20">
-      <view class="head-title ss-m-r-40 head-title-animation">微信登录</view>
-    </view>
-  </view>
+<!--  <view class="head-box ss-flex-col">-->
+<!--    <view class="ss-flex ss-m-b-20">-->
+<!--      <view class="head-title ss-m-r-40 head-title-animation">微信登录</view>-->
+<!--    </view>-->
+<!--  </view>-->
   <view>欢迎您登录【若依商城电商系统】</view>
   <view style="margin-top: 200rpx">
     <button class="ss-reset-button buy-btn ui-Success-Main" open-type="getPhoneNumber"

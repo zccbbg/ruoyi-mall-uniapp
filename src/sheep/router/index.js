@@ -59,7 +59,12 @@ const _go = (
 
   // 页面登录拦截
   if (nextRoute.meta?.auth && !$store('user').isLogin) {
-    showAuthModal();
+    /* #ifdef MP-WEIXIN */
+    showAuthModal('wechatMiniLogin')
+    /* #endif */
+    /* #ifdef H5 */
+    showAuthModal('smsLogin')
+    /* #endif */
     return;
   }
 
