@@ -146,7 +146,7 @@
       <view v-if="grouponTag" class="groupon-tag ss-flex ss-row-center">
         <view class="tag-icon">拼团</view>
       </view>
-      <image class="lg-img-box" :src="sheep.$url.cdn(data.image)" mode="aspectFill"></image>
+      <image class="lg-img-box" :src="sheep.$url.cdn(data.pic)" mode="aspectFill"></image>
       <view class="lg-goods-content ss-flex-1 ss-flex-col ss-row-between ss-p-b-10 ss-p-t-20">
         <view>
           <view
@@ -154,7 +154,7 @@
             class="lg-goods-title ss-line-2"
             :style="[{ color: titleColor }]"
           >
-            {{ data.title }}
+            {{ data.name }}
           </view>
           <view
             v-if="goodsFields.subtitle?.show"
