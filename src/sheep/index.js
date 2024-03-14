@@ -37,26 +37,6 @@ export async function ShoproInit() {
   //   ShoproDebug();
   // }
 
-  // 获取微信授权code
-  /* #ifdef H5 */
-  const code = getUrlCode().code;
-  if (!code && !sheep.$store('app').authInfo ){
-    if (!sheep.$store('user').isLogin){
-      window.location.href =
-          "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
-          import.meta.env.SHOPRO_APPID +
-          "&redirect_uri=" + encodeURIComponent(import.meta.env.SHOPRO_FRONT_DOMAIN + "/#/") +
-          "&response_type=code&scope=snsapi_base#wechat_redirect";
-    }
-  }else {
-    const data = Base64.encode(JSON.stringify({code}));
-    sheep.$store('app').authInfo = await sheep.$api.user.getWechatUserAuth(data);
-    if (sheep.$store('user').isLogin) {
-      await sheep.$api.user.recordLogin();
-    }
-  }
-  /* #endif */
-
 }
 
 function getUrlCode() {
