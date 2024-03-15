@@ -83,6 +83,17 @@ export default class SheepPay {
     return payAction[sheep.$platform.name][this.payment]();
   }
 
+  mock(){
+    let data = {
+      outTradeNo: this.orderSN,
+    };
+    return new Promise((resolve, reject) => {
+      sheep.$api.pay.mock(data).then((res) => {
+        res && resolve(res);
+      });
+    });
+  }
+
   // 预支付
   prepay(wechatType=1) {
     return new Promise((resolve, reject) => {
@@ -184,8 +195,9 @@ export default class SheepPay {
 
   // 货到付款
   async offlinePay() {
-    const { error } = await this.prepay();
-    error === 0 && this.payResult('success');
+    await this.prepay();
+    const data = await this.mock();
+    data && this.payResult('success');
   }
 
   // 支付宝复制链接支付

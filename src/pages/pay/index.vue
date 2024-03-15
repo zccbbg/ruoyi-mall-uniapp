@@ -88,7 +88,7 @@
   // 检测支付环境
   const state = reactive({
     orderType: 'goods',
-    payment: 'wechat',
+    payment: 'offline',
     totalAmount: '',
     orderInfo: {},
     payStatus: 0, // 0=检测支付环境, -2=未查询到支付单信息， -1=支付已过期， 1=待支付，2=订单已支付
@@ -138,8 +138,15 @@
 
   const onPay = () => {
     if (sheep.$platform.name === 'H5') {
-      sheep.$helper.toast('请在微信中打开支付')
-      return;
+        uni.showModal({
+            title: '提示',
+            content: '确定要支付吗?',
+            success: function (res) {
+                if (res.confirm) {
+                    sheep.$platform.pay(state.payment, state.orderType, state.payId, state.totalAmount);
+                }
+            }
+        })
     }
     if (state.payment === '') {
       sheep.$helper.toast('请选择支付方式');

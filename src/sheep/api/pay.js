@@ -11,6 +11,16 @@ export default {
         loadingMsg: '支付中',
       },
     }),
+
+    mock: (data) =>
+        request({
+            url: '/no-auth/wechat/mock',
+            method: 'POST',
+            data,
+            custom: {
+                loadingMsg: '支付中',
+            },
+        }),
   // 发起提现
   withdraw: {
     list: (params) =>
