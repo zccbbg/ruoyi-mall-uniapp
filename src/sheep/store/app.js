@@ -741,25 +741,6 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/ac3bdfced7c4c5f17f03b48f6d3fa3ec.png",
-                                    "title": {
-                                        "text": "收藏",
-                                        "color": "#333"
-                                    },
-                                    "tip": {
-                                        "text": "",
-                                        "color": "#bbb"
-                                    },
-                                    "url": "\/pages\/user\/goods-collect",
-                                    "badge": {
-                                        "show": 0,
-                                        "text": "",
-                                        "color": "#FFFFFF",
-                                        "bgColor": "#FF6000"
-                                    },
-                                    finish: false
-                                },
-                                {
                                     "src": "\/storage\/decorate\/20221115\/94eb324f16b6b48e65c4ea1cf7d3c1fd.png",
                                     "title": {
                                         "text": "积分记录",
@@ -817,25 +798,6 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/58fe6c2a400d6d18a43949f3d8c58021.png",
-                                    "title": {
-                                        "text": "积分商城",
-                                        "color": "#333"
-                                    },
-                                    "tip": {
-                                        "text": "",
-                                        "color": "#bbb"
-                                    },
-                                    "url": "\/pages\/app\/score-shop",
-                                    "badge": {
-                                        "show": 0,
-                                        "text": "",
-                                        "color": "#FFFFFF",
-                                        "bgColor": "#FF6000"
-                                    },
-                                    finish: false
-                                },
-                                {
                                     "src": "\/storage\/decorate\/20221115\/6d0a8c85ba41464b5493226c91c72459.png",
                                     "title": {
                                         "text": "关于我们",
@@ -853,44 +815,6 @@ const app = defineStore({
                                         "bgColor": "#FF6000"
                                     },
                                     finish: true
-                                },
-                                {
-                                    "src": "\/storage\/decorate\/20221115\/92bf692d57b8fc2e76815ce6627ef1f9.png",
-                                    "title": {
-                                        "text": "隐私协议",
-                                        "color": "#333"
-                                    },
-                                    "tip": {
-                                        "text": "",
-                                        "color": "#bbb"
-                                    },
-                                    "url": "\/pages\/public\/richtext?key=mall.privacyAgreement&title=隐私协议",
-                                    "badge": {
-                                        "show": 0,
-                                        "text": "",
-                                        "color": "#FFFFFF",
-                                        "bgColor": "#FF6000"
-                                    },
-                                    finish: true
-                                },
-                                {
-                                    "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
-                                    "title": {
-                                        "text": "我的团队",
-                                        "color": "#333"
-                                    },
-                                    "tip": {
-                                        "text": "",
-                                        "color": "#bbb"
-                                    },
-                                    "url": "\/pages\/user\/address\/list",
-                                    "badge": {
-                                        "show": 0,
-                                        "text": "",
-                                        "color": "#FFFFFF",
-                                        "bgColor": "#FF6000"
-                                    },
-                                    finish: false
                                 },
                                 {
                                     "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
