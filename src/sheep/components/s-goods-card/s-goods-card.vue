@@ -190,7 +190,8 @@ async function getGoodsListByIds(ids) {
 async function getList() {
   state.loadStatus = 'loading'
   const params = {
-    publishStatus: 1
+    publishStatus: 1,
+    ...props.data.params
   }
   const res = await sheep.$api.goods.list(params, { page: state.pagination.page - 1, size: state.pagination.size });
   const {content,totalElements, totalPages } = res;

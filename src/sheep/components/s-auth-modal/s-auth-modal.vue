@@ -165,11 +165,22 @@ import {computed, onMounted, reactive, ref, watch} from 'vue';
     }
   };
 
-  onMounted(async ()=>{
-    //获取客服信息
-    const res = await sheep.$api.data.getSysConfig({configKey:'mall.contact'});
-    contact.value = res.data || {configValue: ''}
-  })
+  const preAuthType = ref('')
+
+  watch(
+      () => authType.value,
+      async () => {
+        if (preAuthType.value === authType.value) {
+          return;
+        }
+        //获取客服信息
+        if(authType.value === 'contact') {
+          const res = await sheep.$api.data.getSysConfig({configKey:'mall.contact'});
+          contact.value = res.data || {configValue: ''}
+        }
+        preAuthType.value = 'contact'
+      },
+  );
 </script>
 
 <style lang="scss">

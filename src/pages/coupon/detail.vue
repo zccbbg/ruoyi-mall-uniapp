@@ -13,128 +13,56 @@
             ></image>
           </view>
           <view class="top ss-flex-col ss-col-center">
-            <view class="title ss-m-t-50 ss-m-b-20 ss-m-x-20">{{ state.list.name }}</view>
-            <view class="subtitle ss-m-b-50">{{ state.list.amount_text }}</view>
+            <view class="title ss-m-t-50 ss-m-b-20 ss-m-x-20">{{ state.coupon.title }}</view>
+            <view class="subtitle ss-m-b-50" v-if="state.coupon.minAmount">满{{ state.coupon.minAmount }}元，优惠{{state.coupon.couponAmount}}元</view>
+            <view class="subtitle ss-m-b-50" v-else>无门槛，优惠{{state.coupon.couponAmount}}元</view>
             <button
               class="ss-reset-button ss-m-b-30"
               :class="
-                state.list.get_status == 'can_get' || state.list.get_status == 'can_use'
+                state.coupon.canGet
                   ? 'use-btn'
                   : 'disable-btn'
               "
               :disabled="
-                (state.list.get_status != 'can_get' && state.list.get_status != 'can_use') ||
+                !state.coupon.canGet ||
                 state.userCouponId
               "
               @click="getCoupon"
             >
-              {{ state.list.get_status_text }}
+              {{  !state.coupon.canGet || state.userCouponId ? '已领取': '立即领取' }}
             </button>
             <view
               class="time ss-m-y-30"
-              v-if="
-                state.list.get_status == 'can_get' ||
-                state.list.get_status == 'cannot_get' ||
-                state.list.get_status == 'get_over'
-              "
-            >
-              领取时间：{{ state.list.get_start_time }}至{{ state.list.get_end_time }}
+              v-if="state.couponId">
+              领取时间：{{ state.coupon.beginTime }}至{{ state.coupon.endTime }}
             </view>
             <view class="time ss-m-y-30" v-else>
-              有效期：{{ state.list.use_start_time }}至{{ state.list.use_end_time }}
+              有效期：{{ state.coupon.beginTime }}至{{ state.coupon.endTime }}
             </view>
             <view class="coupon-line ss-m-t-14"></view>
           </view>
           <view class="bottom">
             <view class="type ss-flex ss-col-center ss-row-between ss-p-x-30">
-              <view>优惠券类型</view>
-              <view>{{ state.list.type_text }}</view>
+              <view>领取方式</view>
+              <view>{{ state.coupon.couponType === 1 ? '免费领取':'积分兑换' }}</view>
             </view>
-            <uni-collapse>
-              <uni-collapse-item title="优惠券说明" v-if="state.list.description">
-                <view class="content ss-p-b-20">
-                  <text class="des ss-p-l-30">{{ state.list.description }}</text>
-                </view>
-              </uni-collapse-item>
-            </uni-collapse>
           </view>
         </view>
       </view>
       <!-- 适用商品 -->
       <view
         class="all-user ss-flex ss-row-center ss-col-center"
-        v-if="state.list.use_scope == 'all_use'"
+        v-if="state.coupon.useScope == 1"
       >
-        {{ state.list.use_scope_text }}
+        全场通用
       </view>
 
       <su-sticky v-else bgColor="#fff">
-        <view class="goods-title ss-p-20">{{ state.list.use_scope_text }}</view>
-        <su-tabs
-          :scrollable="true"
-          :list="state.tabMaps"
-          @change="onTabsChange"
-          :current="state.currentTab"
-          v-if="state.list.use_scope == 'category'"
-        ></su-tabs>
+        <view class="goods-title ss-p-20">{{ state.coupon.useScope === 2 ? '指定商品可用':'指定商品不可用' }}</view>
       </su-sticky>
-      <view v-if="state.list.use_scope == 'goods' || state.list.use_scope == 'disabled_goods'">
-        <view v-for="(item, index) in state.list.items_value" :key="index">
-          <s-goods-column
-            class="ss-m-20"
-            size="lg"
-            :data="item"
-            :titleColor="props.goodsFieldsStyle?.title?.color"
-            :subTitleColor="props.goodsFieldsStyle?.subtitle?.color"
-            @click="sheep.$router.go('/pages/goods/index', { id: item.id })"
-            :goodsFields="{
-              title: { show: true },
-              subtitle: { show: true },
-              price: { show: true },
-              original_price: { show: true },
-              sales: { show: true },
-              stock: { show: false },
-            }"
-            :buttonShow="state.list.use_scope != 'disabled_goods'"
-          ></s-goods-column>
-        </view>
+      <view class="goods-block" v-if="state.coupon.useScope !== 1 && state.coupon.productIds && goodsCard">
+        <s-goods-card :data="goodsCard.data" :styles="goodsCard.style" />
       </view>
-      <view v-if="state.list.use_scope == 'category'">
-        <view v-for="(item, index) in state.pagination.data" :key="index">
-          <s-goods-column
-            class="ss-m-20"
-            size="lg"
-            :data="item"
-            :titleColor="props.goodsFieldsStyle?.title?.color"
-            :subTitleColor="props.goodsFieldsStyle?.subtitle?.color"
-            @click="sheep.$router.go('/pages/goods/index', { id: item.id })"
-            :goodsFields="{
-              title: { show: true },
-              subtitle: { show: true },
-              price: { show: true },
-              original_price: { show: true },
-              sales: { show: true },
-              stock: { show: false },
-            }"
-            :buttonShow="state.list.use_scope != 'disabled_goods'"
-          ></s-goods-column>
-        </view>
-      </view>
-      <uni-load-more
-        v-if="state.pagination.total > 0 && state.list.use_scope == 'category'"
-        :status="state.loadStatus"
-        :content-text="{
-          contentdown: '上拉加载更多',
-        }"
-        @tap="loadmore"
-      />
-      <s-empty
-        v-if="state.pagination.total === 0"
-        paddingTop="0"
-        icon="/static/soldout-empty.png"
-        text="暂无商品"
-      >
-      </s-empty>
     </view>
   </s-layout>
 </template>
@@ -142,29 +70,76 @@
 <script setup>
   import sheep from '@/sheep';
   import { onLoad, onReachBottom } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
-  import _ from 'lodash';
+  import {reactive, ref} from 'vue';
 
-  const pagination = {
-    data: [],
-    current_page: 1,
-    total: 1,
-    last_page: 1,
-  };
   const state = reactive({
-    list: {},
-    couponId: 0,
+    coupon: {},
+    activityId: 0,
     userCouponId: 0,
-    pagination: {
-      data: [],
-      current_page: 1,
-      total: 1,
-      last_page: 1,
-    },
     tabMaps: [],
     loadStatus: '',
-    categoryId: 0,
   });
+
+  const goodsCard = ref(null)
+
+  const initGoodsCard = {
+    "data": {
+      "mode": 2,
+      "goodsFields": {
+        "title": {
+          "show": 1,
+        },
+        "subtitle": {
+          "show": 1,
+        },
+        "price": {
+          "show": 1,
+        },
+        "original_price": {
+          "show": 1,
+        },
+        "sales": {
+          "show": 1,
+        },
+        "stock": {
+          "show": 0,
+        }
+      },
+      "buyNowStyle": {
+        // "mode": 2,
+        // "text": "立即购买",
+        // "color1": "#E9B461",
+        // "color2": "#EECC89",
+        // "src": "\/storage\/decorate\/20221115\/4782356b4587dc4f4a218f2540a0bafc.png",
+        // "right": '20rpx',
+        // "bottom":"18rpx"
+      },
+      "tagStyle": {
+        "show": 0,
+        "src": ""
+      },
+      params: {
+        ids: []
+      },
+      "borderRadiusTop": 6,
+      "borderRadiusBottom": 6,
+      "space": 8
+    },
+    "style": {
+      "background": {
+        "type": "color",
+        "bgImage": "",
+        "bgColor": ""
+      },
+      "marginLeft": 8,
+      "marginRight": 8,
+      "marginTop": 0,
+      "marginBottom": 10,
+      "borderRadiusTop": 0,
+      "borderRadiusBottom": 0,
+      "padding": 0
+    }
+  }
 
   // 接收参数
   const props = defineProps({
@@ -188,71 +163,45 @@
     },
   });
 
-  function onTabsChange(e) {
-    state.pagination = pagination;
-    state.currentTab = e.index;
-    state.categoryId = e.value;
-    getGoodsList(state.categoryId);
-  }
-  async function getGoodsList(categoryId, page = 1, list_rows = 5) {
-    state.loadStatus = 'loading';
-    const res = await sheep.$api.goods.list({
-      category_id: categoryId,
-      list_rows,
-      page,
-      is_category_deep: false,
-    });
-    if (res.error === 0) {
-      let couponlist = _.concat(state.pagination.data, res.data.data);
-      state.pagination = {
-        ...res.data,
-        data: couponlist,
-      };
-      if (state.pagination.current_page < state.pagination.last_page) {
-        state.loadStatus = 'more';
-      } else {
-        state.loadStatus = 'noMore';
-      }
-    }
-  }
   async function getCoupon() {
-    const { error, msg } = await sheep.$api.coupon.get(state.couponId);
-    if (error === 0) {
+    const res = await sheep.$api.coupon.get(state.activityId);
+    if (res) {
       uni.showToast({
-        title: msg,
+        title: '领取成功',
       });
       setTimeout(() => {
-        getCouponContent(state.couponId, state.userCouponId);
+        getCouponContent(state.activityId, state.userCouponId);
       }, 1000);
     }
   }
-  async function getCouponContent(id, c) {
-    const { data } = await sheep.$api.coupon.detail(id, c);
-    state.list = data;
-    data.items_value.forEach((i) => {
-      state.tabMaps.push({ name: i.name, value: i.id });
-    });
-    state.pagination = pagination
-    getGoodsList(state.tabMaps[0].value);
-  }
-  // 加载更多
-  function loadmore() {
-    if (state.loadStatus !== 'noMore') {
-      getGoodsList(state.categoryId, state.pagination.current_page + 1);
+  async function getCouponContent(id, userCouponId) {
+    let res;
+    if (id) {
+      //查活动的
+      res = await sheep.$api.coupon.activityDetail(id);
     }
+    if ([2,3].includes(res.useScope) && res.productIds) {
+      const val = {...initGoodsCard}
+      val.data.params.ids = res.productIds.split(",")
+      goodsCard.value = val;
+    }
+    state.coupon = res
   }
+
+
   onLoad((options) => {
-    state.couponId = options.id;
+    state.activityId = options.id;
     state.userCouponId = options.user_coupon_id;
-    getCouponContent(state.couponId, state.userCouponId);
+    getCouponContent(state.activityId, state.userCouponId);
   });
-  // 上拉加载更多
-  onReachBottom(() => {
-    loadmore();
-  });
+
+
 </script>
 
 <style lang="scss" scoped>
+  .goods-block {
+    margin: 0 20rpx 10rpx 20rpx;
+  }
   .goods-title {
     font-size: 34rpx;
     font-weight: bold;

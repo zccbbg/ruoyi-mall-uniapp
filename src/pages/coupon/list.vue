@@ -14,24 +14,25 @@
       icon="/static/coupon-empty.png"
       text="暂无优惠券"
     ></s-empty>
+    <!-- 活动 -->
     <template v-if="state.currentTab == '0'">
       <view v-for="item in state.pagination.data" :key="item.id">
         <s-coupon-list
           :data="item"
           @tap="
             sheep.$router.go('/pages/coupon/detail', {
-              id: item.id,
+              id: item.id
             })
           "
         >
           <template #default>
             <button
               class="ss-reset-button card-btn ss-flex ss-row-center ss-col-center"
-              :class="item.get_status != 'can_get' ? 'border-btn' : ''"
+              :class="!item.canGet ? 'border-btn' : ''"
               @click.stop="getBuy(item.id)"
-              :disabled="item.get_status != 'can_get'"
+              :disabled="!item.canGet"
             >
-              {{ item.get_status_text }}
+              {{ item.canGet ? '立即领取':'已领取' }}
             </button>
           </template>
         </s-coupon-list>
@@ -44,32 +45,11 @@
           type="user"
           @tap="
             sheep.$router.go('/pages/coupon/detail', {
-              id: item.coupon_id,
+              id: item.couponActivityId,
               user_coupon_id: item.id,
             })
           "
         >
-          <template #default>
-            <button
-              class="ss-reset-button card-btn ss-flex ss-row-center ss-col-center"
-              :class="
-                item.status == 'can_get' || item.status == 'can_use'
-                  ? ''
-                  : item.status == 'used' || item.status == 'expired'
-                  ? 'disabled-btn'
-                  : 'border-btn'
-              "
-              :disabled="item.status != 'can_get' && item.status != 'can_use'"
-              @click.stop="
-                sheep.$router.go('/pages/coupon/detail', {
-                  id: item.coupon_id,
-                  user_coupon_id: item.id,
-                })
-              "
-            >
-              {{ item.status_text }}
-            </button>
-          </template>
         </s-coupon-list>
       </view>
     </template>
@@ -89,23 +69,18 @@
   import sheep from '@/sheep';
   import { onLoad, onReachBottom } from '@dcloudio/uni-app';
   import { computed, reactive } from 'vue';
-  import _ from 'lodash';
+  import _, {clone} from 'lodash';
 
   const pagination = {
     data: [],
-    current_page: 1,
-    total: 1,
-    last_page: 1,
+    page: 1,
+    total: 0,
+    size: 10
   };
   // 数据
   const state = reactive({
     currentTab: 0,
-    pagination: {
-      data: [],
-      current_page: 1,
-      total: 1,
-      last_page: 1,
-    },
+    pagination: clone(pagination),
     loadStatus: '',
     type: '',
   });
@@ -129,65 +104,49 @@
     },
   ];
   function onTabsChange(e) {
-    state.pagination = pagination
+    state.pagination = clone(pagination)
     state.currentTab = e.index;
     state.type = e.value;
     if (state.currentTab == 0) {
-      getData();
+      getActivity();
     } else {
       getCoupon();
     }
   }
-  async function getData(page = 1, list_rows = 5) {
-    state.loadStatus = 'loading';
-    const res = await sheep.$api.coupon.list({ list_rows, page });
-    if (res.error === 0) {
-      let couponlist = _.concat(state.pagination.data, res.data.data);
-      state.pagination = {
-        ...res.data,
-        data: couponlist,
-      };
-      if (state.pagination.current_page < state.pagination.last_page) {
-        state.loadStatus = 'more';
-      } else {
-        state.loadStatus = 'noMore';
-      }
+  async function getActivity() {
+    state.loadStatus = "loading";
+    const res = await sheep.$api.coupon.list({ page: state.pagination.page - 1, size: state.pagination.size });
+    const { content, totalElements, totalPages } = res;
+    state.pagination.data = _.concat(state.pagination.data, content);
+    state.pagination.total = totalElements;
+    if (state.pagination.page < totalPages) {
+      state.loadStatus = "more";
+    } else {
+      state.loadStatus = "noMore";
     }
   }
 
-  async function getCoupon(page = 1, list_rows = 5) {
+  async function getCoupon() {
     state.loadStatus = 'loading';
-    let res = await sheep.$api.coupon.userCoupon({
-      type: state.type,
-      list_rows,
-      page,
-    });
-    if (res.error === 0) {
-      if (page >= 2) {
-        let couponlist = _.concat(state.pagination.data, res.data.data);
-        state.pagination = {
-          ...res.data,
-          data: couponlist,
-        };
-      } else {
-        state.pagination = res.data;
-      }
-      if (state.pagination.current_page < state.pagination.last_page) {
-        state.loadStatus = 'more';
-      } else {
-        state.loadStatus = 'noMore';
-      }
+    let res = await sheep.$api.coupon.userCoupon({type: state.currentTab},{ page: state.pagination.page - 1, size: state.pagination.size });
+    const { content, totalElements, totalPages } = res;
+    state.pagination.data = _.concat(state.pagination.data, content);
+    state.pagination.total = totalElements;
+    if (state.pagination.page < totalPages) {
+      state.loadStatus = "more";
+    } else {
+      state.loadStatus = "noMore";
     }
   }
   async function getBuy(id) {
-    const { error, msg } = await sheep.$api.coupon.get(id);
-    if (error === 0) {
+    const res = await sheep.$api.coupon.get(id);
+    if (res) {
       uni.showToast({
-        title: msg,
+        title: '领取成功',
       });
       setTimeout(() => {
-        state.pagination = pagination
-        getData();
+        state.pagination.data = []
+        getActivity();
       }, 1000);
     }
   }
@@ -195,16 +154,17 @@
   // 加载更多
   function loadmore() {
     if (state.loadStatus !== 'noMore') {
+      state.pagination.page++;
       if (state.currentTab == 0) {
-        getData(state.pagination.current_page + 1);
+        getActivity();
       } else {
-        getCoupon(state.pagination.current_page + 1);
+        getCoupon();
       }
     }
   }
   onLoad((Option) => {
     if (Option.type === 'all' || !Option.type) {
-      getData();
+      getActivity();
     } else {
       state.type = Option.type;
       Option.type === 'geted'

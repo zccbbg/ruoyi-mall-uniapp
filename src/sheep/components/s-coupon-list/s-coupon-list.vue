@@ -3,32 +3,28 @@
     <view class="content">
       <view
         class="tag ss-flex ss-row-center"
-        :class="
-          data.status == 'expired' || data.status == 'used' ? 'disabled-bg-color' : 'info-bg-color'
+        :class="data.getStatus ? 'disabled-bg-color' : 'info-bg-color'
         "
-        >{{ data.type_text }}</view
+        >{{ data.couponType === 1 ? '免费领取':'积分兑换' }}</view
       >
       <view class="title ss-m-x-30 ss-p-t-18">
         <view class="ss-flex ss-row-between">
           <view
             class="value-text ss-flex-1 ss-m-r-10"
             :class="
-              data.status == 'expired' || data.status == 'used' ? 'disabled-color' : 'info-color'
+              data.getStatus ? 'disabled-color' : 'info-color'
             "
-            >{{ data.name }}</view
+            >{{ data.title }}</view
           >
           <view>
             <view
               class="ss-flex ss-col-bottom"
               :class="
-                data.status != 'expired' && data.status != 'used' ? 'price-text' : 'disabled-color'
+                !data.getStatus ? 'price-text' : 'disabled-color'
               "
             >
-              <view class="value-reduce ss-m-b-10" v-if="data.type === 'reduce'">￥</view>
-              <view class="value-price">{{ data.amount }}</view>
-              <view class="value-discount ss-m-b-10 ss-m-l-4" v-if="data.type === 'discount'"
-                >折</view
-              >
+              <view class="value-reduce ss-m-b-10">￥</view>
+              <view class="value-price">{{ data.couponAmount }}</view>
             </view>
           </view>
         </view>
@@ -36,31 +32,27 @@
           <view
             class="sellby-text"
             :class="
-              data.status == 'expired' || data.status == 'used'
+              data.getStatus
                 ? 'disabled-color'
                 : 'subtitle-color'
             "
           >
-            {{
-              type === 'user'
-                ? '有效期：' + data.use_start_time.substring(0, 11)
-                : '领取时间：' + data.get_start_time.substring(0, 11)
-            }}至
-            {{
-              type === 'user'
-                ? data.use_end_time.substring(0, 11)
-                : data.get_end_time.substring(0, 11)
-            }}
+            <view v-if="type === 'coupon'">领取时间：{{data.beginTime}} ~</view>
+            <view v-else>有效时间： {{data.beginTime}}</view>
+            <view style="margin-left: 116rpx;">{{data.endTime}}</view>
+
           </view>
           <view
             class="value-enough"
             :class="
-              data.status == 'expired' || data.status == 'used'
+              data.getStatus
                 ? 'disabled-color'
                 : 'subtitle-color'
             "
-            >满{{ data.enough }}可用</view
-          >
+            >
+            <text v-if="data.minAmount">满{{ data.minAmount }}可用</text>
+            <text v-else>无门槛</text>
+          </view>
         </view>
       </view>
     </view>
@@ -68,7 +60,7 @@
     <view class="desc ss-flex ss-row-between">
       <view>
         <view class="desc-title">
-          {{ data.description }}
+          {{ data.useScope === 1 ? '全场通用' : (data.useScope === 2 ? '指定商品可用':'指定商品不可用') }}
         </view>
         <view>
           <slot name="reason">
@@ -132,7 +124,7 @@
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.04);
 
     .tag {
-      width: 100rpx;
+      width: 120rpx;
 
       color: #fff;
       height: 40rpx;

@@ -195,6 +195,8 @@
         return '消费得积分'
       case 21:
         return '退款扣积分'
+      case 22:
+        return '优惠券兑换'
       default:
         return ''
     }
@@ -206,6 +208,8 @@
         return `消费${item.orderAmount}元、获得积分${item.amount}`
       case 21:
         return `订单退款${item.orderAmount}元、扣除积分${item.amount}`
+      case 22:
+        return `兑换${item.orderAmount}元优惠券、扣除积分${item.amount}`
       default:
         return ''
     }
