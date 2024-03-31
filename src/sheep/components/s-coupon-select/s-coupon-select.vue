@@ -16,32 +16,32 @@
         :enable-back-to-top="true"
       >
         <view class="subtitle ss-m-l-20">可使用优惠券</view>
-        <view v-for="(item, index) in state.couponInfo.can_use" :key="index">
+        <view v-for="(item, index) in state.couponInfo" :key="index">
           <s-coupon-list :data="item" type="user" :disabled="false">
             <template #default>
-              <radio-group @change="radioChange(item.id)" class="ss-flex ss-col-center">
+              <checkbox-group @change="radioChange(item.id)" class="ss-flex ss-col-center">
                 <label class="radio">
-                  <radio
+                  <checkbox
                     color="var(--ui-BG-Main)"
                     style="transform: scale(0.8)"
-                    :checked="state.couponId == item.id"
+                    :checked="state.couponId === item.id"
                   />
                 </label>
-              </radio-group>
+              </checkbox-group>
             </template>
           </s-coupon-list>
         </view>
-        <view class="subtitle ss-m-t-40 ss-m-l-20">不可使用优惠券</view>
-        <view v-for="item in state.couponInfo.cannot_use" :key="item.id">
-          <s-coupon-list :data="item" type="user" :disabled="true">
-            <template v-slot:reason>
-              <view class="ss-flex ss-m-t-24">
-                <view class="reason-title"> 不可用原因：</view>
-                <view class="reason-desc">{{ item.cannot_use_msg }}</view>
-              </view>
-            </template>
-          </s-coupon-list>
-        </view>
+<!--        <view class="subtitle ss-m-t-40 ss-m-l-20">不可使用优惠券</view>-->
+<!--        <view v-for="item in state.couponInfo.cannot_use" :key="item.id">-->
+<!--          <s-coupon-list :data="item" type="user" :disabled="true">-->
+<!--            <template v-slot:reason>-->
+<!--              <view class="ss-flex ss-m-t-24">-->
+<!--                <view class="reason-title"> 不可用原因：</view>-->
+<!--                <view class="reason-desc">{{ item.cannot_use_msg }}</view>-->
+<!--              </view>-->
+<!--            </template>-->
+<!--          </s-coupon-list>-->
+<!--        </view>-->
       </scroll-view>
     </view>
     <view class="modal-footer ss-flex">
@@ -68,7 +68,7 @@
   });
   function radioChange(couponId) {
     if (state.couponId == couponId) {
-      state.couponId = 0;
+      state.couponId = null;
     } else {
       state.couponId = couponId;
     }
@@ -79,8 +79,18 @@
 </script>
 <style lang="scss" scoped>
   :deep() {
-    .uni-checkbox-input {
-      background-color: var(--ui-BG-Main);
+    checkbox .wx-checkbox-input {
+      border-radius: 50% !important;
+      color: #ffffff !important;
+    }
+
+    checkbox .wx-checkbox-input.wx-checkbox-input-checked {
+      color: #fff;
+      background: var(--ui-BG-Main);
+    }
+
+    .wx-checkbox-input.wx-checkbox-input-checked {
+      border: none !important;
     }
   }
 

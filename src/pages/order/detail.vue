@@ -116,14 +116,14 @@
 <!--        <text class="title">运费</text>-->
 <!--        <text class="detail">+￥{{ totalFreightAmount }}</text>-->
 <!--      </view>-->
-<!--      <view-->
-<!--          class="notice-item ss-flex ss-row-between" v-if="totalConsumption > 0">-->
-<!--        <text class="title">消费金</text>-->
-<!--        <text class="detail all-price">-¥{{ totalConsumption }}</text>-->
-<!--      </view>-->
+      <view
+          class="notice-item ss-flex ss-row-between" v-if="state.orderInfo.couponAmount">
+        <text class="title">优惠券</text>
+        <text class="detail all-price">-¥{{ state.orderInfo.couponAmount }}</text>
+      </view>
       <view class="notice-item all-rpice-item ss-flex ss-m-t-20">
         <text class="title">{{ [1,2,3].includes(state.status) ? '已付款：' : '需付款：'}}</text>
-        <text class="detail all-price">￥{{ state.orderInfo.totalAmount }}</text>
+        <text class="detail all-price">￥{{ state.orderInfo.payAmount }}</text>
       </view>
     </view>
 

@@ -74,26 +74,22 @@
 <!--          class="order-item ss-flex ss-col-center ss-row-between"-->
 <!--          v-if="state.orderPayload.order_type != 'score'"-->
 <!--        >-->
-          <!-- <view v-if="state.orderInfo.coupon_discount_fee > 0" class="order-item ss-flex ss-col-center ss-row-between"> -->
-<!--          <view class="item-title">优惠券</view>-->
-<!--          <view class="ss-flex ss-col-center" @tap="state.showCoupon = true">-->
-<!--            <text class="item-value text-red" v-if="state.orderPayload.coupon_id"-->
-<!--              >-￥{{ state.orderInfo.coupon_discount_fee }}</text-->
-<!--            >-->
-<!--            <text-->
-<!--              class="item-value"-->
-<!--              :class="state.couponInfo.can_use?.length > 0 ? 'text-red' : 'text-disabled'"-->
-<!--              v-else-->
-<!--              >{{-->
-<!--                state.couponInfo.can_use?.length > 0-->
-<!--                  ? state.couponInfo.can_use?.length + '张可用'-->
-<!--                  : '暂无可用优惠券'-->
-<!--              }}</text-->
-<!--            >-->
-
-<!--            <text class="_icon-forward item-icon"></text>-->
-<!--          </view>-->
-<!--        </view>-->
+        <view v-if="state.orderInfo.couponList?.length" class="order-item ss-flex ss-col-center ss-row-between">
+          <view class="item-title">优惠券</view>
+          <view class="ss-flex ss-col-center" @tap="state.showCoupon = true">
+            <text class="item-value text-red" v-if="state.orderPayload.memberCouponId"
+              >-￥{{ state.orderPayload.couponAmount }}</text
+            >
+            <text
+              class="item-value text-red"
+              v-else
+              >{{
+                state.orderInfo.couponList.length + '张可用'
+              }}</text
+            >
+            <text class="_icon-forward item-icon"></text>
+          </view>
+        </view>
 <!--        <view-->
 <!--          class="order-item ss-flex ss-col-center ss-row-between"-->
 <!--          v-if="state.orderInfo.promo_infos?.length"-->
@@ -109,14 +105,14 @@
       <view class="total-box-footer ss-font-28 ss-flex ss-row-right ss-col-center ss-m-r-28">
         <view class="total-num ss-m-r-20">共{{ state.totalNumber }}件</view>
         <view>合计：</view>
-        <view class="total-num text-red"> ￥{{ state.orderInfo.orderTotalAmount }} </view>
+        <view class="total-num text-red"> ￥{{ state.orderPayload.payAmount }} </view>
         <view class="ss-flex" v-if="state.orderPayload.order_type === 'score'">
           <view class="total-num ss-font-30 text-red ss-m-l-4"> + </view>
           <image
             :src="sheep.$url.static('/static/img/shop/goods/score1.svg')"
             class="score-img"
           ></image>
-          <view class="total-num ss-font-30 text-red">{{ state.orderInfo.orderTotalAmount }}</view>
+          <view class="total-num ss-font-30 text-red">{{ state.orderPayload.payAmount }}</view>
         </view>
       </view>
     </view>
@@ -131,12 +127,12 @@
 <!--      </view>-->
 <!--    </view>-->
     <!-- 选择优惠券弹框 -->
-<!--    <s-coupon-select-->
-<!--      v-model="state.couponInfo"-->
-<!--      :show="state.showCoupon"-->
-<!--      @confirm="onSelectCoupon"-->
-<!--      @close="state.showCoupon = false"-->
-<!--    />-->
+    <s-coupon-select
+      v-model="state.orderInfo.couponList"
+      :show="state.showCoupon"
+      @confirm="onSelectCoupon"
+      @close="state.showCoupon = false"
+    />
     <!-- 满额折扣弹框  -->
 <!--    <s-discount-list-->
 <!--      v-model="state.orderInfo"-->
@@ -147,7 +143,7 @@
     <su-fixed bottom :opacity="false" bg="bg-white" placeholder :noFixed="false" :index="200">
       <view class="footer-box border-top ss-flex ss-row-between ss-p-x-20 ss-col-center">
         <view class="total-box-footer ss-flex ss-col-center">
-          <view class="total-num ss-font-30 text-red"> ￥{{ state.orderInfo.orderTotalAmount }} </view>
+          <view class="total-num ss-font-30 text-red"> ￥{{ state.orderPayload.payAmount }} </view>
         </view>
 
         <button
@@ -166,6 +162,7 @@
   import { onLoad, onPageScroll, onShow } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
   import { isEmpty } from 'lodash';
+  import {numSub} from "@/sheep/hooks/useGoods";
 
   const state = reactive({
     orderPayload: {},
@@ -208,8 +205,17 @@
 
   // 选择优惠券
   async function onSelectCoupon(e) {
-    state.orderPayload.coupon_id = e || 0;
-    getOrderInfo();
+    state.orderPayload.memberCouponId = e || null;
+    //计算金额
+    if (!state.orderPayload.memberCouponId) {
+      state.orderPayload.couponAmount = 0
+      state.orderPayload.payAmount = state.orderInfo.orderTotalAmount
+    } else {
+      const coupon = state.orderInfo.couponList.filter(it=>it.id == state.orderPayload.memberCouponId)[0]
+      state.orderPayload.couponAmount = coupon.couponAmount
+      let amount = numSub(state.orderInfo.orderTotalAmount,coupon.couponAmount);
+      state.orderPayload.payAmount = amount > 0 ? amount : 0;
+    }
     state.showCoupon = false;
   }
 
@@ -251,7 +257,8 @@
       note: state.orderPayload.remark,
       from: state.orderPayload.from,
       payType: 2,
-      skuList: state.orderInfo.skuList
+      skuList: state.orderInfo.skuList,
+      memberCouponId: state.orderPayload.memberCouponId
     }
     console.log('订单params：', params)
     const res = await sheep.$api.order.create(params);
@@ -260,9 +267,14 @@
       if (state.orderPayload.from === 'cart') {
         sheep.$store('cart').getList();
       }
+      if (state.orderPayload.payAmount == 0) {
+        sheep.$router.redirect('/pages/pay/result', {
+          orderSN: res,
+        });
+      }
       sheep.$router.redirect('/pages/pay/index', {
         orderSN: res,
-        totalAmount: state.orderInfo.orderTotalAmount,
+        totalAmount: state.orderPayload.payAmount,
         orderType: 'memberConsumer',
       });
       // if (exchangeNow.value) {
@@ -297,6 +309,7 @@
       item.spDataValue = str
       state.totalNumber += item.quantity
     })
+    state.orderPayload.payAmount = state.orderInfo.orderTotalAmount
   }
 
   // 获取可用优惠券

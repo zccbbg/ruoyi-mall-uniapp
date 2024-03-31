@@ -186,6 +186,7 @@
   },
   "mp-weixin": {
     "appid": "wxf336d6b2889047c1",
+    "libVersion": "latest",
     "setting": {
       "urlCheck": false,
       "minified": true,
