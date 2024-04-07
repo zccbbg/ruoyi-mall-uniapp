@@ -81,8 +81,8 @@ const app = defineStore({
                 "title": "关于我们",
                 "id": "3"
             },
-            "copyright": "河南星品科技有限公司版权所有",
-            "copytime": "Copyright© 2018-2022"
+            "copyright": "XXX有限公司版权所有",
+            "copytime": "Copyright© 2018-2030"
         },
         "platform": {
             "auto_login": 0,

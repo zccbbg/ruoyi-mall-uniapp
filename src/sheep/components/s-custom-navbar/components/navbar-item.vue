@@ -11,7 +11,7 @@
       v-if="data.type === 'image'"
       :style="[{ width: width }]"
       class="menu-icon-wrap ss-flex ss-row-center ss-col-center"
-      @tap="sheep.$helper.toast('功能暂未开发')"
+      @tap="sheep.$router.go(data.url)"
     >
       <image class="nav-image" :src="sheep.$url.cdn(data.src)" mode="aspectFit"></image>
     </view>
