@@ -13,7 +13,7 @@
       class="menu-icon-wrap ss-flex ss-row-center ss-col-center"
       @tap="sheep.$router.go(data.url)"
     >
-      <image class="nav-image" :src="sheep.$url.cdn(data.src)" mode="aspectFit"></image>
+      <image class="nav-image" :src="data.src" mode="aspectFit"></image>
     </view>
     <view class="ss-flex-1" v-if="data.type == 'search'" :style="[{ width: width }]">
       <s-search-block

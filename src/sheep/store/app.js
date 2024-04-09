@@ -590,7 +590,7 @@ const app = defineStore({
                                     "type": "image",
                                     "text": "",
                                     "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/6e30b6357d3285d7d007ac308e7b2b12.png",
+                                    "src": "\/static\/quan.png",
                                     "url": "\/pages\/coupon\/list",
                                     "placeholder": "",
                                     "borderRadius": 0
@@ -618,7 +618,7 @@ const app = defineStore({
                                     "type": "image",
                                     "text": "",
                                     "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/6e30b6357d3285d7d007ac308e7b2b12.png",
+                                    "src": "\/static\/quan.png",
                                     "url": "\/pages\/coupon\/list",
                                     "placeholder": "",
                                     "borderRadius": 0
@@ -635,8 +635,8 @@ const app = defineStore({
                         "style": {
                             "marginLeft": 0,
                             "marginRight": 0,
-                            "marginTop": 70,
-                            "marginBottom": 10,
+                            "marginTop": 30,
+                            "marginBottom": 30,
                             "borderRadiusTop": 0,
                             "borderRadiusBottom": 0,
                             "background": {
@@ -953,71 +953,6 @@ const app = defineStore({
                         "color": "#F6F6F6",
                         "src": "\/storage\/decorate\/20221115\/b530150a466c8cda0a4cd5b29e2c8d11.png"
                     },
-                    "navbar": {
-                        "mode": "inner",
-                        "alwaysShow": 1,
-                        "type": "image",
-                        "color": "",
-                        "src": "\/storage\/decorate\/20221115\/283592b4d4f74d84b530035fa7265d73.png",
-                        "list": {
-                            "mp": [
-                                {
-                                    "width": 1,
-                                    "height": 1,
-                                    "top": 0,
-                                    "left": 0,
-                                    "type": "image",
-                                    "text": "",
-                                    "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/c47b048175b325b1e78f837a3b696794.png",
-                                    "url": "\/pages\/chat\/index",
-                                    "placeholder": "",
-                                    "borderRadius": 0
-                                },
-                                {
-                                    "width": 1,
-                                    "height": 1,
-                                    "top": 0,
-                                    "left": 1,
-                                    "type": "image",
-                                    "text": "",
-                                    "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/f09ef51624e48d7d8c58cd602110c46e.png",
-                                    "url": "\/pages\/commission\/goods",
-                                    "placeholder": "",
-                                    "borderRadius": 0
-                                }
-                            ],
-                            "app": [
-                                {
-                                    "width": 1,
-                                    "height": 1,
-                                    "top": 0,
-                                    "left": 0,
-                                    "type": "image",
-                                    "text": "",
-                                    "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/c47b048175b325b1e78f837a3b696794.png",
-                                    "url": "\/pages\/chat\/index",
-                                    "placeholder": "",
-                                    "borderRadius": 0
-                                },
-                                {
-                                    "width": 1,
-                                    "height": 1,
-                                    "top": 0,
-                                    "left": 1,
-                                    "type": "image",
-                                    "text": "",
-                                    "textColor": "#111111",
-                                    "src": "\/storage\/decorate\/20221115\/f09ef51624e48d7d8c58cd602110c46e.png",
-                                    "url": "\/pages\/commission\/goods",
-                                    "placeholder": "",
-                                    "borderRadius": 0
-                                }
-                            ]
-                        }
-                    }
                 }
             }
         },
