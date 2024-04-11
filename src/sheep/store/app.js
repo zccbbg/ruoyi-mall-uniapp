@@ -635,8 +635,8 @@ const app = defineStore({
                         "style": {
                             "marginLeft": 0,
                             "marginRight": 0,
-                            "marginTop": 30,
-                            "marginBottom": 30,
+                            "marginTop": 70,
+                            "marginBottom": 10,
                             "borderRadiusTop": 0,
                             "borderRadiusBottom": 0,
                             "background": {
