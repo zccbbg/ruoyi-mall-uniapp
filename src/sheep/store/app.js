@@ -703,7 +703,7 @@ const app = defineStore({
                             "col": 4,
                             "list": [
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/9ff8442f8cda57f88aac61059d7d3f21.png",
+                                    "src": "\/static\/icons\/sign.png",
                                     "title": {
                                         "text": "签到",
                                         "color": "#333333"
@@ -722,7 +722,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/9464fe770d388c7982df73b2d1b1d457.png",
+                                    "src": "\/static\/icons\/set.png",
                                     "title": {
                                         "text": "清空缓存",
                                         "color": "#333"
@@ -741,7 +741,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/ac3bdfced7c4c5f17f03b48f6d3fa3ec.png",
+                                    "src": "\/static\/icons\/star.png",
                                     "title": {
                                         "text": "收藏",
                                         "color": "#333"
@@ -760,7 +760,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/94eb324f16b6b48e65c4ea1cf7d3c1fd.png",
+                                    "src": "\/static\/icons\/footprints.png",
                                     "title": {
                                         "text": "积分记录",
                                         "color": "#333"
@@ -779,7 +779,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/215f0aa658e271b3018f2d421bea694f.png",
+                                    "src": "\/static\/icons\/edit.png",
                                     "title": {
                                         "text": "意见反馈",
                                         "color": "#333"
@@ -798,7 +798,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/0c37315a83f9424a4717ef684984c9c0.png",
+                                    "src": "\/static\/icons\/message.png",
                                     "title": {
                                         "text": "常见问题",
                                         "color": "#333"
@@ -817,7 +817,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/58fe6c2a400d6d18a43949f3d8c58021.png",
+                                    "src": "\/static\/icons\/medal.png",
                                     "title": {
                                         "text": "积分商城",
                                         "color": "#333"
@@ -836,7 +836,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/6d0a8c85ba41464b5493226c91c72459.png",
+                                    "src": "\/static\/icons\/userStar.png",
                                     "title": {
                                         "text": "关于我们",
                                         "color": "#333"
@@ -855,7 +855,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/92bf692d57b8fc2e76815ce6627ef1f9.png",
+                                    "src": "\/static\/icons\/privacy.png",
                                     "title": {
                                         "text": "隐私协议",
                                         "color": "#333"
@@ -874,7 +874,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
+                                    "src": "\/static\/icons\/team.png",
                                     "title": {
                                         "text": "我的团队",
                                         "color": "#333"
@@ -893,7 +893,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/26dff8fb21473e219c6f024fc6a5e39a.png",
+                                    "src": "\/static\/icons\/location.png",
                                     "title": {
                                         "text": "收货地址",
                                         "color": "#333"
@@ -912,7 +912,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/storage\/decorate\/20221115\/3c7eb06563d1cf28b4b34bb0d1647659.png",
+                                    "src": "\/static\/icons\/customer_service.png",
                                     "title": {
                                         "text": "联系客服",
                                         "color": "#333"

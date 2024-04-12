@@ -7,7 +7,7 @@
       @tap="sheep.$router.go(item.path, { type: item.type })"
       :class="item.type === 'all' ? 'menu-wallet' : 'ss-flex-1'"
     >
-      <image class="item-icon" :src="sheep.$url.static(item.icon)" mode="aspectFit"></image>
+      <image class="item-icon" :src="item.icon" mode="aspectFit"></image>
       <view class="menu-title ss-m-t-28">{{ item.title }}</view>
     </view>
   </view>
@@ -28,28 +28,28 @@
           {
             title: '已领取',
             value: '0',
-            icon: '/static/img/shop/order/nouse_coupon.png',
+            icon: '\/static\/icons\/nouse_coupon.png',
             path: '/pages/coupon/list',
             type: 'geted',
           },
           {
             title: '已使用',
             value: '0',
-            icon: '/static/img/shop/order/useend_coupon.png',
+            icon: '\/static\/icons\/useend_coupon.png',
             path: '/pages/coupon/list',
             type: 'used',
           },
           {
             title: '已失效',
             value: '0',
-            icon: '/static/img/shop/order/out_coupon.png',
+            icon: '\/static\/icons\/out_coupon.png',
             path: '/pages/coupon/list',
             type: 'expired',
           },
           {
             title: '领券中心',
             value: '0',
-            icon: '/static/img/shop/order/all_coupon.png',
+            icon: '\/static\/icons\/all_coupon.png',
             path: '/pages/coupon/list',
             type: 'all',
           },
