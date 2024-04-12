@@ -119,20 +119,20 @@ const app = defineStore({
                     "activeColor": "#FF7A0C",
                     "list": [
                         {
-                            "inactiveIcon": "\/storage\/decorate\/20221115\/76574bb482da1fd62539c0253f0152d6.png",
-                            "activeIcon": "\/storage\/decorate\/20221115\/c92d07a10eec8850ab9a481638e5159b.gif",
+                            "inactiveIcon": "\/static\/icons\/home.png",
+                            "activeIcon": "\/static\/icons\/home.gif",
                             "url": "\/pages\/index\/index",
                             "text": "首页"
                         },
                         {
-                            "inactiveIcon": "\/storage\/decorate\/20221115\/113eb988efc1fe17cb90cdf5311e5b63.png",
-                            "activeIcon": "\/storage\/decorate\/20221115\/2a3992a220f306d129ac1659304694bd.gif",
+                            "inactiveIcon": "\/static\/icons\/cart.png",
+                            "activeIcon": "\/static\/icons\/cart.gif",
                             "url": "\/pages\/index\/cart",
                             "text": "购物车"
                         },
                         {
-                            "inactiveIcon": "\/storage\/decorate\/20221115\/f930c59d338a97a158ee53cb65bde082.png",
-                            "activeIcon": "\/storage\/decorate\/20221115\/1130ab158b1c31b1e1d356fa78bb5f4a.gif",
+                            "inactiveIcon": "\/static\/icons\/my.png",
+                            "activeIcon": "\/static\/icons\/my.gif",
                             "url": "\/pages\/index\/user",
                             "text": "我的"
                         }
