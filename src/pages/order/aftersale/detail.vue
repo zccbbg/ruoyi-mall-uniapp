@@ -13,7 +13,7 @@
         ]"
       >
         <!-- <uni-steps :options="state.list" :active="state.active" active-color="#fff" /> -->
-        <view class="ss-flex">
+        <view class="steps-items" :style="[{'grid-template-columns': `repeat(${state.list.length}, ${100/state.list.length}%)`}]">
           <view class="steps-item" v-for="(item, index) in state.list" :key="index">
             <view class="ss-flex">
               <text
@@ -43,11 +43,6 @@
         <view class="">
           <view class="status-time">更新时间：{{ state.info.updateTime }}</view>
         </view>
-<!--        <view class="">-->
-<!--          <view class="status-text">{{ state.info.aftersale_status_desc }}</view>-->
-<!--          <view class="status-time">{{ state.info.update_time }}</view>-->
-<!--        </view>-->
-<!--        <text class="ss-iconfont _icon-forward" style="color: #666"></text>-->
       </view>
 
       <!-- 退款金额 -->
@@ -57,15 +52,6 @@
       </view>
       <!-- 服务商品 -->
       <view class="order-shop">
-<!--        <s-goods-item-->
-<!--          :title="state.info.goods_title"-->
-<!--          :price="state.info.goods_price"-->
-<!--          :img="state.info.goods_image"-->
-<!--          priceColor="#333333"-->
-<!--          :titleWidth="480"-->
-<!--          :skuText="state.info.goods_sku_text"-->
-<!--          :num="state.info.goods_num"-->
-<!--        ></s-goods-item>-->
         <view class="border-bottom" v-for="item in state.info.orderItemList" :key="item.id">
           <s-goods-item
               :img="item.pic"
@@ -78,6 +64,51 @@
           >
           </s-goods-item>
         </view>
+      </view>
+
+      <!-- 填写退回单号 -->
+      <view class="aftersale-code" v-if="state.info.type === 2 && state.info.status === 1 && !state.info.refundWaybillCode">
+        <view class="refund-item u-m-b-20">
+          <view class="item-title ss-m-b-20">
+            <text>填写物流单号</text>
+            <text class="import_tip">（退货地址请联系客服获取）</text>
+          </view>
+          <view class="flex_center item" @tap="state.showModal = true">
+            <text class="flex-label">快递公司：</text>
+            <view>
+              <text class="ss-m-r-20 ss-p-l-20" v-if="state.returnOrder.deliveryCompanyCode">{{ state.returnOrder.companyName }}</text>
+              <text class="ss-m-r-20 ss-p-l-20 grey" v-else>请选择快递公司</text>
+            </view>
+          </view>
+          <view class="flex_center item">
+            <text class="flex-label">快递单号：</text>
+            <uni-easyinput
+                :inputBorder="false"
+                v-model="state.returnOrder.deliverySn"
+                placeholder="请输入快递单号"
+                paddingLeft="10"
+            />
+          </view>
+          <view class="foot_box ss-flex ss-col-center ss-row-between">
+            <button class="ss-reset-button btn ui-BG-Main-Gradient" @tap="submitReturnCode">提交</button>
+          </view>
+        </view>
+      </view>
+      <view class="aftersale-code" v-else-if="state.info.type === 2 && state.info.status === 1 && state.info.refundWaybillCode">
+        <view class="item-title ss-m-b-20">
+          <text>退货物流单号</text>
+        </view>
+        <view class="item ss-flex ss-col-center">
+          <view class="item-title">快递公司：</view>
+          <view class="item-content ss-m-r-16">{{companyMap[state.info.refundWpCode]}}</view>
+        </view>
+        <view class="item ss-flex ss-col-center">
+          <view class="item-title">快递单号：</view>
+          <view class="item-content ss-m-r-16">{{state.info.refundWaybillCode}}</view>
+        </view>
+<!--        <view class="foot_box ss-flex ss-col-center ss-row-between">-->
+<!--          <button class="ss-reset-button btn" @tap="seeExpress" style="width: 220rpx">查看物流信息</button>-->
+<!--        </view>-->
       </view>
 
       <!-- 服务内容 -->
@@ -129,13 +160,42 @@
 <!--        >-->
       </view>
     </su-fixed>
+
+    <su-popup :show="state.showModal" round="10" :showClose="true" @close="state.showModal = false">
+      <view class="modal-box page_box">
+        <view class="modal-head item-title head_box ss-flex ss-row-center ss-col-center"
+        >快递公司</view
+        >
+        <view class="modal-content content_box">
+          <radio-group @change="onChange">
+            <label
+                class="radio ss-flex ss-col-center"
+                v-for="item in companyList"
+                :key="item.expressCode"
+            >
+              <view class="ss-flex-1 ss-p-20">{{ item.expressName }}</view>
+              <radio
+                  :value="item.expressCode"
+                  color="var(--ui-BG-Main)"
+                  :checked="item.expressCode === state.currentValue"
+              />
+            </label>
+          </radio-group>
+        </view>
+        <view class="modal-foot foot_box ss-flex ss-row-center ss-col-center">
+          <button class="ss-reset-button close-btn ui-BG-Main-Gradient" @tap="onReason"
+          >确定</button
+          >
+        </view>
+      </view>
+    </su-popup>
   </s-layout>
 </template>
 
 <script setup>
   import sheep from '@/sheep';
   import { onLoad } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import {computed, reactive} from 'vue';
   import { isEmpty } from 'lodash';
 
   const statusBarHeight = sheep.$platform.device.statusBarHeight * 2;
@@ -145,6 +205,7 @@
     orderId: null,
     aftersaleId: 0,
     info: {},
+    currentValue: '',
     list: [
       {
         title: '提交申请',
@@ -154,7 +215,47 @@
       },
     ],
     loading: false,
+    returnOrder: {deliverySn: null,deliveryCompanyCode:null,companyName: ''}
   });
+
+  const companyList = computed(()=>sheep.$store('user').companyList)
+  const companyMap = computed(()=>sheep.$store('user').companyMap)
+
+  function seeExpress(){
+    sheep.$router.go('/pages/order/express/list', {
+      waybillCode:state.info.refundWaybillCode,
+    });
+  }
+
+  //选择申请原因
+  function onChange(e) {
+    state.currentValue = e.detail.value;
+  }
+
+  function submitReturnCode(){
+    if (!state.returnOrder.deliveryCompanyCode || !state.returnOrder.deliverySn) {
+      sheep.$helper.toast('请填写快递单号并选择快递公司');
+      return;
+    }
+    const {deliverySn,deliveryCompanyCode} = state.returnOrder
+    const params = {orderId:Number(state.orderId),deliveryCompanyCode,deliverySn}
+    sheep.$api.order.aftersale.returnWaybillCode(params)
+        .then(()=>{
+          setTimeout(()=>{
+            getDetail(state.orderId)
+          },500)
+        })
+  }
+
+  function onReason() {
+    companyList.value.forEach((item) => {
+      if (item.expressCode === state.currentValue) {
+        state.returnOrder.companyName = item.expressName
+      }
+    });
+    state.returnOrder.deliveryCompanyCode = state.currentValue;
+    state.showModal = false;
+  }
 
   function onApply(orderId) {
     uni.showModal({
@@ -209,7 +310,17 @@
           state.active = 1
         }
       }else {
-        //退货退款，暂时没有
+        //退货退款
+        state.list.push({ title: '退货中' });
+        state.list.push({ title: '已完成' });
+        if (state.info.status === 2) {
+          state.active = 3;
+        } else if (state.info.status === 1) {
+          //退货中
+          state.active = 2;
+        } else if (state.info.status === 0) {
+          state.active = 1;
+        }
       }
     } else {
       state.info = null;
@@ -222,154 +333,205 @@
 </script>
 
 <style lang="scss" scoped>
-  // 步骤条
-  .steps-box {
-    width: 100%;
-    height: 190rpx;
-    background: v-bind(headerBg) no-repeat,
-      linear-gradient(90deg, var(--ui-BG-Main), var(--ui-BG-Main-gradient));
-    background-size: 750rpx 100%;
-    padding-left: 72rpx;
 
-    .steps-item {
-      .sicon-circleclose {
-        font-size: 24rpx;
-        color: #fff;
-      }
-      .sicon-circlecheck {
-        font-size: 24rpx;
-      }
-      .steps-item-title {
-        font-size: 24rpx;
-        font-weight: 400;
-        margin-top: 16rpx;
-        margin-left: -36rpx;
-        width: 100rpx;
-        text-align: center;
-      }
-    }
-  }
-  .activity-color {
-    color: #fff;
-  }
-  .info-color {
-    color: rgba(#fff, 0.4);
-  }
-  .activity-bg {
-    background: #fff;
-  }
-  .info-bg {
-    background: rgba(#fff, 0.4);
-  }
+.modal-box {
+  border-radius: 30rpx 30rpx 0 0;
+  background: #fff;
 
-  .line {
-    width: 270rpx;
-    height: 4rpx;
-  }
-
-  // 服务状态
-  .status-box {
-    position: relative;
-    z-index: 3;
-    background-color: #fff;
-    border-radius: 20rpx 20rpx 0px 0px;
-    padding: 20rpx;
-    margin-top: -20rpx;
-
-    .status-text {
-      font-size: 28rpx;
-
-      font-weight: 500;
-      color: rgba(51, 51, 51, 1);
-      margin-bottom: 20rpx;
-    }
-
-    .status-time {
-      font-size: 24rpx;
-
-      font-weight: 400;
-      color: rgba(153, 153, 153, 1);
-    }
-  }
-
-  // 退款金额
-  .aftersale-money {
-    background-color: #fff;
-    height: 98rpx;
-    padding: 0 20rpx;
-    margin: 20rpx;
-
-    .aftersale-money--title {
-      font-size: 28rpx;
-
-      font-weight: 500;
-      color: rgba(51, 51, 51, 1);
-    }
-
-    .aftersale-money--num {
-      font-size: 28rpx;
-      font-family: OPPOSANS;
-      font-weight: 500;
-      color: #ff3000;
-    }
-  }
-
-  // order-shop
-  .order-shop {
-    padding: 20rpx;
-    background-color: #fff;
-    margin: 0 20rpx 20rpx 20rpx;
-  }
-
-  // 服务内容
-  .aftersale-content {
-    background-color: #fff;
-    padding: 20rpx;
-    margin: 0 20rpx;
-
-    .aftersale-item {
-      height: 60rpx;
-
-      .copy-btn {
-        background: #eeeeee;
-        color: #333;
-        border-radius: 20rpx;
-        width: 75rpx;
-        height: 40rpx;
-        font-size: 22rpx;
-      }
-
-      .item-title {
-        color: #999;
-        font-size: 28rpx;
-      }
-
-      .item-content {
-        color: #333;
-        font-size: 28rpx;
-      }
-    }
-  }
-
-  // 底部功能
-  .foot_box {
+  .modal-head {
     height: 100rpx;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    font-size: 30rpx;
+  }
 
-    .btn {
-      width: 160rpx;
-      line-height: 60rpx;
-      background: rgba(238, 238, 238, 1);
-      border-radius: 30rpx;
-      padding: 0;
-      margin-right: 20rpx;
-      font-size: 26rpx;
+  .modal-content {
+    font-size: 28rpx;
+    padding: 0 20rpx;
+    height: 800rpx;
+    overflow-y: auto;
+  }
 
-      font-weight: 400;
-      color: rgba(51, 51, 51, 1);
+  .modal-foot {
+    justify-content: center !important;
+    .close-btn {
+      width: calc(100% - 40rpx);
+      line-height: 80rpx;
+      border-radius: 40rpx;
+      color: rgba(#fff, 0.9);
     }
   }
+}
+// 步骤条
+.steps-box {
+  width: 100%;
+  height: 190rpx;
+  background: v-bind(headerBg) no-repeat,
+  linear-gradient(90deg, var(--ui-BG-Main), var(--ui-BG-Main-gradient));
+  background-size: 750rpx 100%;
+  padding-left: 72rpx;
+  .steps-items {
+    display: grid;
+    width: 100%;
+  }
+  .steps-item {
+    .sicon-circleclose {
+      font-size: 24rpx;
+      color: #fff;
+    }
+    .sicon-circlecheck {
+      font-size: 24rpx;
+    }
+    .steps-item-title {
+      font-size: 24rpx;
+      font-weight: 400;
+      margin-top: 16rpx;
+      margin-left: -36rpx;
+      width: 100rpx;
+      text-align: center;
+    }
+  }
+}
+.activity-color {
+  color: #fff;
+}
+.info-color {
+  color: rgba(#fff, 0.4);
+}
+.activity-bg {
+  background: #fff;
+}
+.info-bg {
+  background: rgba(#fff, 0.4);
+}
+
+.import_tip {
+  color: red;
+  //font-weight: bolder;
+}
+.flex_center {
+  display: flex;
+  align-items: center;
+}
+.flex-label {
+  width: 150rpx;
+}
+.grey {
+  color: #CCCCCC;
+}
+
+.line {
+  width: 100%;
+  height: 4rpx;
+}
+
+// 服务状态
+.status-box {
+  position: relative;
+  z-index: 3;
+  background-color: #fff;
+  border-radius: 20rpx 20rpx 0px 0px;
+  padding: 20rpx;
+  margin-top: -20rpx;
+
+  .status-text {
+    font-size: 28rpx;
+
+    font-weight: 500;
+    color: rgba(51, 51, 51, 1);
+    margin-bottom: 20rpx;
+  }
+
+  .status-time {
+    font-size: 24rpx;
+
+    font-weight: 400;
+    color: rgba(153, 153, 153, 1);
+  }
+}
+.aftersale-code {
+  background-color: #fff;
+  padding: 20rpx 20rpx 0 20rpx;
+  margin: 20rpx;
+
+  .item {
+    height: 60rpx;
+  }
+}
+
+// 退款金额
+.aftersale-money {
+  background-color: #fff;
+  padding: 20rpx 20rpx;
+  margin: 20rpx;
+
+  .aftersale-money--title {
+    font-size: 28rpx;
+
+    font-weight: 500;
+    color: rgba(51, 51, 51, 1);
+  }
+
+  .aftersale-money--num {
+    font-size: 28rpx;
+    font-family: OPPOSANS;
+    font-weight: 500;
+    color: #ff3000;
+  }
+}
+
+// order-shop
+.order-shop {
+  padding: 20rpx;
+  background-color: #fff;
+  margin: 0 20rpx 20rpx 20rpx;
+}
+
+// 服务内容
+.aftersale-content {
+  background-color: #fff;
+  padding: 20rpx;
+  margin: 0 20rpx;
+  margin-bottom: 20rpx;
+
+  .aftersale-item {
+    height: 60rpx;
+
+    .copy-btn {
+      background: #eeeeee;
+      color: #333;
+      border-radius: 20rpx;
+      width: 75rpx;
+      height: 40rpx;
+      font-size: 22rpx;
+    }
+
+    .item-title {
+      color: #999;
+      font-size: 28rpx;
+    }
+
+    .item-content {
+      color: #333;
+      font-size: 28rpx;
+    }
+  }
+}
+
+// 底部功能
+.foot_box {
+  height: 100rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .btn {
+    width: 160rpx;
+    height: 55rpx;
+    border-radius: 30rpx;
+    font-size: 26rpx;
+    border: 2rpx solid #dcdcdc;
+    line-height: normal;
+    margin-right: 10rpx;
+  }
+}
 </style>

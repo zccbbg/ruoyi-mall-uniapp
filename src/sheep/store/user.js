@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import userApi from '@/sheep/api/user';
 import orderApi from '@/sheep/api/order';
+import dataApi from '@/sheep/api/data';
 import commissionApi from '@/sheep/api/commission';
 import $share from '@/sheep/platform/share';
 import { isEmpty, cloneDeep, clone } from 'lodash';
@@ -38,6 +39,8 @@ const defaultUUID = ''
 const user = defineStore({
   id: 'user',
   state: () => ({
+    companyList: [],
+    companyMap: {},
     userInfo: clone(defaultUserInfo), // 用户信息
     isLogin: !!uni.getStorageSync('token'), // 登录状态
     numData: cloneDeep(defaultNumData), // 用户其他数据
@@ -47,6 +50,16 @@ const user = defineStore({
   }),
 
   actions: {
+    async getExpressCompanyList() {
+      const data = await dataApi.getSysConfig({configKey:'express-set-key'});
+      if (data.data) {
+        this.companyList = JSON.parse(data.data)
+        this.companyMap = this.companyList.reduce((accu, val) => {
+          accu[val.expressCode] = val.expressName;
+          return accu;
+        }, {});
+      }
+    },
     // 获取个人信息
     async getInfo() {
       const data  = await userApi.profile();
@@ -116,6 +129,7 @@ const user = defineStore({
     async loginAfter() {
       await this.updateUserData();
       cart().getList();
+      this.getExpressCompanyList()
       // 登录后设置全局分享参数
       $share.getShareInfo();
       // 提醒绑定手机号

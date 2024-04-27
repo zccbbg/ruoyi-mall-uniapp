@@ -134,6 +134,17 @@ export default {
         method: 'GET',
         params: {orderId: id}
       }),
+    returnWaybillCode: (data) =>
+      request({
+          url: "h5/order/aftersale/delivery",
+          data,
+          method: "post",
+          custom:{
+              showLoading: true,
+              showSuccess: true,
+              successMsg: '提交成功'
+          }
+      }),
   },
   //订单包裹
   express: (id, orderId) =>

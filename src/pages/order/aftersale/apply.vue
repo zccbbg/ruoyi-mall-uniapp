@@ -59,29 +59,34 @@
 <!--      </view>-->
 
       <!-- 留言 -->
-<!--      <view class="refund-item">-->
-<!--        <view class="item-title ss-m-b-20">相关描述</view>-->
-<!--        <view class="describe-box">-->
-<!--          <uni-easyinput-->
-<!--            :inputBorder="false"-->
-<!--            class="describe-content"-->
-<!--            type="textarea"-->
-<!--            maxlength="120"-->
-<!--            autoHeight-->
-<!--            v-model="formData.description"-->
-<!--            placeholder="客官~请描述您遇到的问题，建议上传照片"-->
-<!--          ></uni-easyinput>-->
-<!--          <view class="upload-img">-->
-<!--            <s-uploader-->
-<!--              v-model:url="formData.images"-->
-<!--              fileMediatype="image"-->
-<!--              limit="9"-->
-<!--              mode="grid"-->
-<!--              :imageStyles="{ width: '168rpx', height: '168rpx' }"-->
-<!--            />-->
-<!--          </view>-->
-<!--        </view>-->
-<!--      </view>-->
+      <view class="refund-item">
+        <view class="item-title ss-m-b-20">相关描述</view>
+        <view class="describe-box">
+          <uni-easyinput
+              :inputBorder="false"
+              class="describe-content"
+              type="textarea"
+              maxlength="120"
+              autoHeight
+              v-model="formData.description"
+              placeholder="客官~请描述您遇到的问题，建议上传照片"
+          ></uni-easyinput>
+        </view>
+      </view>
+      <view class="refund-item">
+        <view class="item-title ss-m-b-20">上传凭证</view>
+        <view class="describe-box">
+          <view class="upload-img">
+            <s-uploader
+                v-model:url="formData.images"
+                fileMediatype="image"
+                limit="9"
+                mode="grid"
+                :imageStyles="{ width: '168rpx', height: '168rpx' }"
+            />
+          </view>
+        </view>
+      </view>
     </uni-forms>
     <!-- 底部按钮 -->
     <su-fixed bottom placeholder>
@@ -181,8 +186,8 @@
     orderId: '',
     applyRefundType: '',
     reason: '',
-    // description: '',
-    // images: [],
+    description: '',
+    images: [],
     quantity: null
   });
   const rules = reactive({});
@@ -198,10 +203,27 @@
       sheep.$helper.toast('请选择申请原因');
       return;
     }
-    await sheep.$api.order.applyRefund(data);
+    if (!data.description){
+      sheep.$helper.toast('请输入相关描述')
+      return;
+    }
+    if (data.applyRefundType == '2' && !data.images.length){
+      sheep.$helper.toast('请上传凭证')
+      return;
+    }
+    if (formData.images.length > 0) {
+      data.proofPics = formData.images.join()
+    }
+    const success = await sheep.$api.order.applyRefund(data);
+    if (!success) {
+      setTimeout(()=>{
+        sheep.$router.go('/pages/order/list',{type: 0});
+      },2000)
+      return;
+    }
     setTimeout(()=>{
       sheep.$router.go('/pages/order/list',{type: 4});
-    },500)
+    },1000)
   }
 
   //选择售后类型
@@ -237,18 +259,15 @@
       sum += it.quantity
     })
     formData.quantity = sum
-    //目前只能退款，先写死
-    formData.applyRefundType = 1
-    state.disabled = true
-    // if (order.status == 1){
-    //   formData.applyRefundType = 1
-    //   state.disabled = true
-    // }else if(order.status == 3){
-    //   formData.applyRefundType = 2
-    //   state.disabled = true
-    // }else {
-    //   state.disabled = false
-    // }
+    if (order.status == 1){
+      formData.applyRefundType = 1
+      state.disabled = true
+    }else if(order.status == 3){
+      formData.applyRefundType = 2
+      state.disabled = true
+    }else {
+      state.disabled = false
+    }
   });
 </script>
 
