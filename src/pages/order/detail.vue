@@ -206,7 +206,7 @@
   }
 
   const statusBarHeight = sheep.$platform.device.statusBarHeight * 2;
-  const headerBg = sheep.$url.css('/static/img/shop/order/order_bg.png');
+  const headerBg = sheep.$url.cdn('/icons/order_bg.png');
   const state = reactive({
     orderInfo: {},
     orderId: null,

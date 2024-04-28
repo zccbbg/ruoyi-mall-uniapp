@@ -14,6 +14,13 @@
         <view>手机号快捷登录</view>
       </view>
     </button>
+    <view style="height: 10rpx"></view>
+    <button class="ss-reset-button cancel-btn ui-Shadow-Pioneer-Main" @tap="closeAuthModal">
+      <view class="ss-flex">
+        <!--        <image class="auto-login-img" :src="sheep.$url.static('/image/weixin.svg')"/>-->
+        <view>暂不登录</view>
+      </view>
+    </button>
   </view>
 
   <view class="agreement-text ss-flex">
@@ -69,6 +76,16 @@ function handleTip(){
 
 
 <style lang="scss" scoped>
+.cancel-btn {
+  width: 100%;
+  height: 72rpx;
+  font-weight: 500;
+  font-size: 28rpx;
+
+  border-radius: 40rpx;
+  background: red;
+  color: $white;
+}
 .btnStyle{
   border: none;
   font-size: 15px;

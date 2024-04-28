@@ -12,7 +12,7 @@
         absolute="rightTop"
         size="small"
       >
-        <image class="item-icon" :src="item.icon" mode="aspectFit"></image>
+        <image class="item-icon" :src="sheep.$url.cdn(item.icon)" mode="aspectFit"></image>
       </uni-badge>
       <view class="menu-title ss-m-t-28">{{ item.title }}</view>
     </view>
@@ -30,21 +30,21 @@
     {
       title: '待付款',
       value: '1',
-      icon: '\/static\/icons\/no_pay.png',
+      icon: '\/icons\/no_pay.png',
       path: '/pages/order/list',
       type: 'unpaid',
     },
     {
       title: '待发货',
       value: '2',
-      icon: '\/static\/icons\/no_comment.png',
+      icon: '\/icons\/no_comment.png',
       path: '/pages/order/list',
       type: 'nosend',
     },
     {
       title: '待收货',
       value: '3',
-      icon: '\/static\/icons\/no_take.png',
+      icon: '\/icons\/no_take.png',
       path: '/pages/order/list',
       type: 'noget',
     },
@@ -58,14 +58,14 @@
     {
       title: '售后单',
       value: '4',
-      icon: '\/static\/icons\/change_order.png',
+      icon: '\/icons\/change_order.png',
       path: '/pages/order/list',
       type: 'aftersale',
     },
     {
       title: '全部订单',
       value: '0',
-      icon: '\/static\/icons\/all_order.png',
+      icon: '\/icons\/all_order.png',
       path: '/pages/order/list',
     },
   ];

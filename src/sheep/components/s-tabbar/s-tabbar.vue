@@ -20,10 +20,10 @@
         @tap="sheep.$router.go(item.url)"
       >
         <template v-slot:active-icon>
-          <image class="u-page__item__slot-icon" :src="item.activeIcon"></image>
+          <image class="u-page__item__slot-icon" :src="sheep.$url.cdn(item.activeIcon)"></image>
         </template>
         <template v-slot:inactive-icon>
-          <image class="u-page__item__slot-icon" :src="item.inactiveIcon"></image>
+          <image class="u-page__item__slot-icon" :src="sheep.$url.cdn(item.inactiveIcon)"></image>
         </template>
       </su-tabbar-item>
     </su-tabbar>

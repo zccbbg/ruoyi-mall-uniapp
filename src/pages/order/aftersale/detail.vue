@@ -199,7 +199,7 @@
   import { isEmpty } from 'lodash';
 
   const statusBarHeight = sheep.$platform.device.statusBarHeight * 2;
-  const headerBg = sheep.$url.css('/static/img/shop/order/order_bg.png');
+  const headerBg = sheep.$url.css('/icons/order_bg.png');
   const state = reactive({
     active: 0,
     orderId: null,

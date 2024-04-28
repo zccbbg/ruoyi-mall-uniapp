@@ -23,13 +23,13 @@
                 <image
                   class="pay-icon"
                   v-if="item.disabled"
-                  :src="sheep.$url.static('/static/img/shop/pay/cod_disabled.png')"
+                  :src="sheep.$url.cdn('/static/img/shop/pay/cod_disabled.png')"
                   mode="aspectFit"
                 ></image>
                 <image
                   class="pay-icon"
                   v-else
-                  :src="sheep.$url.static(item.icon)"
+                  :src="sheep.$url.cdn(item.icon)"
                   mode="aspectFit"
                 ></image>
                 <text class="pay-title">{{ item.title }}</text>
@@ -105,31 +105,31 @@
 
   const payMethods = [
     {
-      icon: '/static/img/shop/pay/wechat.png',
+      icon: '/icons/wechat.png',
       title: '微信支付',
       value: 'wechat',
       disabled: false,
     },
     {
-      icon: '/static/img/shop/pay/alipay.png',
+      icon: '/icons/alipay.png',
       title: '支付宝支付',
       value: 'alipay',
       disabled: false,
     },
     {
-      icon: '/static/img/shop/pay/wallet.png',
+      icon: '/icons/wallet.png',
       title: '余额支付',
       value: 'money',
       disabled: false,
     },
     {
-      icon: '/static/img/shop/pay/apple.png',
+      icon: '/icons/apple.png',
       title: 'Apple Pay',
       value: 'apple',
       disabled: false,
     },
     {
-      icon: '/static/img/shop/pay/cod.png',
+      icon: '/icons/cod.png',
       title: '货到付款',
       value: 'offline',
       disabled: false,

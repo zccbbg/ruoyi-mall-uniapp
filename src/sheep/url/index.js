@@ -6,6 +6,9 @@ const cdn = (url = '', cdnurl = '') => {
   if (url.indexOf('http') === 0) {
     return url;
   }
+  // if (!url.startsWith("~/icons")) {
+  //   return url.substring(1);
+  // }
   if (cdnurl === '') {
     cdnurl = $store('app').info.cdnurl;
   }

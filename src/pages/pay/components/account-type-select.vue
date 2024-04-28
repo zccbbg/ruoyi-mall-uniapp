@@ -11,7 +11,7 @@
           :key="index"
         >
           <view class="container-icon ss-flex ss-m-r-20">
-            <image :src="sheep.$url.static(item.icon)" />
+            <image :src="sheep.$url.cdn(item.icon)" />
           </view>
           <view class="ss-flex-1">{{ item.title }}</view>
           <view class="radio">
@@ -59,17 +59,17 @@
   });
   const typeList = [
     {
-      icon: '/static/img/shop/pay/wechat.png',
+      icon: '/icons/wechat.png',
       title: '微信零钱',
       value: 'wechat',
     },
     {
-      icon: '/static/img/shop/pay/alipay.png',
+      icon: '/icons/alipay.png',
       title: '支付宝账户',
       value: 'alipay',
     },
     {
-      icon: '/static/img/shop/pay/bank.png',
+      icon: '/icons/bank.png',
       title: '银行卡转账',
       value: 'bank',
     },

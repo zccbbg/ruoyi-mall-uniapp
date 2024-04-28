@@ -22,7 +22,7 @@
       >
         <view class="order-card-header ss-flex ss-col-center ss-row-between ss-p-x-20">
           <view class="order-no">{{ '订单号：' + order.orderSn }}</view>
-          <view class="order-state ss-font-26" :class="formatOrderColor(order.status)">
+          <view class="order-state ss-font-24 ml-auto" :class="formatOrderColor(order.status)">
             <text>{{getOrderStatusName(order.status) }}</text>
             <text v-if="order.aftersaleStatus > 1" class="danger-color">（{{getOrderAfterSaleStatusName(order.aftersaleStatus) }}）</text>
           </view>

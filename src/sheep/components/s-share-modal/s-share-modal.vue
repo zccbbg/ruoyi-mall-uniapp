@@ -33,7 +33,7 @@
           >
             <image
               class="share-img"
-              :src="sheep.$url.static('/static/img/shop/share/share_poster.png')"
+              :src="sheep.$url.static('/icons/share_poster.png')"
               mode=""
             ></image>
             <text class="share-title">生成海报</text>
@@ -46,7 +46,7 @@
           >
             <image
               class="share-img"
-              :src="sheep.$url.static('/static/img/shop/share/share_link.png')"
+              :src="sheep.$url.static('/icons/share_link.png')"
               mode=""
             ></image>
             <text class="share-title">复制链接</text>

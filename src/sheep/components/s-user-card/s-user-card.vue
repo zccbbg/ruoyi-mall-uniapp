@@ -9,7 +9,7 @@
             :src="
               isLogin && userInfo.avatar
                 ? sheep.$url.cdn(userInfo.avatar)
-                : '\/static\/icons\/default_avatar.png'
+                : sheep.$url.cdn('\/icons\/default_avatar.png')
             "
             mode="aspectFill"
             @tap="handleLogin()"

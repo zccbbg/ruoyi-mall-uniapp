@@ -66,7 +66,7 @@ const app = defineStore({
         "app": {
             "name": "Shopro",
             "logo": "\/static\/img\/shop\/logo.png",
-            "cdnurl": "https:\/\/file.sheepjs.com",
+            "cdnurl": "https://ruoyi-mall-sz.oss-cn-shenzhen.aliyuncs.com",
             "filesystem": "qcloud",
             "version": "1.1.13",
             "user_protocol": {
@@ -119,20 +119,20 @@ const app = defineStore({
                     "activeColor": "#FF7A0C",
                     "list": [
                         {
-                            "inactiveIcon": "\/static\/icons\/home.png",
-                            "activeIcon": "\/static\/icons\/home.gif",
+                            "inactiveIcon": "/icons/home.png",
+                            "activeIcon": "/icons/home.gif",
                             "url": "\/pages\/index\/index",
                             "text": "首页"
                         },
                         {
-                            "inactiveIcon": "\/static\/icons\/cart.png",
-                            "activeIcon": "\/static\/icons\/cart.gif",
+                            "inactiveIcon": "/icons/cart.png",
+                            "activeIcon": "/icons/cart.gif",
                             "url": "\/pages\/index\/cart",
                             "text": "购物车"
                         },
                         {
-                            "inactiveIcon": "\/static\/icons\/my.png",
-                            "activeIcon": "\/static\/icons\/my.gif",
+                            "inactiveIcon": "/icons/my.png",
+                            "activeIcon": "/icons/my.gif",
                             "url": "\/pages\/index\/user",
                             "text": "我的"
                         }
@@ -703,7 +703,7 @@ const app = defineStore({
                             "col": 4,
                             "list": [
                                 {
-                                    "src": "\/static\/icons\/sign.png",
+                                    "src": "\/icons\/sign.png",
                                     "title": {
                                         "text": "签到",
                                         "color": "#333333"
@@ -722,7 +722,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/set.png",
+                                    "src": "\/icons\/set.png",
                                     "title": {
                                         "text": "清空缓存",
                                         "color": "#333"
@@ -741,7 +741,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/star.png",
+                                    "src": "\/icons\/star.png",
                                     "title": {
                                         "text": "收藏",
                                         "color": "#333"
@@ -760,7 +760,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/footprints.png",
+                                    "src": "\/icons\/footprints.png",
                                     "title": {
                                         "text": "积分记录",
                                         "color": "#333"
@@ -779,7 +779,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/edit.png",
+                                    "src": "\/icons\/edit.png",
                                     "title": {
                                         "text": "意见反馈",
                                         "color": "#333"
@@ -798,7 +798,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/message.png",
+                                    "src": "\/icons\/message.png",
                                     "title": {
                                         "text": "常见问题",
                                         "color": "#333"
@@ -817,7 +817,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/medal.png",
+                                    "src": "\/icons\/medal.png",
                                     "title": {
                                         "text": "积分商城",
                                         "color": "#333"
@@ -836,7 +836,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/userStar.png",
+                                    "src": "\/icons\/userStar.png",
                                     "title": {
                                         "text": "关于我们",
                                         "color": "#333"
@@ -855,7 +855,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/privacy.png",
+                                    "src": "\/icons\/privacy.png",
                                     "title": {
                                         "text": "隐私协议",
                                         "color": "#333"
@@ -874,7 +874,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/team.png",
+                                    "src": "\/icons\/team.png",
                                     "title": {
                                         "text": "我的团队",
                                         "color": "#333"
@@ -893,7 +893,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/location.png",
+                                    "src": "\/icons\/location.png",
                                     "title": {
                                         "text": "收货地址",
                                         "color": "#333"
@@ -912,7 +912,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/customer_service.png",
+                                    "src": "\/icons\/customer_service.png",
                                     "title": {
                                         "text": "联系客服",
                                         "color": "#333"
