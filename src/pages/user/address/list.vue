@@ -56,9 +56,6 @@
   });
 
   onBeforeMount(() => {
-    if (!!uni.getStorageSync('areaData')) {
-      return;
-    }
     // 提前加载省市区数据
     sheep.$api.data.area().then((res) => {
       uni.setStorageSync('areaData', res.data);
