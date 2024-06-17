@@ -703,7 +703,7 @@ const app = defineStore({
                             "col": 4,
                             "list": [
                                 {
-                                    "src": "\/icons\/sign.png",
+                                    "src": "\/icons\/sign-menu.png",
                                     "title": {
                                         "text": "签到",
                                         "color": "#333333"

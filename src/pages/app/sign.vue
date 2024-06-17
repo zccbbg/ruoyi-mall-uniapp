@@ -41,7 +41,7 @@
                 <view class="is-sign-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
                 <image
                   class="is-sign-image"
-                  :src="sheep.$url.static('/static/img/shop/app/correct.png')"
+                  :src="sheep.$url.cdn('/icons/correct.png')"
                 >
                 </image>
               </view>
@@ -57,9 +57,16 @@
 
           <!-- 签到按钮 -->
           <view class="ss-flex ss-col-center ss-row-center sign-box ss-m-y-40">
+            <!-- #ifdef H5 -->
             <button class="ss-reset-button sign-btn" v-if="state.isSign === 0" @tap="onSign"
-              >签到</button
+            >签到</button
             >
+            <!-- #endif -->
+            <!-- #ifdef MP -->
+            <button class="ss-reset-button sign-btn" v-if="state.isSign === 0" @tap="seeAds"
+              >观看视频 立即签到</button
+            >
+            <!-- #endif -->
             <button class="ss-reset-button already-btn" v-if="state.isSign === 1" disabled
               >已签到</button
             >
@@ -98,10 +105,11 @@
 <script setup>
   import sheep from '@/sheep';
   import { onLoad, onReady } from '@dcloudio/uni-app';
-  import { computed, reactive } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import dayjs from "dayjs";
+  import {createAds,toSeeAd} from "@/sheep/hooks/useAds";
 
-  const headerBg = sheep.$url.css('/static/img/shop/app/sign.png');
+  const headerBg = sheep.$url.css('/icons/sign1.png')
 
   const state = reactive({
     data: {
@@ -146,6 +154,14 @@
     isSign: 0, //今天是否签到
     loading: true,
   });
+  function seeAds(){
+    toSeeAd(videoAd.value,()=>{
+      //看完广告了
+      setTimeout(()=>{
+        onSign()
+      },500)
+    })
+  }
   async function onSign() {
     const res = await sheep.$api.activity.signAdd({amount: state.rules.signCount});
     if (res) {
@@ -157,7 +173,7 @@
   //签到确认刷新页面
   function onConfirm() {
     state.showModel = false;
-    handleCalendar(0);
+    handleCalendar(0)
   }
 
   //初始化天数
@@ -220,10 +236,15 @@
     }
   }
 
+  const videoAd = ref(null)
+
   onReady(async () => {
     await getSignRule()
     initDays(0)
     getData(0);
+    // #ifdef MP
+    videoAd.value = await createAds()
+    // #endif
   });
 
   async function getSignRule(){
@@ -248,10 +269,7 @@
     }
     const today = dayjs();
     const current = dayjs(newYear + '-' + newMonth + '-01')
-    let monthsDiff = current.diff(today, 'months', true).toFixed();
-    if (monthsDiff === '-0') {
-      monthsDiff = 0
-    }
+    let monthsDiff = Math.ceil(current.diff(today, 'month', true));
     initDays(monthsDiff)
     getData(monthsDiff);
   };
