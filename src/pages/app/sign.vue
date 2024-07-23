@@ -1,90 +1,89 @@
 <!-- 页面  -->
 <template>
   <s-layout title="签到有礼">
-    <view class="sign-wrap" v-if="state.rules.signStatus">
-      <!-- 签到日历 -->
-      <view class="content-box calendar">
-        <!-- 切换年月 -->
-        <view class="bar ss-flex ss-col-center ss-row-center">
-          <view class="previous" @tap="handleCalendar(-1)"><text class="cicon-back"></text></view>
-          <view class="date ss-m-x-20"
-            >{{ state.cur_year || '--' }} 年 {{ state.cur_month || '--' }} 月</view
-          >
-          <view class="next" @tap="handleCalendar(1)"><text class="cicon-forward"></text></view>
-        </view>
-
-        <!-- 显示星期 -->
-        <view class="week ss-flex">
-          <view
-            class="week-item ss-flex ss-row-center"
-            v-for="(item, index) in state.weeks_ch"
-            :key="index"
-          >
-            {{ item.title }}
-          </view>
-        </view>
-
-        <!-- 日历表 -->
-        <view class="myDateTable">
-          <view
-            v-for="(item, j) in state.data.days"
-            :key="j"
-            class="dateCell ss-flex ss-row-center ss-col-center"
-          >
-            <!-- 空格 -->
-            <view class="ss-flex ss-row-center ss-col-center">
-              <text :decode="true">&nbsp;&nbsp;</text>
-            </view>
-            <view>
-              <!-- 已签到日期 -->
-              <view v-if="item.is_sign" class="is-sign ss-flex ss-row-center">
-                <view class="is-sign-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
-                <image
-                  class="is-sign-image"
-                  :src="sheep.$url.cdn('/icons/correct.png')"
-                >
-                </image>
-              </view>
-              <!-- 未签到日期 -->
-              <view
-                class="is-sign ss-flex ss-row-center"
-                v-if="!item.is_sign && item.day"
-              >
-                <view class="cell-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
-              </view>
-            </view>
-          </view>
-
-          <!-- 签到按钮 -->
-          <view class="ss-flex ss-col-center ss-row-center sign-box ss-m-y-40">
-            <!-- #ifdef H5 -->
-            <button class="ss-reset-button sign-btn" v-if="state.isSign === 0" @tap="onSign"
-            >签到</button
-            >
-            <!-- #endif -->
-            <!-- #ifdef MP -->
-            <button class="ss-reset-button sign-btn" v-if="state.isSign === 0" @tap="seeAds"
-              >观看视频 立即签到</button
-            >
-            <!-- #endif -->
-            <button class="ss-reset-button already-btn" v-if="state.isSign === 1" disabled
-              >已签到</button
-            >
-          </view>
-        </view>
-      </view>
-      <view class="bg-white ss-m-t-16 ss-p-t-30 ss-p-b-60 ss-p-x-40">
-        <view class="activity-title ss-m-b-30">签到说明</view>
-        <view class="activity-des">
-          每日签到固定 {{ state.rules.signCount }} 积分
-        </view>
-      </view>
+    <view v-if="!finishSeeAds">
+      <s-ads @onFinish="initData" ref="sAdsRef"/>
     </view>
-    <s-empty
-      v-else
-      icon="/static/data-empty.png"
-      text="签到活动还未开始"
-    />
+    <view v-else>
+      <view class="sign-wrap" v-if="state.rules.signStatus">
+        <!-- 签到日历 -->
+        <view class="content-box calendar">
+          <!-- 切换年月 -->
+          <view class="bar ss-flex ss-col-center ss-row-center">
+            <view class="previous" @tap="handleCalendar(-1)"><text class="cicon-back"></text></view>
+            <view class="date ss-m-x-20"
+            >{{ state.cur_year || '--' }} 年 {{ state.cur_month || '--' }} 月</view
+            >
+            <view class="next" @tap="handleCalendar(1)"><text class="cicon-forward"></text></view>
+          </view>
+
+          <!-- 显示星期 -->
+          <view class="week ss-flex">
+            <view
+                class="week-item ss-flex ss-row-center"
+                v-for="(item, index) in state.weeks_ch"
+                :key="index"
+            >
+              {{ item.title }}
+            </view>
+          </view>
+
+          <!-- 日历表 -->
+          <view class="myDateTable">
+            <view
+                v-for="(item, j) in state.data.days"
+                :key="j"
+                class="dateCell ss-flex ss-row-center ss-col-center"
+            >
+              <!-- 空格 -->
+              <view class="ss-flex ss-row-center ss-col-center">
+                <text :decode="true">&nbsp;&nbsp;</text>
+              </view>
+              <view>
+                <!-- 已签到日期 -->
+                <view v-if="item.is_sign" class="is-sign ss-flex ss-row-center">
+                  <view class="is-sign-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
+                  <image
+                      class="is-sign-image"
+                      :src="sheep.$url.cdn('/icons/correct.png')"
+                  >
+                  </image>
+                </view>
+                <!-- 未签到日期 -->
+                <view
+                    class="is-sign ss-flex ss-row-center"
+                    v-if="!item.is_sign && item.day"
+                >
+                  <view class="cell-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
+                </view>
+              </view>
+            </view>
+
+            <!-- 签到按钮 -->
+            <view class="ss-flex ss-col-center ss-row-center sign-box ss-m-y-40">
+              <button class="ss-reset-button sign-btn" v-if="state.isSign === 0" @tap="onSign"
+              >签到</button
+              >
+              <button class="ss-reset-button already-btn" v-if="state.isSign === 1" disabled
+              >已签到</button
+              >
+            </view>
+          </view>
+        </view>
+        <view class="bg-white ss-m-t-16 ss-p-t-30 ss-p-b-60 ss-p-x-40">
+          <view class="activity-title ss-m-b-30">签到说明</view>
+          <view class="activity-des">
+            每日签到固定 {{ state.rules.signCount }} 积分
+          </view>
+        </view>
+      </view>
+      <s-empty
+          v-else
+          icon="/static/data-empty.png"
+          text="签到活动还未开始"
+      />
+    </view>
+
     <su-popup :show="state.showModel" type="center" round="10" :isMaskClick="false">
       <view class="model-box ss-flex-col">
         <view class="ss-m-t-56 ss-flex-col ss-col-center">
@@ -103,14 +102,14 @@
 </template>
 
 <script setup>
-  import sheep from '@/sheep';
-  import { onLoad, onReady } from '@dcloudio/uni-app';
-  import { computed, reactive, ref } from 'vue';
-  import dayjs from "dayjs";
-  import {createAds,toSeeAd} from "@/sheep/hooks/useAds";
+import sheep from '@/sheep';
+import {onReady} from '@dcloudio/uni-app';
+import {nextTick, reactive, ref} from 'vue';
+import dayjs from "dayjs";
 
   const headerBg = sheep.$url.css('/icons/sign1.png')
-
+  const finishSeeAds = ref(false)
+  const sAdsRef = ref()
   const state = reactive({
     data: {
       days: [], //日历
@@ -154,14 +153,6 @@
     isSign: 0, //今天是否签到
     loading: true,
   });
-  function seeAds(){
-    toSeeAd(videoAd.value,()=>{
-      //看完广告了
-      setTimeout(()=>{
-        onSign()
-      },500)
-    })
-  }
   async function onSign() {
     const res = await sheep.$api.activity.signAdd({amount: state.rules.signCount});
     if (res) {
@@ -236,16 +227,27 @@
     }
   }
 
-  const videoAd = ref(null)
-
   onReady(async () => {
+    //直接看广告
+    // #ifdef MP
+    finishSeeAds.value = false
+    nextTick(()=>{
+      sAdsRef.value.initAds(true)
+    })
+    // #endif
+
+    // #ifdef H5
+    finishSeeAds.value = true
+    initData()
+    // #endif
+  });
+
+  async function initData(){
+    finishSeeAds.value = true
     await getSignRule()
     initDays(0)
     getData(0);
-    // #ifdef MP
-    videoAd.value = await createAds()
-    // #endif
-  });
+  }
 
   async function getSignRule(){
     const res = await sheep.$api.data.getSysConfig({configKey:'activity-integral-income-set-key'});

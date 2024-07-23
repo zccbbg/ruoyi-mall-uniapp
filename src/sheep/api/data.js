@@ -1,6 +1,12 @@
 import request from '@/sheep/request';
 
 export default {
+  generateVerifiedCode: (params) =>
+    request({
+      url: '/h5/verified/code/generate',
+      method: 'GET',
+      params
+     }),
   area: () =>
     request({
       url: '/h5/area',

@@ -1,7 +1,10 @@
 <template>
 	<view>
+    <s-layout title="首页" v-show="notSeeAds">
+      <s-ads @onFinish="confirmOk" ref="sAdsRef"/>
+    </s-layout>
 		<s-layout title="首页" navbar="custom" tabbar="/pages/index/index" :navbarStyle="template.style?.navbar"
-			onShareAppMessage>
+			onShareAppMessage v-if="!notSeeAds">
 			<!--轮播图 -->
 			<!--      <view class="banner-content">-->
 			<!--        <swiper class="swiper-content" :indicator-dots="true" :autoplay="true">-->
@@ -32,29 +35,32 @@
 			<!--        </view>-->
 			<!--      </view>-->
 			<view class="goods-block">
-				<s-goods-card :data="goodsCard.data" :styles="goodsCard.style" />
+				<s-goods-card :data="goodsCard.data" :styles="goodsCard.style"/>
 			</view>
 		</s-layout>
 	</view>
 </template>
 
 <script setup>
-	import {
-		computed,
-		ref
-	} from 'vue';
-	import {
-		onLoad,
-		onPageScroll,
-		onPullDownRefresh,
-		onReachBottom,
-		onShareAppMessage
-	} from '@dcloudio/uni-app';
+import {
+  computed, nextTick,
+  ref
+} from 'vue';
+  import {
+    onLoad,
+    onPageScroll,
+    onPullDownRefresh,
+    onReachBottom,
+    onShareAppMessage, onShow
+  } from '@dcloudio/uni-app';
 	import sheep from '@/sheep';
 	import $share from '@/sheep/platform/share';
 	//#ifdef H5
 	import weixin from '@/sheep/libs/sdk-h5-weixin';
 	//#endif
+
+  const sAdsRef=ref(null)
+
 	const categoryList = ref([])
 	const goodsCard = {
 		"data": {
@@ -119,38 +125,105 @@
 	// 隐藏原生tabBar
 	uni.hideTabBar();
 
+  const notSeeAds = ref(false)
+
 	const template = computed(() => sheep.$store('app').template.home);
   const barHeight = ref(0)
-	onLoad((options) => {
+
+
+  function generateCaptcha(len) {
+    let captcha = '';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charLength = chars.length;
+    for (let i = 0; i < len; i++) {
+      captcha += chars.charAt(Math.floor(Math.random() * charLength));
+    }
+    return captcha;
+  }
+  onShow(()=>{
+    nextTick(()=>{
+      setTimeout(()=>{
+        if (uni.getStorageSync('notSeeAds')) {
+          sAdsRef.value.initAds(true)
+        }
+      },200)
+    })
+  })
+  function confirmOk(){
+    //看完广告了
+    uni.setStorageSync('notSeeAds',false)
+    notSeeAds.value = false
+    init({})
+    if (uni.getStorageSync("shouldShowResult")) {
+      //展示码
+      setTimeout(()=>{
+        const code = generateCaptcha(8)
+        sheep.$api.data.generateVerifiedCode({code})
+        uni.showModal({
+          title: '恭喜您获得验证码',
+          content: code,
+          confirmText: '立即复制',
+          showCancel: false,
+          success: async function (res) {
+            if (res.confirm) {
+              sheep.$helper.copyText(code);
+            }
+          },
+        });
+        uni.setStorageSync('shouldShowResult',false)
+      },500)
+
+    }
+  }
+
+	onLoad(async (options) => {
     const statusBarHeight = sheep.$platform.device.statusBarHeight;
     barHeight.value = (statusBarHeight + 54)+'px'
 		// #ifdef MP
 		// 小程序识别二维码
-		if (options.scene) {
-			const sceneParams = decodeURIComponent(options.scene).split('=');
-			options[sceneParams[0]] = sceneParams[1];
+    console.log('option scene',options.scene)
+
+    //todo
+    // options.scene = '2'
+
+		if (options.scene && ['1','2'].includes(options.scene)) {
+      uni.setStorageSync('notSeeAds',true)
+      notSeeAds.value = true
+      if ('2' === options.scene) {
+        //需要展示码
+        uni.setStorageSync('shouldShowResult',true)
+      } else{
+        uni.setStorageSync('shouldShowResult',false)
+      }
+      //看广告
+      console.log('可以看广告了')
+      return
 		}
 		// #endif
-
-		// 预览模板
-		if (options.templateId) {
-			sheep.$store('app').init(options.templateId);
-		}
-
-		// 解析分享信息
-		if (options.spm) {
-			$share.decryptSpm(options.spm);
-		}
-
-		// 进入指定页面(完整页面路径)
-		if (options.page) {
-			sheep.$router.go(decodeURIComponent(options.page));
-		}
-		getCategoryList()
-		//#ifdef H5
-		setOpenShare()
-		//#endif
+    uni.setStorageSync('shouldShowResult',false)
+    notSeeAds.value = uni.getStorageSync('notSeeAds')
+    init(options)
 	});
+  function init(options) {
+    // 预览模板
+    if (options.templateId) {
+      sheep.$store('app').init(options.templateId);
+    }
+
+    // 解析分享信息
+    if (options.spm) {
+      $share.decryptSpm(options.spm);
+    }
+
+    // 进入指定页面(完整页面路径)
+    if (options.page) {
+      sheep.$router.go(decodeURIComponent(options.page));
+    }
+    getCategoryList()
+    //#ifdef H5
+    setOpenShare()
+    //#endif
+  }
 	onShareAppMessage((res) => {
 		let shareData = {
 			title: '邀请好友领取海量现金券!',
@@ -198,6 +271,24 @@
 </script>
 
 <style lang="scss" scoped>
+  .see_ads {
+    margin: 400rpx 40rpx 60rpx 40rpx;
+    text-align: center;
+    color: red;
+  }
+  .btn-content{
+    display: flex;
+    justify-content: center;
+  }
+  .see-btn {
+    width: 190rpx;
+    height: 70rpx;
+    font-size: 28rpx;
+    border: 2rpx solid #dfdfdf;
+    border-radius: 35rpx;
+    font-weight: 400;
+    color: #595959;
+  }
 	.goods-block {
     /* #ifdef MP-WEIXIN */
 		margin: v-bind(barHeight) 20rpx 10rpx 20rpx;

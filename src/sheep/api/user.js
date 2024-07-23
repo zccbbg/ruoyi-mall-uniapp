@@ -2,6 +2,12 @@ import request from '@/sheep/request';
 import $platform from '@/sheep/platform';
 
 export default {
+  getMiniImg: (params)=>
+    request({
+        url: '/h5/member/wechat/code',
+        method: 'GET',
+        params
+    }),
   profile: () =>
     request({
       url: '/h5/member/info',

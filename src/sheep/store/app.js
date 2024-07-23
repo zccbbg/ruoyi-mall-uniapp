@@ -951,7 +951,7 @@ const app = defineStore({
                 "style": {
                     "background": {
                         "color": "#F6F6F6",
-                        "src": "\/storage\/decorate\/20221115\/b530150a466c8cda0a4cd5b29e2c8d11.png"
+                        "src": "\/icons\/b530150a466c8cda0a4cd5b29e2c8d11.png"
                     },
                 }
             }
