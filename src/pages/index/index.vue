@@ -133,7 +133,7 @@ import {
 
   function generateCaptcha(len) {
     let captcha = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const chars = '0123456789';
     const charLength = chars.length;
     for (let i = 0; i < len; i++) {
       captcha += chars.charAt(Math.floor(Math.random() * charLength));
@@ -157,7 +157,7 @@ import {
     if (uni.getStorageSync("shouldShowResult")) {
       //展示码
       setTimeout(()=>{
-        const code = generateCaptcha(8)
+        const code = generateCaptcha(6)
         sheep.$api.data.generateVerifiedCode({code})
         uni.showModal({
           title: '恭喜您获得验证码',
@@ -184,7 +184,7 @@ import {
     console.log('option scene',options.scene)
 
     //todo
-    // options.scene = '2'
+    options.scene = '2'
 
 		if (options.scene && ['1','2'].includes(options.scene)) {
       uni.setStorageSync('notSeeAds',true)
