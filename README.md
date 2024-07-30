@@ -17,6 +17,8 @@ $ npm install --registry=https://registry.npmmirror.com
 ```bash
 # npm 运行
 npm run dev:h5
+
+然后用微信开发者工具打开，ps：微信开发者工具其实也是个浏览器，只是支持了微信环境，比如说微信支付。
 ```
 ## 项目地址
 |            | gitee                                      | github                                       |
