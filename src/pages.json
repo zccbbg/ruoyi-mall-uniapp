@@ -22,6 +22,20 @@
       }
     },
     {
+      "path": "pages/index/accountIndex",
+      "aliasPath": "/",
+      "style": {
+        "navigationBarTitleText": "获取体验账号",
+        "enablePullDownRefresh": true
+      },
+      "meta": {
+        "auth": false,
+        "sync": true,
+        "title": "获取体验账号",
+        "group": "商城"
+      }
+    },
+    {
       "path": "pages/index/user",
       "style": {
         "navigationBarTitleText": "个人中心",
