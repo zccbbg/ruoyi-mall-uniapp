@@ -184,7 +184,7 @@ import {
     console.log('option scene',options.scene)
 
     //todo
-    options.scene = '2'
+    options.scene = '3'
 
 		if (options.scene && ['1','2'].includes(options.scene)) {
       uni.setStorageSync('notSeeAds',true)

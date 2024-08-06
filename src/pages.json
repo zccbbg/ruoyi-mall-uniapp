@@ -25,13 +25,13 @@
       "path": "pages/index/accountIndex",
       "aliasPath": "/",
       "style": {
-        "navigationBarTitleText": "获取体验账号",
+        "navigationBarTitleText": "获取信息",
         "enablePullDownRefresh": true
       },
       "meta": {
         "auth": false,
         "sync": true,
-        "title": "获取体验账号",
+        "title": "获取信息",
         "group": "商城"
       }
     },

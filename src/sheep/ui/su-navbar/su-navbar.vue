@@ -20,7 +20,7 @@
       >
         <view
           class="uni-navbar__header-btns uni-navbar__header-btns-left"
-          :style="{ width: leftIconWidth }"
+          :style="{ width: leftIconWidth }" v-if="showHeaderButton"
         >
           <slot name="left">
             <view class="uni-navbar__content_view" v-if="leftIcon.length > 0">
@@ -200,6 +200,10 @@
       type: String,
       default: '',
     },
+    showHeaderButton: {
+      type: Boolean,
+      default: true
+    }
   });
 
   const capsuleStyle = computed(() => {

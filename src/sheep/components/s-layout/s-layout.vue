@@ -14,6 +14,7 @@
         :opacityBgUi="opacityBgUi"
         @search="(e) => emits('search', e)"
         :defaultSearch="defaultSearch"
+        :show-header-button="showHeaderButton"
       />
 
       <!-- 装修组件导航栏-普通 -->
@@ -140,6 +141,10 @@
       type: Boolean,
       default: false,
     },
+    showHeaderButton: {
+      type: Boolean,
+      default: true,
+    }
   });
   const emits = defineEmits(['search']);
 

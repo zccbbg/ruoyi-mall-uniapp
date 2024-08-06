@@ -1,8 +1,8 @@
 <template>
-  <s-layout title="获取体验账号" v-show="seeAds">
+  <s-layout title="获取信息" v-show="seeAds" :show-header-button="false">
     <s-ads @onFinish="confirmOk" ref="sAdsRef"/>
   </s-layout>
-  <s-layout title="获取体验账号" v-if="!seeAds">
+  <s-layout title="获取信息" v-if="!seeAds" :show-header-button="false">
     <uni-popup ref="popupRef" type="dialog">
       <uni-popup-dialog :content="account" :duration="2000" :before-close="true" @close="close" @confirm="confirm" confirm-text="立即复制" :show-close="false"></uni-popup-dialog>
     </uni-popup>
@@ -43,7 +43,7 @@ onShow(() => {
   nextTick(() => {
     setTimeout(() => {
       if (seeAds.value) {
-        sAdsRef.value.initAds(true)
+        sAdsRef.value.initAds(false)
       }
     }, 200)
   })
