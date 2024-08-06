@@ -41,7 +41,7 @@ export async function ShoproInit() {
   /* #ifdef H5 */
   const code = getUrlCode().code;
   if (!code && !sheep.$store('app').authInfo ){
-    if (!sheep.$store('user').isLogin){
+    if (!sheep.$store('user').isLogin && process.env.NODE_ENV !== 'development'){
       window.location.href =
           "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" +
           import.meta.env.SHOPRO_APPID +
