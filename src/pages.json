@@ -36,6 +36,20 @@
       }
     },
     {
+      "path": "pages/index/verificationCodeIndex",
+      "aliasPath": "/",
+      "style": {
+        "navigationBarTitleText": "获取验证码",
+        "enablePullDownRefresh": true
+      },
+      "meta": {
+        "auth": false,
+        "sync": true,
+        "title": "获取验证码",
+        "group": "商城"
+      }
+    },
+    {
       "path": "pages/index/user",
       "style": {
         "navigationBarTitleText": "个人中心",

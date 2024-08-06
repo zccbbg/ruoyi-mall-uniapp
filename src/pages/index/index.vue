@@ -1,10 +1,6 @@
 <template>
-	<view>
-    <s-layout title="首页" v-show="notSeeAds">
-      <s-ads @onFinish="confirmOk" ref="sAdsRef"/>
-    </s-layout>
-		<s-layout title="首页" navbar="custom" tabbar="/pages/index/index" :navbarStyle="template.style?.navbar"
-			onShareAppMessage v-if="!notSeeAds">
+  <s-layout title="首页" navbar="custom" tabbar="/pages/index/index" :navbarStyle="template.style?.navbar"
+			onShareAppMessage>
 			<!--轮播图 -->
 			<!--      <view class="banner-content">-->
 			<!--        <swiper class="swiper-content" :indicator-dots="true" :autoplay="true">-->
@@ -38,7 +34,6 @@
 				<s-goods-card :data="goodsCard.data" :styles="goodsCard.style"/>
 			</view>
 		</s-layout>
-	</view>
 </template>
 
 <script setup>
@@ -58,8 +53,6 @@ import {
 	//#ifdef H5
 	import weixin from '@/sheep/libs/sdk-h5-weixin';
 	//#endif
-
-  const sAdsRef=ref(null)
 
 	const categoryList = ref([])
 	const goodsCard = {
@@ -125,83 +118,15 @@ import {
 	// 隐藏原生tabBar
 	uni.hideTabBar();
 
-  const notSeeAds = ref(false)
 
 	const template = computed(() => sheep.$store('app').template.home);
   const barHeight = ref(0)
 
 
-  function generateCaptcha(len) {
-    let captcha = '';
-    const chars = '0123456789';
-    const charLength = chars.length;
-    for (let i = 0; i < len; i++) {
-      captcha += chars.charAt(Math.floor(Math.random() * charLength));
-    }
-    return captcha;
-  }
-  onShow(()=>{
-    nextTick(()=>{
-      setTimeout(()=>{
-        if (uni.getStorageSync('notSeeAds')) {
-          sAdsRef.value.initAds(true)
-        }
-      },200)
-    })
-  })
-  function confirmOk(){
-    //看完广告了
-    uni.setStorageSync('notSeeAds',false)
-    notSeeAds.value = false
-    init({})
-    if (uni.getStorageSync("shouldShowResult")) {
-      //展示码
-      setTimeout(()=>{
-        const code = generateCaptcha(6)
-        sheep.$api.data.generateVerifiedCode({code})
-        uni.showModal({
-          title: '恭喜您获得验证码',
-          content: code,
-          confirmText: '立即复制',
-          showCancel: false,
-          success: async function (res) {
-            if (res.confirm) {
-              sheep.$helper.copyText(code);
-            }
-          },
-        });
-        uni.setStorageSync('shouldShowResult',false)
-      },500)
-
-    }
-  }
 
 	onLoad(async (options) => {
     const statusBarHeight = sheep.$platform.device.statusBarHeight;
     barHeight.value = (statusBarHeight + 54)+'px'
-		// #ifdef MP
-		// 小程序识别二维码
-    console.log('option scene',options.scene)
-
-    //todo
-    options.scene = '3'
-
-		if (options.scene && ['1','2'].includes(options.scene)) {
-      uni.setStorageSync('notSeeAds',true)
-      notSeeAds.value = true
-      if ('2' === options.scene) {
-        //需要展示码
-        uni.setStorageSync('shouldShowResult',true)
-      } else{
-        uni.setStorageSync('shouldShowResult',false)
-      }
-      //看广告
-      console.log('可以看广告了')
-      return
-		}
-		// #endif
-    uni.setStorageSync('shouldShowResult',false)
-    notSeeAds.value = uni.getStorageSync('notSeeAds')
     init(options)
 	});
   function init(options) {
