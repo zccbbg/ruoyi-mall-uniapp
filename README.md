@@ -15,11 +15,13 @@ $ npm install --registry=https://registry.npmmirror.com
 ## 启动方式
 更推荐用vscode或者webstorm开发，所以请不要使用hbuilder启动。
 ```bash
-# npm 运行
+# h5页面
 npm run dev:h5
 
-然后用微信开发者工具打开，ps：微信开发者工具其实也是个浏览器，只是支持了微信环境，比如说微信支付。
+# 微信小程序
+npm run dev:mp-weixin
 ```
+
 ## 项目地址
 |            | gitee                                      | github                                       |
 |:----------:|:-------------------------------------------|:---------------------------------------------|
