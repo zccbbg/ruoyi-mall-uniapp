@@ -92,7 +92,7 @@ const user = defineStore({
 
     // 设置token
     setToken(token = '') {
-      if (token === '') {
+      if (!token) {
         this.isLogin = false;
         uni.removeStorageSync('token');
       } else {
