@@ -4,11 +4,12 @@
  */
 
 import Request from 'luch-request';
-import { baseUrl, apiPath } from '@/sheep/config';
+import {apiPath, baseUrl} from '@/sheep/config';
 import $store from '@/sheep/store';
 import $platform from '@/sheep/platform';
-import { showAuthModal } from '@/sheep/hooks/useModal';
+import {showAuthModal} from '@/sheep/hooks/useModal';
 import sheep from '@/sheep';
+
 const options = {
   // 显示操作成功消息 默认不显示
   showSuccess: false,
@@ -120,17 +121,25 @@ http.interceptors.response.use(
         //无权限
         const userStore = $store('user')
         const isLogin = userStore.isLogin
-        if (isLogin){
+        if (isLogin) {
           errorMsg = '您的登录已过期'
-        }else {
+        } else {
           errorMsg = '请先登录'
         }
-        sheep.$helper.toast(errorMsg)
         userStore.logout(true)
-        if ($platform.name === 'WechatMiniProgram') {
-          showAuthModal('wechatMiniLogin')
-        } else {
-          showAuthModal('smsLogin')
+        if (currentPage !== 'pages/index/index') {
+          sheep.$helper.toast(errorMsg)
+          // 获取当前页面栈数组
+          const pages = getCurrentPages();
+          // 获取数组中的最后一个元素，即当前页面
+          const currentPage = pages[pages.length - 1];
+          // 获取当前页面的路径
+          const currentPath = currentPage.route;
+          if ($platform.name === 'WechatMiniProgram') {
+            showAuthModal('wechatMiniLogin')
+          } else {
+            showAuthModal('smsLogin')
+          }
         }
       }
       else if (data.code === 500){
