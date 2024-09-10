@@ -127,14 +127,14 @@ http.interceptors.response.use(
           errorMsg = '请先登录'
         }
         userStore.logout(true)
-        if (currentPage !== 'pages/index/index') {
+        // 获取当前页面栈数组
+        const pages = getCurrentPages();
+        // 获取数组中的最后一个元素，即当前页面
+        const currentPage = pages[pages.length - 1];
+        // 获取当前页面的路径
+        const currentPath = currentPage.route;
+        if (!['pages/index/accountIndex','pages/index/index'].includes(currentPath)) {
           sheep.$helper.toast(errorMsg)
-          // 获取当前页面栈数组
-          const pages = getCurrentPages();
-          // 获取数组中的最后一个元素，即当前页面
-          const currentPage = pages[pages.length - 1];
-          // 获取当前页面的路径
-          const currentPath = currentPage.route;
           if ($platform.name === 'WechatMiniProgram') {
             showAuthModal('wechatMiniLogin')
           } else {
