@@ -66,8 +66,6 @@ const app = defineStore({
         "app": {
             "name": "Shopro",
             "logo": "\/static\/img\/shop\/logo.png",
-            "cdnurl": "https://ruoyi-mall-sz.oss-cn-shenzhen.aliyuncs.com",
-            "filesystem": "qcloud",
             "version": "1.1.13",
             "user_protocol": {
                 "title": "用户协议",
@@ -119,8 +117,8 @@ const app = defineStore({
                     "activeColor": "#FF7A0C",
                     "list": [
                         {
-                            "inactiveIcon": "/icons/home.png",
-                            "activeIcon": "/icons/home.gif",
+                            "inactiveIcon": "\/static\/icons\/home.png",
+                            "activeIcon": "\/static\/icons\/home.gif",
                             "url": "\/pages\/index\/index",
                             "text": "首页"
                         },
