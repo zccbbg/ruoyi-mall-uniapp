@@ -23,7 +23,7 @@
           <image class="u-page__item__slot-icon" :src="sheep.$url.static(item.activeIcon)"></image>
         </template>
         <template v-slot:inactive-icon>
-          <image class="u-page__item__slot-icon" :src="sheep.$url.cdn(item.inactiveIcon)"></image>
+          <image class="u-page__item__slot-icon" :src="sheep.$url.static(item.inactiveIcon)"></image>
         </template>
       </su-tabbar-item>
     </su-tabbar>

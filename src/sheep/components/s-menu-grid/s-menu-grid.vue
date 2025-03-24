@@ -14,7 +14,7 @@
           >
             {{ item.badge.text }}
           </view>
-          <image class="menu-image" :src="sheep.$url.cdn(item.src)"></image>
+          <image class="menu-image" :src="sheep.$url.static(item.src)"></image>
         </view>
 
         <view class="title-box ss-flex ss-flex-col ss-row-center ss-col-center">

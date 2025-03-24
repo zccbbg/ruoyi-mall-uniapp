@@ -720,7 +720,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/icons\/set.png",
+                                    "src": "\/static\/icons\/set.png",
                                     "title": {
                                         "text": "清空缓存",
                                         "color": "#333"
