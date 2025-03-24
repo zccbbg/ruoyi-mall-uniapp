@@ -106,13 +106,7 @@
         }
       },
       "buyNowStyle": {
-        // "mode": 2,
-        // "text": "立即购买",
-        // "color1": "#E9B461",
-        // "color2": "#EECC89",
-        // "src": "\/storage\/decorate\/20221115\/4782356b4587dc4f4a218f2540a0bafc.png",
-        // "right": '20rpx',
-        // "bottom":"18rpx"
+
       },
       "tagStyle": {
         "show": 0,
