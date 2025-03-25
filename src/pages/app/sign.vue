@@ -45,7 +45,7 @@
                   <view class="is-sign-num">{{ item.day < 10 ? '0' + item.day : item.day }}</view>
                   <image
                       class="is-sign-image"
-                      :src="sheep.$url.cdn('/icons/correct.png')"
+                      :src="sheep.$url.static('/icons/correct.png')"
                   >
                   </image>
                 </view>
