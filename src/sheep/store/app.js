@@ -118,19 +118,19 @@ const app = defineStore({
                     "list": [
                         {
                             "inactiveIcon": "\/static\/icons\/home.png",
-                            "activeIcon": "\/static\/icons\/home.gif",
+                            "activeIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/home.gif",
                             "url": "\/pages\/index\/index",
                             "text": "首页"
                         },
                         {
                             "inactiveIcon": "\/static/icons/cart.png",
-                            "activeIcon": "\/static/icons/cart.gif",
+                            "activeIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/cart.gif",
                             "url": "\/pages\/index\/cart",
                             "text": "购物车"
                         },
                         {
                             "inactiveIcon": "\/static/icons/my.png",
-                            "activeIcon": "\/static/icons/my.gif",
+                            "activeIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/my.gif",
                             "url": "\/pages\/index\/user",
                             "text": "我的"
                         }
@@ -949,7 +949,7 @@ const app = defineStore({
                 "style": {
                     "background": {
                         "color": "#F6F6F6",
-                        "src": "\/static\/icons\/b530150a466c8cda0a4cd5b29e2c8d11.png"
+                        "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/b530150a466c8cda0a4cd5b29e2c8d11.png"
                     },
                 }
             }
