@@ -30,21 +30,21 @@
     {
       title: '待付款',
       value: '1',
-      icon: '\/static\/icons\/no_pay.png',
+      icon: 'https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/no_pay.png',
       path: '/pages/order/list',
       type: 'unpaid',
     },
     {
       title: '待发货',
       value: '2',
-      icon: '\/static\/icons\/no_comment.png',
+      icon: 'https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/no_comment.png',
       path: '/pages/order/list',
       type: 'nosend',
     },
     {
       title: '待收货',
       value: '3',
-      icon: '\/static\/icons\/no_take.png',
+      icon: 'https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/no_take.png',
       path: '/pages/order/list',
       type: 'noget',
     },
@@ -58,14 +58,14 @@
     {
       title: '售后单',
       value: '4',
-      icon: '\/static\/icons\/change_order.png',
+      icon: 'https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/change_order.png',
       path: '/pages/order/list',
       type: 'aftersale',
     },
     {
       title: '全部订单',
       value: '0',
-      icon: '\/static\/icons\/all_order.png',
+      icon: 'https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/all_order.png',
       path: '/pages/order/list',
     },
   ];

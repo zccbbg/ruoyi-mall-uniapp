@@ -123,13 +123,13 @@ const app = defineStore({
                             "text": "首页"
                         },
                         {
-                            "inactiveIcon": "\/static/icons/cart.png",
+                            "inactiveIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/cart.png",
                             "activeIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/cart.gif",
                             "url": "\/pages\/index\/cart",
                             "text": "购物车"
                         },
                         {
-                            "inactiveIcon": "\/static/icons/my.png",
+                            "inactiveIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/my.png",
                             "activeIcon": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/my.gif",
                             "url": "\/pages\/index\/user",
                             "text": "我的"
@@ -701,7 +701,7 @@ const app = defineStore({
                             "col": 4,
                             "list": [
                                 {
-                                    "src": "\/static\/icons\/sign-menu.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/sign-menu.png",
                                     "title": {
                                         "text": "签到",
                                         "color": "#333333"
@@ -720,7 +720,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/set.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/set.png",
                                     "title": {
                                         "text": "清空缓存",
                                         "color": "#333"
@@ -739,7 +739,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/star.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/star.png",
                                     "title": {
                                         "text": "收藏",
                                         "color": "#333"
@@ -758,7 +758,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/footprints.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/footprints.png",
                                     "title": {
                                         "text": "积分记录",
                                         "color": "#333"
@@ -777,7 +777,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/edit.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/edit.png",
                                     "title": {
                                         "text": "意见反馈",
                                         "color": "#333"
@@ -796,7 +796,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/message.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/message.png",
                                     "title": {
                                         "text": "常见问题",
                                         "color": "#333"
@@ -815,7 +815,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/medal.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/medal.png",
                                     "title": {
                                         "text": "积分商城",
                                         "color": "#333"
@@ -834,7 +834,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/userStar.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/userStar.png",
                                     "title": {
                                         "text": "关于我们",
                                         "color": "#333"
@@ -853,7 +853,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/privacy.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/privacy.png",
                                     "title": {
                                         "text": "隐私协议",
                                         "color": "#333"
@@ -872,7 +872,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/team.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/team.png",
                                     "title": {
                                         "text": "我的团队",
                                         "color": "#333"
@@ -891,7 +891,7 @@ const app = defineStore({
                                     finish: false
                                 },
                                 {
-                                    "src": "\/static\/icons\/location.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/location.png",
                                     "title": {
                                         "text": "收货地址",
                                         "color": "#333"
@@ -910,7 +910,7 @@ const app = defineStore({
                                     finish: true
                                 },
                                 {
-                                    "src": "\/static\/icons\/customer_service.png",
+                                    "src": "https://git-open.oss-cn-shenzhen.aliyuncs.com/ruoyi-mall/uniapp/icons/customer_service.png",
                                     "title": {
                                         "text": "联系客服",
                                         "color": "#333"
